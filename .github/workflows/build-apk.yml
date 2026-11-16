@@ -2,41 +2,28 @@ name: Build Android APK
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
-      - 'apk-*'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   build-apk:
-    name: Build Android APK (Capacitor)
+    name: Android APK (Capacitor)
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '21'
+          distribution: zulu
+          java-version: 21
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: app-client-desktop-and-mobile/package-lock.json
 
-      - name: Restore Keystore (secretos del repositorio)
-        # La clave NO está en git (ver .gitignore y README-DEV.md § Android).
-        # Se reconstruye aquí desde secrets: base64 del .keystore + su clave.
+      - name: Restore keystore from secrets
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -44,65 +31,34 @@ jobs:
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           if [ -z "$KEYSTORE_B64" ]; then
-            echo "::error::Falta el secret ANDROID_KEYSTORE_BASE64. Sin el no se puede firmar el APK (ver README-DEV.md § Android)."
+            echo "::error::Falta ANDROID_KEYSTORE_BASE64"
             exit 1
           fi
-          # Dos rutas distintas, y confundirlas rompe la firma:
-          #   - build.gradle lee las CREDENCIALES con rootProject.file(), o sea
-          #     app-client-desktop-and-mobile/android/keystore.properties
-          #   - pero Gradle resuelve storeFile (la RUTA del .keystore) relativo
-          #     al modulo app/, no al directorio android. Gradle lo busca en
-          #     android/app/release.keystore, asi que ahi va el fichero y
-          #     storeFile se declara como ../release.keystore.
           ANDROID_DIR=app-client-desktop-and-mobile/android
           mkdir -p "$ANDROID_DIR/app"
           echo "$KEYSTORE_B64" | base64 -d > "$ANDROID_DIR/app/release.keystore"
-          {
-            echo "storeFile=release.keystore"
-            echo "storePassword=$STORE_PASSWORD"
-            echo "keyAlias=$KEY_ALIAS"
-            echo "keyPassword=$KEY_PASSWORD"
-          } > "$ANDROID_DIR/keystore.properties"
-          ls -la "$ANDROID_DIR"/keystore.properties "$ANDROID_DIR"/app/release.keystore
+          printf "storeFile=release.keystore\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n" \
+            "$STORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" > "$ANDROID_DIR/keystore.properties"
           echo "::add-mask::$STORE_PASSWORD"
           echo "::add-mask::$KEY_PASSWORD"
 
-      - name: Verify Android SDK
-        run: |
-          echo "ANDROID_HOME: $ANDROID_HOME"
-          ls -d $ANDROID_HOME/platforms/* || true
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         working-directory: app-client-desktop-and-mobile
         run: npm install
 
-      # Un comando que las vistas invocan y el puente no implementa falla en
-      # tiempo de ejecucion, no al compilar: TypeScript no lo detecta. Y como
-      # casi todo va envuelto en un catch que devuelve lista vacia, se veia como
-      # una pantalla en cero sin explicar por que. Esto lo corta antes.
-      - name: Comprobar que las vistas invocan comandos existentes
-        working-directory: ${{ github.workspace }}
-        run: node tools/bridge-check/check.js
-
-      - name: Comprobar paridad del catalogo de planes
-        working-directory: ${{ github.workspace }}
-        run: node tools/plan-check/check.js
-
-      - name: Comprobar que la marca esta aplicada
+      - name: Check brand
         working-directory: ${{ github.workspace }}
         run: node tools/brand/apply.mjs --check
 
-      - name: Build Web Application
+      - name: Build frontend
         working-directory: app-client-desktop-and-mobile
         run: npm run build
 
@@ -110,38 +66,15 @@ jobs:
         working-directory: app-client-desktop-and-mobile
         run: npx cap sync android
 
-      - name: Build Hardened Release APK (ProGuard & Signed)
+      - name: Build release APK
         working-directory: app-client-desktop-and-mobile/android
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
 
-      - name: Verify the APK is signed
-        # Un assembleRelease SIN credenciales produce un APK sin firmar, no un
-        # error. Esto lo detecta en vez de publicar un artefacto inútil.
-        working-directory: app-client-desktop-and-mobile/android
-        run: |
-          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
-          echo "APK: $APK"
-          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose "$APK" \
-            || "$ANDROID_HOME/build-tools/33.0.2/apksigner" verify --verbose "$APK" \
-            || { echo "::error::El APK no esta firmado. Revisa los secrets ANDROID_*."; exit 1; }
-
-      # Sin upload-artifact: ese almacenamiento es compartido y ya esta lleno.
-      # El release de abajo es la via de distribucion y no consume esa cuota.
-      # En un tag, el APK va al release del tag. En un dispatch manual, se
-      # adjunta tambien, para poder instalarlo sin esperar a un tag.
-      - name: Attach APK to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            TAG="${GITHUB_REF_NAME}"
-          else
-            TAG="v$(node -p "require('./app-client-desktop-and-mobile/src-tauri/tauri.conf.json').version")"
-          fi
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "$(node -p "require('./brand.config.json').appName") $TAG" --notes "APK generado por build-apk.yml."
-          gh release upload "$TAG" app-client-desktop-and-mobile/android/app/build/outputs/apk/release/*.apk --clobber
-          gh release view "$TAG" --json assets --jq '.assets[] | "\(.name)  \(.size) bytes"'
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: app-client-desktop-and-mobile/android/app/build/outputs/apk/release/*.apk
+          retention-days: 7

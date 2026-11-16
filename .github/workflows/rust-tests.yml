@@ -1,0 +1,66 @@
+name: Rust tests (catálogo + cifrado)
+
+# Corre en dev/* (iteración rápida) y TAMBIÉN en main: los 60 tests de Rust
+# estaban escritos pero nunca ejecutados en la rama principal, así que un merge
+# a main no verificaba nada. Cancelar en progreso solo aplica a dev/*; en main
+# se deja terminar para no dejar una verificación a medias.
+on:
+  push:
+    branches: ['main', 'dev/*']
+  workflow_dispatch:
+
+concurrency:
+  group: rust-tests-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  rust-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+    # Ver nota en build-desktop.yml: en contenedores, HOME debe ser /root o
+    # rustup aborta con "$HOME differs from euid-obtained home directory".
+    env:
+      CARGO_HOME: /root/.cargo
+      RUSTUP_HOME: /root/.rustup
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install base tools + Linux system dependencies
+        run: |
+          apt-get update
+          apt-get install -y build-essential curl git pkg-config \
+            libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf \
+            libssl-dev libdbus-1-dev libsecret-1-dev xdg-utils file
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: app-client-desktop-and-mobile/package-lock.json
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './app-client-desktop-and-mobile/src-tauri -> target'
+
+      - name: Frontend dist (tauri embed)
+        working-directory: app-client-desktop-and-mobile
+        run: |
+          npm install
+          npm run build
+
+      - name: Validate catalogo JS (paridad pools.mjs vs pools.rs)
+        working-directory: app-client-desktop-and-mobile
+        run: node fingerprint/pools.test.mjs
+
+      - name: Validar catálogo del backend (plausibilidad de la huella)
+        run: node tools/fingerprint-lab/validate.mjs
+
+      - name: Compile & run library tests (catálogo, cifrado, offsets)
+        working-directory: app-client-desktop-and-mobile/src-tauri
+        run: cargo test --lib --locked

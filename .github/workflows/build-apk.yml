@@ -145,3 +145,4 @@ jobs:
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "$(node -p "require('./brand.config.json').appName") $TAG" --notes "APK generado por build-apk.yml."
           gh release upload "$TAG" app-client-desktop-and-mobile/android/app/build/outputs/apk/release/*.apk --clobber
           gh release view "$TAG" --json assets --jq '.assets[] | "\(.name)  \(.size) bytes"'
+

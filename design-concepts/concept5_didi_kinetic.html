@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Design Concept: DiDi Kinetic Mobility</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Outfit"', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            didi: {
+              bg: '#0a0c10',
+              canvas: '#10131a',
+              card: '#151922',
+              cardHover: '#1c222e',
+              border: '#232a3b',
+              borderSubtle: 'rgba(255, 255, 255, 0.05)',
+              orange: '#ff5500', // DiDi Signature Orange
+              orangeHover: '#ff6b1a',
+              orangeGlow: 'rgba(255, 85, 0, 0.25)',
+              emerald: '#00e599',
+              slate: '#8c95a6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0a0c10;
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #232a3b;
+      border-radius: 999px;
+    }
+    .didi-btn {
+      transition: all 0.15s ease-out;
+    }
+    .didi-btn:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden select-none bg-didi-bg">
+
+  <!-- LEFT SIDEBAR: WARM MOBILITY COMMAND -->
+  <aside class="w-64 border-r border-didi-border bg-didi-canvas flex flex-col justify-between shrink-0">
+    <div>
+      <!-- Brand Logo -->
+      <div class="h-16 px-6 flex items-center gap-3 border-b border-didi-borderSubtle">
+        <div class="w-8 h-8 rounded-xl bg-didi-orange flex items-center justify-center font-black text-black text-base shadow-lg shadow-didi-orangeGlow">
+          M
+        </div>
+        <div>
+          <div class="font-black text-base tracking-tight text-white leading-none">Kraken Ges</div>
+          <div class="text-[10px] font-mono text-didi-orange font-bold tracking-wider mt-1 uppercase">Dispatch v3.4</div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="p-4 space-y-1 font-sans">
+        <div class="text-[11px] font-bold text-didi-slate px-3 py-1.5 uppercase tracking-wider">
+          Módulos Principales
+        </div>
+
+        <button class="w-full h-11 px-3.5 rounded-xl bg-didi-orange text-black font-extrabold text-sm flex items-center justify-between shadow-lg shadow-didi-orangeGlow didi-btn">
+          <div class="flex items-center gap-3">
+            <i data-lucide="layout-grid" class="w-4 h-4 stroke-[2.5]"></i>
+            <span>Perfiles de Flota</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-lg bg-black/15 text-xs font-mono font-black">12</span>
+        </button>
+
+        <button class="w-full h-11 px-3.5 rounded-xl text-neutral-300 hover:text-white hover:bg-didi-card font-semibold text-sm flex items-center justify-between transition didi-btn">
+          <div class="flex items-center gap-3">
+            <i data-lucide="activity" class="w-4 h-4 text-didi-emerald"></i>
+            <span>Sesiones en Directo</span>
+          </div>
+          <span class="w-2 h-2 rounded-full bg-didi-emerald animate-pulse"></span>
+        </button>
+
+        <button class="w-full h-11 px-3.5 rounded-xl text-neutral-300 hover:text-white hover:bg-didi-card font-semibold text-sm flex items-center gap-3 transition didi-btn">
+          <i data-lucide="globe" class="w-4 h-4 text-didi-slate"></i>
+          <span>Red & Nodos Proxy</span>
+        </button>
+
+        <button class="w-full h-11 px-3.5 rounded-xl text-neutral-300 hover:text-white hover:bg-didi-card font-semibold text-sm flex items-center gap-3 transition didi-btn">
+          <i data-lucide="flame" class="w-4 h-4 text-didi-orange"></i>
+          <span>Autónomo Warmer</span>
+        </button>
+
+        <div class="pt-5 text-[11px] font-bold text-didi-slate px-3 py-1.5 uppercase tracking-wider">
+          Grupos de Campaña
+        </div>
+
+        <div class="space-y-1">
+          <button class="w-full h-9 px-3.5 rounded-lg text-neutral-400 hover:text-white hover:bg-didi-card text-xs font-medium flex items-center justify-between transition">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-pink-500"></span>
+              <span>Shein & E-Commerce</span>
+            </div>
+            <span class="text-xs font-mono text-neutral-500">4</span>
+          </button>
+          <button class="w-full h-9 px-3.5 rounded-lg text-neutral-400 hover:text-white hover:bg-didi-card text-xs font-medium flex items-center justify-between transition">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span>Meta Ads Latam</span>
+            </div>
+            <span class="text-xs font-mono text-neutral-500">5</span>
+          </button>
+          <button class="w-full h-9 px-3.5 rounded-lg text-neutral-400 hover:text-white hover:bg-didi-card text-xs font-medium flex items-center justify-between transition">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span>Eneba Gaming Keys</span>
+            </div>
+            <span class="text-xs font-mono text-neutral-500">3</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Node Footprint -->
+    <div class="p-4 border-t border-didi-borderSubtle bg-didi-bg/60">
+      <div class="flex items-center justify-between text-[11px] font-mono mb-2">
+        <span class="text-didi-slate font-bold">ESTADO DEL MOTOR</span>
+        <span class="text-didi-emerald font-bold">100% OPERATIVO</span>
+      </div>
+      <div class="flex items-center gap-3 p-2 rounded-xl bg-didi-card border border-didi-border">
+        <div class="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center font-black text-xs text-white">
+          DS
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-xs font-bold text-white truncate">Despacho Central</div>
+          <div class="text-[10px] text-didi-slate font-mono truncate">187.140.76.148 (Host Directo)</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    
+    <!-- TOP BAR -->
+    <header class="h-16 px-8 border-b border-didi-border bg-didi-canvas flex items-center justify-between">
+      <div class="flex items-center gap-4 flex-1 max-w-xl">
+        <div class="relative w-full">
+          <i data-lucide="search" class="w-4 h-4 text-didi-slate absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            placeholder="Buscar por ID, tienda, proxy o tag..." 
+            class="w-full h-11 pl-10 pr-12 text-sm bg-didi-bg border border-didi-border rounded-xl text-white placeholder-didi-slate focus:outline-none focus:border-didi-orange transition"
+          >
+          <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-mono text-didi-slate bg-didi-card border border-didi-border px-1.5 py-0.5 rounded">⌘K</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button class="h-11 px-4 rounded-xl bg-didi-card hover:bg-didi-cardHover border border-didi-border text-white text-xs font-bold flex items-center gap-2 transition didi-btn">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-didi-slate"></i>
+          <span>Test de Latencia</span>
+        </button>
+
+        <button onclick="toggleModal()" class="h-11 px-5 rounded-xl bg-didi-orange hover:bg-didi-orangeHover text-black text-xs font-black flex items-center gap-2 shadow-lg shadow-didi-orangeGlow transition didi-btn">
+          <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
+          <span>Nuevo Perfil</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <div class="flex-1 flex flex-col overflow-hidden px-8 py-6">
+      
+      <!-- DISPATCH METRICS CARDS -->
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="p-4 rounded-2xl bg-didi-card border border-didi-border">
+          <div class="flex items-center justify-between text-xs text-didi-slate font-bold uppercase tracking-wider mb-1">
+            <span>Perfiles en Flota</span>
+            <i data-lucide="layers" class="w-4 h-4 text-didi-slate"></i>
+          </div>
+          <div class="text-3xl font-black text-white tracking-tight">12</div>
+          <div class="text-xs text-didi-slate mt-1">Todos configurados</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-didi-card border border-didi-border">
+          <div class="flex items-center justify-between text-xs text-didi-slate font-bold uppercase tracking-wider mb-1">
+            <span>Sesiones Activas</span>
+            <span class="w-2 h-2 rounded-full bg-didi-emerald animate-ping"></span>
+          </div>
+          <div class="text-3xl font-black text-didi-emerald tracking-tight">2</div>
+          <div class="text-xs text-didi-slate mt-1">840 MB RAM asignada</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-didi-card border border-didi-border">
+          <div class="flex items-center justify-between text-xs text-didi-slate font-bold uppercase tracking-wider mb-1">
+            <span>Rutas Operativas</span>
+            <i data-lucide="wifi" class="w-4 h-4 text-didi-emerald"></i>
+          </div>
+          <div class="text-3xl font-black text-white tracking-tight">38ms</div>
+          <div class="text-xs text-didi-emerald font-bold mt-1">● 8/8 Proxies Conectados</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-didi-card border border-didi-border">
+          <div class="flex items-center justify-between text-xs text-didi-slate font-bold uppercase tracking-wider mb-1">
+            <span>Scoring Antifraude</span>
+            <i data-lucide="shield-check" class="w-4 h-4 text-didi-orange"></i>
+          </div>
+          <div class="text-3xl font-black text-white tracking-tight">0% Lies</div>
+          <div class="text-xs text-didi-slate mt-1">CreepJS & Turnstile Clean</div>
+        </div>
+      </div>
+
+      <!-- MAIN TABLE CONTAINER -->
+      <div class="flex-1 overflow-hidden border border-didi-border rounded-2xl bg-didi-card flex flex-col">
+        
+        <!-- Table Toolbar -->
+        <div class="h-14 px-6 border-b border-didi-border flex items-center justify-between text-xs">
+          <div class="flex items-center gap-3">
+            <span class="text-base font-extrabold text-white tracking-tight">Directorio de Perfiles</span>
+            <span class="px-2 py-0.5 rounded-md bg-didi-bg border border-didi-border text-didi-slate font-mono text-[11px]">12 registrados</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="h-8 px-3 rounded-lg bg-didi-bg border border-didi-border text-white text-xs font-semibold">
+              Filtrar por grupo
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Table -->
+        <div class="flex-1 overflow-y-auto custom-scroll">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="sticky top-0 bg-[#161a24] border-b border-didi-border text-[11px] font-mono uppercase text-didi-slate font-bold">
+              <tr>
+                <th class="w-12 px-6 py-3.5 text-center">
+                  <input type="checkbox" class="rounded bg-didi-bg border-neutral-700 text-didi-orange focus:ring-0 cursor-pointer">
+                </th>
+                <th class="px-6 py-3.5">Perfil de Navegador</th>
+                <th class="px-6 py-3.5">Salida IP / Proxy</th>
+                <th class="px-6 py-3.5">Emulación Hardware</th>
+                <th class="px-6 py-3.5">Estado</th>
+                <th class="w-48 px-6 py-3.5 text-right">Comando</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-didi-border font-sans">
+
+              <!-- ROW 1 (RUNNING) -->
+              <tr class="hover:bg-didi-cardHover transition group">
+                <td class="px-6 py-4 text-center">
+                  <input type="checkbox" class="rounded bg-didi-bg border-neutral-700 text-didi-orange focus:ring-0 cursor-pointer">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-lg shrink-0">
+                      🪟
+                    </div>
+                    <div>
+                      <div class="text-sm font-extrabold text-white tracking-tight group-hover:text-didi-orange transition">
+                        Shein VIP Buyer #01
+                      </div>
+                      <div class="text-[11px] font-mono text-didi-slate mt-0.5">
+                        ID: prf_920f18aa · Chrome 134 Oficial
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">🇺🇸</span>
+                    <div>
+                      <div class="font-mono text-white text-xs font-semibold">189.201.44.12:8080</div>
+                      <div class="text-[11px] text-didi-slate">Miami, US · <span class="text-didi-emerald font-bold">34ms</span></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="text-neutral-200">RTX 4070 · 8 Cores</div>
+                  <div class="text-didi-slate text-[10px]">1920×1080 · Canvas Noise</div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-didi-emerald/10 border border-didi-emerald/30 text-didi-emerald font-mono text-xs font-extrabold">
+                    <span class="w-2 h-2 rounded-full bg-didi-emerald animate-pulse"></span>
+                    CORRIENDO
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="inline-flex items-center gap-2">
+                    <button class="h-9 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold transition didi-btn flex items-center gap-1.5">
+                      <i data-lucide="square" class="w-3.5 h-3.5 fill-rose-400"></i>
+                      <span>Detener</span>
+                    </button>
+                    <button class="w-9 h-9 rounded-xl bg-didi-bg hover:bg-didi-cardHover border border-didi-border text-didi-slate hover:text-white flex items-center justify-center transition" title="Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4"></i>
+                    </button>
+                    <button class="w-9 h-9 rounded-xl bg-didi-bg hover:bg-didi-cardHover border border-didi-border text-didi-slate hover:text-white flex items-center justify-center transition" title="Opciones">
+                      <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 2 (STANDBY) -->
+              <tr class="hover:bg-didi-cardHover transition group">
+                <td class="px-6 py-4 text-center">
+                  <input type="checkbox" class="rounded bg-didi-bg border-neutral-700 text-didi-orange focus:ring-0 cursor-pointer">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg shrink-0">
+                      🍎
+                    </div>
+                    <div>
+                      <div class="text-sm font-extrabold text-white tracking-tight group-hover:text-didi-orange transition">
+                        Meta Ads Scaler Latam
+                      </div>
+                      <div class="text-[11px] font-mono text-didi-slate mt-0.5">
+                        ID: prf_482c91bb · macOS Sonoma
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">🇲🇽</span>
+                    <div>
+                      <div class="font-mono text-white text-xs font-semibold">187.190.22.4:3128</div>
+                      <div class="text-[11px] text-didi-slate">CDMX, MX · <span class="text-didi-emerald font-bold">42ms</span></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="text-neutral-200">Apple M2 Max · 12 Cores</div>
+                  <div class="text-didi-slate text-[10px]">2560×1440 · CreepJS 0%</div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-didi-bg border border-didi-border text-didi-slate font-mono text-xs">
+                    <span class="w-2 h-2 rounded-full bg-neutral-600"></span>
+                    STANDBY
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="inline-flex items-center gap-2">
+                    <button class="h-9 px-5 rounded-xl bg-didi-orange hover:bg-didi-orangeHover text-black text-xs font-black shadow-md shadow-didi-orangeGlow transition didi-btn flex items-center gap-1.5">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+                      <span>INICIAR</span>
+                    </button>
+                    <button class="w-9 h-9 rounded-xl bg-didi-bg hover:bg-didi-cardHover border border-didi-border text-didi-slate hover:text-white flex items-center justify-center transition" title="Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4"></i>
+                    </button>
+                    <button class="w-9 h-9 rounded-xl bg-didi-bg hover:bg-didi-cardHover border border-didi-border text-didi-slate hover:text-white flex items-center justify-center transition" title="Opciones">
+                      <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 3 (ENEBA) -->
+              <tr class="hover:bg-didi-cardHover transition group">
+                <td class="px-6 py-4 text-center">
+                  <input type="checkbox" class="rounded bg-didi-bg border-neutral-700 text-didi-orange focus:ring-0 cursor-pointer">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-lg shrink-0">
+                      🪟
+                    </div>
+                    <div>
+                      <div class="text-sm font-extrabold text-white tracking-tight group-hover:text-didi-orange transition">
+                        Eneba Gaming Keys Buyer
+                      </div>
+                      <div class="text-[11px] font-mono text-didi-slate mt-0.5">
+                        ID: prf_113a77fc · Win 11 Chrome
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">🇩🇪</span>
+                    <div>
+                      <div class="font-mono text-white text-xs font-semibold">45.142.122.9:8000</div>
+                      <div class="text-[11px] text-didi-slate">Frankfurt, DE · <span class="text-didi-emerald font-bold">68ms</span></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="text-neutral-200">Intel Iris Xe · 8 Cores</div>
+                  <div class="text-didi-slate text-[10px]">1920×1080 · Turnstile Bypass</div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-didi-bg border border-didi-border text-didi-slate font-mono text-xs">
+                    <span class="w-2 h-2 rounded-full bg-neutral-600"></span>
+                    STANDBY
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="inline-flex items-center gap-2">
+                    <button class="h-9 px-5 rounded-xl bg-didi-orange hover:bg-didi-orangeHover text-black text-xs font-black shadow-md shadow-didi-orangeGlow transition didi-btn flex items-center gap-1.5">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+                      <span>INICIAR</span>
+                    </button>
+                    <button class="w-9 h-9 rounded-xl bg-didi-bg hover:bg-didi-cardHover border border-didi-border text-didi-slate hover:text-white flex items-center justify-center transition" title="Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4"></i>
+                    </button>
+                    <button class="w-9 h-9 rounded-xl bg-didi-bg hover:bg-didi-cardHover border border-didi-border text-didi-slate hover:text-white flex items-center justify-center transition" title="Opciones">
+                      <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL: CREAR PERFIL (DIDI ENERGETIC STYLE) -->
+  <div id="modal-didi" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-didi-canvas border border-didi-border rounded-2xl overflow-hidden shadow-2xl">
+      <div class="px-6 py-5 border-b border-didi-border flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-didi-orange flex items-center justify-center text-black font-black text-xs">
+            +
+          </div>
+          <h3 class="text-base font-extrabold text-white tracking-tight">Nueva Identidad en Flota</h3>
+        </div>
+        <button onclick="toggleModal()" class="text-didi-slate hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-didi-slate uppercase tracking-wider mb-2">Nombre del Perfil</label>
+          <input type="text" placeholder="Ej: Shein VIP Buyer #02" class="w-full h-11 px-4 rounded-xl bg-didi-bg border border-didi-border text-white text-sm focus:outline-none focus:border-didi-orange transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-didi-slate uppercase tracking-wider mb-2">Sistema Operativo</label>
+            <select class="w-full h-11 px-3 rounded-xl bg-didi-bg border border-didi-border text-white text-sm focus:outline-none">
+              <option>Windows 11 x64</option>
+              <option>macOS Sonoma</option>
+              <option>Linux Ubuntu</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-didi-slate uppercase tracking-wider mb-2">Grupo / Tag</label>
+            <input type="text" placeholder="shein, ecommerce" class="w-full h-11 px-4 rounded-xl bg-didi-bg border border-didi-border text-white text-sm focus:outline-none focus:border-didi-orange transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-didi-slate uppercase tracking-wider mb-2">Proxy Dedicado</label>
+          <input type="text" placeholder="http://usuario:pass@ip:puerto" class="w-full h-11 px-4 rounded-xl bg-didi-bg border border-didi-border text-white font-mono text-xs focus:outline-none focus:border-didi-orange transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-didi-slate uppercase tracking-wider mb-2">URL de Inicio Directa</label>
+          <input type="text" value="https://www.shein.com" class="w-full h-11 px-4 rounded-xl bg-didi-bg border border-didi-border text-white font-mono text-xs focus:outline-none focus:border-didi-orange transition">
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-didi-border bg-didi-bg/50 flex items-center justify-between">
+        <button onclick="toggleModal()" class="text-xs font-bold text-didi-slate hover:text-white">
+          Cancelar
+        </button>
+        <button onclick="toggleModal(); alert('¡Perfil despachado!')" class="h-11 px-6 rounded-xl bg-didi-orange hover:bg-didi-orangeHover text-black text-xs font-black shadow-lg shadow-didi-orangeGlow didi-btn">
+          Crear Perfil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function toggleModal() {
+      const modal = document.getElementById('modal-didi');
+      modal.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>

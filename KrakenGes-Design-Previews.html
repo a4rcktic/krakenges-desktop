@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges Design Previews</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #050505;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+      padding: 50px 0;
+    }
+    .preview-container {
+      width: 900px;
+      height: 500px;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    h2 {
+      margin-bottom: -30px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    /* =========================================
+       1. GLASSMORPHISM
+       ========================================= */
+    .theme-glass {
+      background-color: #0f172a;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.4), transparent 30%),
+        radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.4), transparent 30%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      color: #f8fafc;
+      display: flex;
+      height: 100%;
+    }
+    .glass-sidebar {
+      width: 200px;
+      background: rgba(30, 41, 59, 0.4);
+      backdrop-filter: blur(16px);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px;
+    }
+    .glass-main {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+    .glass-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      cursor: pointer;
+    }
+    .glass-nav-item {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      color: #94a3b8;
+    }
+    .glass-nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    /* =========================================
+       2. ENTERPRISE DARK (Linear / Vercel style)
+       ========================================= */
+    .theme-enterprise {
+      background-color: #000000;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #ededed;
+      display: flex;
+      height: 100%;
+      border: 1px solid #333;
+    }
+    .ent-sidebar {
+      width: 200px;
+      background: #0a0a0a;
+      border-right: 1px solid #222;
+      padding: 20px;
+    }
+    .ent-main {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: #000;
+    }
+    .ent-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .ent-btn {
+      background: #ededed;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-weight: 500;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .ent-nav-item {
+      padding: 8px 10px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+      color: #888;
+      font-size: 14px;
+    }
+    .ent-nav-item.active {
+      background: #222;
+      color: #ededed;
+    }
+
+    /* =========================================
+       3. NEO-BRUTALISM
+       ========================================= */
+    .theme-brutal {
+      background-color: #1e1e2e;
+      font-family: 'Space Grotesk', 'Courier New', monospace;
+      color: #cdd6f4;
+      display: flex;
+      height: 100%;
+    }
+    .brut-sidebar {
+      width: 200px;
+      background: #1e1e2e;
+      border-right: 3px solid #11111b;
+      padding: 20px;
+    }
+    .brut-main {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: #313244;
+    }
+    .brut-card {
+      background: #1e1e2e;
+      border: 3px solid #11111b;
+      border-radius: 12px;
+      box-shadow: 6px 6px 0px #11111b;
+      padding: 24px;
+    }
+    .brut-btn {
+      background: #f9e2af;
+      color: #11111b;
+      border: 3px solid #11111b;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-weight: bold;
+      box-shadow: 4px 4px 0px #11111b;
+      cursor: pointer;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    .brut-nav-item {
+      padding: 10px;
+      border: 3px solid transparent;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      color: #a6adc8;
+      font-weight: bold;
+    }
+    .brut-nav-item.active {
+      background: #cba6f7;
+      color: #11111b;
+      border: 3px solid #11111b;
+      box-shadow: 3px 3px 0px #11111b;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>1. Glassmorphism (Apple / Premium)</h2>
+  <div class="preview-container">
+    <div class="theme-glass">
+      <div class="glass-sidebar">
+        <h3 style="margin-top:0;">Kraken Ges</h3>
+        <div class="glass-nav-item active">Dashboard</div>
+        <div class="glass-nav-item">Profiles</div>
+        <div class="glass-nav-item">Settings</div>
+      </div>
+      <div class="glass-main">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="color:white; margin:0; text-transform:none; font-size:24px;">Welcome, Admin</h2>
+          <button class="glass-btn">+ New Profile</button>
+        </div>
+        <div style="display:flex; gap:20px;">
+          <div class="glass-card" style="flex:1;">
+            <div style="color:#94a3b8; font-size:14px;">Active Profiles</div>
+            <div style="font-size:32px; font-weight:bold; margin-top:10px;">124</div>
+          </div>
+          <div class="glass-card" style="flex:1;">
+            <div style="color:#94a3b8; font-size:14px;">System Status</div>
+            <div style="font-size:32px; font-weight:bold; margin-top:10px; color:#34d399;">Good</div>
+          </div>
+        </div>
+        <div class="glass-card" style="flex:1;">
+          <h3 style="margin-top:0;">Recent Activity</h3>
+          <div style="color:#94a3b8;">Profile "Amazon Buyer" launched successfully.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>2. Enterprise Dark (Linear / Developer)</h2>
+  <div class="preview-container">
+    <div class="theme-enterprise">
+      <div class="ent-sidebar">
+        <h3 style="margin-top:0; color:#fff;">Kraken Ges</h3>
+        <div class="ent-nav-item active">Dashboard</div>
+        <div class="ent-nav-item">Profiles</div>
+        <div class="ent-nav-item">Settings</div>
+      </div>
+      <div class="ent-main">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="color:white; margin:0; text-transform:none; font-size:20px; font-weight:500;">Welcome, Admin</h2>
+          <button class="ent-btn">New Profile</button>
+        </div>
+        <div style="display:flex; gap:20px;">
+          <div class="ent-card" style="flex:1;">
+            <div style="color:#888; font-size:12px; text-transform:uppercase;">Active Profiles</div>
+            <div style="font-size:28px; margin-top:10px;">124</div>
+          </div>
+          <div class="ent-card" style="flex:1;">
+            <div style="color:#888; font-size:12px; text-transform:uppercase;">System Status</div>
+            <div style="font-size:28px; margin-top:10px;">Good</div>
+          </div>
+        </div>
+        <div class="ent-card" style="flex:1;">
+          <h3 style="margin-top:0; font-size:14px; font-weight:500;">Recent Activity</h3>
+          <div style="color:#888; font-size:13px;">Profile "Amazon Buyer" launched successfully.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>3. Neo-Brutalism (Trendy / High Contrast)</h2>
+  <div class="preview-container" style="box-shadow:none;">
+    <div class="theme-brutal">
+      <div class="brut-sidebar">
+        <h3 style="margin-top:0;">KRAKENGES</h3>
+        <div class="brut-nav-item active">Dashboard</div>
+        <div class="brut-nav-item">Profiles</div>
+        <div class="brut-nav-item">Settings</div>
+      </div>
+      <div class="brut-main">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="color:white; margin:0; text-transform:none; font-size:28px;">Welcome, Admin</h2>
+          <button class="brut-btn">New Profile</button>
+        </div>
+        <div style="display:flex; gap:20px;">
+          <div class="brut-card" style="flex:1;">
+            <div style="font-size:14px; text-transform:uppercase; font-weight:bold;">Active Profiles</div>
+            <div style="font-size:42px; font-weight:bold; margin-top:10px; color:#a6e3a1;">124</div>
+          </div>
+          <div class="brut-card" style="flex:1;">
+            <div style="font-size:14px; text-transform:uppercase; font-weight:bold;">System Status</div>
+            <div style="font-size:42px; font-weight:bold; margin-top:10px; color:#f9e2af;">GOOD</div>
+          </div>
+        </div>
+        <div class="brut-card" style="flex:1;">
+          <h3 style="margin-top:0; text-transform:uppercase;">Recent Activity</h3>
+          <div>> Profile "Amazon Buyer" launched successfully.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

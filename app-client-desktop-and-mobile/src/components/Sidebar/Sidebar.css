@@ -1,0 +1,369 @@
+/* ============================================================
+   Kraken Ges Uber Fleet Architecture — Collapsible Sidebar Styles
+   ============================================================ */
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 55;
+}
+
+.uber-sidebar {
+  width: 256px;
+  height: 100vh;
+  height: 100dvh;
+  background: #000000;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 60;
+  user-select: none;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Collapsed Mini-Rail (70px) */
+.uber-sidebar.collapsed {
+  width: 70px;
+}
+
+.uber-sidebar.collapsed .uber-brand-info,
+.uber-sidebar.collapsed .uber-nav-label,
+.uber-sidebar.collapsed .uber-user-info,
+.uber-sidebar.collapsed .uber-role-bar,
+.uber-sidebar.collapsed .uber-nav-section-label,
+.uber-sidebar.collapsed .uber-live-indicator,
+.uber-sidebar.collapsed .uber-logout-btn {
+  display: none !important;
+}
+
+.uber-sidebar.collapsed .uber-collapse-btn {
+  display: none !important;
+}
+
+.uber-sidebar.collapsed .uber-brand-wrap {
+  width: 100%;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.uber-sidebar.collapsed .uber-nav-btn {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.uber-sidebar.collapsed .uber-nav-btn-inner {
+  justify-content: center;
+  gap: 0;
+}
+
+.uber-sidebar.collapsed .uber-user-card {
+  justify-content: center;
+  padding: 6px !important;
+}
+
+/* Brand Header */
+.uber-sidebar-header {
+  height: 64px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.uber-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.uber-brand-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.12);
+}
+
+.uber-brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.uber-brand-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uber-brand-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.uber-brand-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #d4d4d8;
+}
+
+.uber-brand-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #5d6375;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+}
+
+.uber-collapse-btn {
+  background: transparent;
+  border: none;
+  color: #5d6375;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.uber-collapse-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Role bar */
+.uber-role-bar {
+  padding: 8px 14px 4px;
+}
+
+.uber-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.uber-role-pill.owner {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  color: #000000;
+  font-weight: 800;
+}
+.uber-role-pill.owner svg {
+  stroke: #000000;
+  fill: #000000;
+}
+
+.uber-role-pill.admin {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.uber-role-pill.seller {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.uber-role-pill.user {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a1a1aa;
+}
+
+/* Nav Menu */
+.uber-nav {
+  padding: 12px 10px;
+}
+
+.uber-nav-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #5d6375;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px 8px;
+}
+
+.uber-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.uber-nav-btn {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #9499ad;
+  font-size: 12.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.uber-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.uber-nav-btn.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.uber-nav-btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.uber-nav-icon {
+  color: inherit;
+}
+
+.uber-live-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.uber-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+  animation: bgPulse 2s infinite;
+}
+
+/* Footer User Card */
+.uber-sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.uber-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.uber-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #181920;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.uber-avatar-beacon {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #ffffff;
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  border: 1px solid #000000;
+}
+
+.uber-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.uber-user-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uber-user-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #5d6375;
+}
+
+.uber-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.uber-logout-btn:hover {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+@media (max-width: 768px) {
+  .uber-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -280px;
+    width: 280px;
+    z-index: 70 !important;
+    box-shadow: 12px 0 50px rgba(0, 0, 0, 0.95);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .uber-sidebar.mobile-open {
+    transform: translateX(280px);
+  }
+}

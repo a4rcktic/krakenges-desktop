@@ -1,0 +1,13 @@
+[Unit]
+Description=Backup diario de Kraken Ges
+Documentation=file:/opt/krakenges/docs/BACKUP-Y-RESTAURACION.md
+
+[Timer]
+# Hora local del VPS. Si el VPS no está en UTC, ajústala.
+OnCalendar=*-*-* 03:15:00
+Persistent=true
+RandomizedDelaySec=15m
+Unit=krakenges-backup.service
+
+[Install]
+WantedBy=timers.target

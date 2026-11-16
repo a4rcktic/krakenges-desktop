@@ -1,0 +1,29 @@
+[Unit]
+Description=Backup cifrado de MongoDB de Kraken Ges
+Documentation=file:/opt/krakenges/docs/BACKUP-Y-RESTAURACION.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=backup
+Group=backup
+UMask=0077
+EnvironmentFile=/etc/krakenges/backup.env
+# GNUPGHOME queda fuera del home para que ProtectHome no lo bloquee.
+Environment=GNUPGHOME=/var/lib/krakenges-backup/gnupg
+StateDirectory=krakenges-backup
+ExecStart=/opt/krakenges/ops/backup/krakenges-backup.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+ReadWritePaths=/var/backups/krakenges

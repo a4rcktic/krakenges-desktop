@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Fleet Engine (100% Congruent Lucide Iconography)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            uber: {
+              black: '#000000',
+              canvas: '#060608',
+              sidebar: '#0a0b0f',
+              surface: '#0e1017',
+              card: '#131620',
+              cardHover: '#181c28',
+              border: 'rgba(255, 255, 255, 0.07)',
+              borderSubtle: 'rgba(255, 255, 255, 0.035)',
+              borderHover: 'rgba(255, 255, 255, 0.15)',
+              textPrimary: '#ffffff',
+              textSecondary: '#9499ad',
+              textMuted: '#5d6375',
+              green: '#06c167',
+              greenDark: '#048c4a',
+              amber: '#f59e0b',
+              red: '#ef4444',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .uber-card {
+      background: #0e1017;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .uber-card:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+    .btn-tactile {
+      transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn-tactile:active {
+      transform: scale(0.96);
+    }
+    .pulse-beacon {
+      animation: beacon-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes beacon-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.85); }
+    }
+    .glass-drawer {
+      background: rgba(10, 12, 17, 0.95);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-modal {
+      background: rgba(13, 15, 22, 0.96);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+    }
+    .signal-bar {
+      width: 2.5px;
+      border-radius: 1px;
+    }
+    .switch-track {
+      width: 36px;
+      height: 20px;
+      background: #242836;
+      border-radius: 999px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .switch-track.active {
+      background: #06c167;
+    }
+    .switch-thumb {
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 999px;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+    .switch-track.active .switch-thumb {
+      transform: translateX(16px);
+    }
+    /* Collapsible Sidebar Styles */
+    #app-sidebar {
+      transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #app-sidebar.collapsed {
+      width: 70px !important;
+    }
+    #app-sidebar.collapsed .sidebar-label,
+    #app-sidebar.collapsed .sidebar-badge,
+    #app-sidebar.collapsed .sidebar-section-title,
+    #app-sidebar.collapsed .sidebar-user-details,
+    #app-sidebar.collapsed .sidebar-brand-text {
+      display: none !important;
+    }
+    #app-sidebar.collapsed .sidebar-toggle-btn {
+      display: none !important;
+    }
+    #app-sidebar.collapsed nav {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-btn {
+      justify-content: center !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      width: 100% !important;
+    }
+    #app-sidebar.collapsed .sidebar-btn > div {
+      justify-content: center !important;
+      gap: 0 !important;
+    }
+    #app-sidebar.collapsed .sidebar-brand-inner {
+      justify-content: center !important;
+      width: 100% !important;
+      cursor: pointer;
+    }
+    #app-sidebar.collapsed .sidebar-brand {
+      justify-content: center !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-footer {
+      padding: 0.75rem 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-footer-header {
+      display: none !important;
+    }
+    #app-sidebar.collapsed .sidebar-user-box {
+      justify-content: center !important;
+      padding: 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-user-box button {
+      display: none !important;
+    }
+    #app-sidebar.collapsed .sidebar-section-divider {
+      display: block !important;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 10px 8px;
+    }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden select-none bg-black">
+
+  <!-- LEFT SIDEBAR: PURE LUCIDE & VECTOR ICONOGRAPHY (COLLAPSIBLE) -->
+  <aside id="app-sidebar" class="w-64 border-r border-uber-border bg-uber-sidebar flex flex-col justify-between shrink-0 select-none">
+    <div>
+      <!-- Brand Header -->
+      <div class="h-16 px-5 flex items-center justify-between border-b border-uber-borderSubtle sidebar-brand">
+        <div onclick="if(isSidebarCollapsed) toggleSidebar()" class="sidebar-brand-inner flex items-center gap-3 overflow-hidden" title="Kraken Ges Core (Click para expandir)">
+          <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center font-black text-black text-sm tracking-tighter shadow-sm shrink-0">
+            <i data-lucide="shield" class="w-4 h-4 fill-black text-black"></i>
+          </div>
+          <div class="flex flex-col sidebar-brand-text">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-base tracking-tight text-white leading-none">Kraken Ges</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-neutral-300 font-bold">FLEET</span>
+            </div>
+            <span class="text-[10px] font-mono text-uber-textMuted uppercase tracking-widest mt-1">Enterprise Core</span>
+          </div>
+        </div>
+
+        <button onclick="toggleSidebar()" class="sidebar-toggle-btn text-uber-textMuted hover:text-white transition p-1.5 rounded-lg hover:bg-white/5" title="Colapsar / Desplegar Barra Lateral (Ctrl+B)">
+          <i id="sidebar-toggle-icon" data-lucide="panel-left-close" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="p-3.5 space-y-1 font-sans text-xs">
+        <div class="sidebar-section-title text-[10px] font-mono tracking-wider uppercase text-uber-textMuted px-3 py-1 font-bold">
+          Gestión de Flota
+        </div>
+
+        <!-- Perfiles Stealth (Active) -->
+        <button class="sidebar-btn w-full h-10 px-3.5 rounded-lg bg-white text-black font-bold flex items-center justify-between shadow-sm" title="Perfiles Stealth">
+          <div class="flex items-center gap-3">
+            <i data-lucide="layers" class="w-4 h-4 stroke-[2.4] shrink-0"></i>
+            <span class="sidebar-label tracking-tight">Perfiles Stealth</span>
+          </div>
+          <span class="sidebar-badge px-2 py-0.5 rounded bg-black/10 text-[11px] font-mono font-extrabold">12</span>
+        </button>
+
+        <!-- Sesiones en Vivo -->
+        <button onclick="filterByStatus('running')" class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center justify-between transition btn-tactile" title="Sesiones en Marcha (2)">
+          <div class="flex items-center gap-3">
+            <i data-lucide="radio" class="w-4 h-4 text-uber-green shrink-0"></i>
+            <span class="sidebar-label">Sesiones en Marcha</span>
+          </div>
+          <span class="sidebar-badge flex items-center gap-1.5 font-mono text-[11px] text-uber-green font-bold">
+            <span class="w-2 h-2 rounded-full bg-uber-green pulse-beacon"></span>
+            2
+          </span>
+        </button>
+
+        <!-- Rutas Proxy -->
+        <button class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center gap-3 transition btn-tactile" title="Rutas Proxy & Nodos">
+          <i data-lucide="network" class="w-4 h-4 text-neutral-400 shrink-0"></i>
+          <span class="sidebar-label">Rutas Proxy & Nodos</span>
+        </button>
+
+        <!-- Calentador Autónomo -->
+        <button onclick="openWarmer('Calentador Global')" class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center gap-3 transition btn-tactile" title="Warmer Studio">
+          <i data-lucide="flame" class="w-4 h-4 text-amber-500 shrink-0"></i>
+          <span class="sidebar-label">Warmer Studio</span>
+        </button>
+
+        <!-- Planes & Cuotas -->
+        <a href="concept_planes_fleet.html" class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center gap-3 transition btn-tactile" title="Planes & Cuotas">
+          <i data-lucide="credit-card" class="w-4 h-4 text-neutral-400 shrink-0"></i>
+          <span class="sidebar-label">Planes & Cuotas</span>
+        </a>
+
+        <!-- Divider in collapsed mode -->
+        <div class="sidebar-section-divider hidden"></div>
+
+        <!-- Campaign Tags Group -->
+        <div class="sidebar-section-title pt-5 text-[10px] font-mono tracking-wider uppercase text-uber-textMuted px-3 py-1 font-bold flex items-center justify-between">
+          <span>Campañas</span>
+          <i data-lucide="plus" class="w-3.5 h-3.5 text-neutral-500 hover:text-white cursor-pointer transition"></i>
+        </div>
+
+        <div class="space-y-0.5">
+          <button onclick="filterByTag('shein')" class="sidebar-btn w-full h-8 px-3 rounded-md text-uber-textSecondary hover:text-white hover:bg-uber-surface text-xs flex items-center justify-between transition" title="Shein VIP Latam">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-pink-400 shrink-0"></i>
+              <span class="sidebar-label">Shein VIP Latam</span>
+            </div>
+            <span class="sidebar-badge font-mono text-[10.5px] text-uber-textMuted">4</span>
+          </button>
+          <button onclick="filterByTag('facebook')" class="sidebar-btn w-full h-8 px-3 rounded-md text-uber-textSecondary hover:text-white hover:bg-uber-surface text-xs flex items-center justify-between transition" title="Facebook Ads Pro">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="megaphone" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
+              <span class="sidebar-label">Facebook Ads Pro</span>
+            </div>
+            <span class="sidebar-badge font-mono text-[10.5px] text-uber-textMuted">5</span>
+          </button>
+          <button onclick="filterByTag('eneba')" class="sidebar-btn w-full h-8 px-3 rounded-md text-uber-textSecondary hover:text-white hover:bg-uber-surface text-xs flex items-center justify-between transition" title="Eneba / Gaming">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="gamepad-2" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+              <span class="sidebar-label">Eneba / Gaming</span>
+            </div>
+            <span class="sidebar-badge font-mono text-[10.5px] text-uber-textMuted">3</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Node Footprint & Host Telemetry -->
+    <div class="sidebar-footer p-4 border-t border-uber-borderSubtle bg-black/50">
+      <div class="sidebar-footer-header flex items-center justify-between mb-2">
+        <span class="text-[10px] font-mono text-uber-textMuted uppercase font-bold tracking-wider">Nodo Host</span>
+        <span class="text-[10.5px] font-mono text-uber-green font-bold flex items-center gap-1">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 0 Lies
+        </span>
+      </div>
+
+      <div class="sidebar-user-box flex items-center gap-3 p-2.5 rounded-xl bg-uber-surface border border-uber-borderSubtle" title="usuario · 187.140.76.148">
+        <div class="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center text-xs font-bold text-white shadow-inner shrink-0 relative">
+          <i data-lucide="user" class="w-4 h-4 text-neutral-300"></i>
+          <span class="w-2 h-2 rounded-full bg-uber-green absolute -bottom-0.5 -right-0.5 border-2 border-black"></span>
+        </div>
+        <div class="sidebar-user-details flex-1 min-w-0">
+          <div class="text-xs font-bold text-white truncate">usuario</div>
+          <div class="text-[10px] text-uber-textMuted font-mono truncate">187.140.76.148 · CDMX</div>
+        </div>
+        <button class="text-uber-textMuted hover:text-white transition" title="Configuración">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 flex flex-col overflow-hidden bg-black">
+
+    <!-- TOP TOOLBAR: INTENTIONAL, SHARP & ERGONOMIC -->
+    <header class="h-16 px-6 lg:px-8 border-b border-uber-border flex items-center justify-between bg-uber-canvas shrink-0">
+      <!-- Sidebar Toggle + Search Bar -->
+      <div class="flex items-center gap-3 flex-1 max-w-lg">
+        <!-- Sidebar Toggle Trigger Button -->
+        <button onclick="toggleSidebar()" class="h-10 w-10 rounded-xl bg-uber-surface hover:bg-neutral-900 border border-uber-border text-uber-textSecondary hover:text-white flex items-center justify-center transition btn-tactile shrink-0" title="Desplegar / Colapsar Menú (Ctrl+B)">
+          <i id="topbar-sidebar-icon" data-lucide="panel-left" class="w-4 h-4"></i>
+        </button>
+
+        <div class="relative w-full">
+          <i data-lucide="search" class="w-4 h-4 text-uber-textMuted absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            id="search-input"
+            onkeyup="handleSearch(this.value)"
+            placeholder="Buscar por ID, tienda, proxy o etiqueta..." 
+            class="w-full h-10 pl-10 pr-12 text-xs bg-uber-surface border border-uber-border rounded-xl text-white placeholder-uber-textMuted focus:outline-none focus:border-white transition"
+          >
+        </div>
+      </div>
+
+      <!-- Action Buttons with Precision Lucide Icons -->
+      <div class="flex items-center gap-2.5">
+        <!-- Test Proxies Button -->
+        <button onclick="testAllProxies()" class="h-10 px-3.5 rounded-xl bg-uber-surface hover:bg-neutral-900 border border-uber-border text-white text-xs font-semibold flex items-center gap-2 transition btn-tactile" title="Medir latencia en vivo de todos los proxies">
+          <i data-lucide="wifi" class="w-4 h-4 text-uber-green" id="btn-wifi-icon"></i>
+          <span>Test Proxies</span>
+        </button>
+
+        <!-- Cookies Button -->
+        <button onclick="openCookiesModal('Bóveda Global')" class="h-10 px-3.5 rounded-xl bg-uber-surface hover:bg-neutral-900 border border-uber-border text-white text-xs font-semibold flex items-center gap-2 transition btn-tactile" title="Importar o exportar cookies en formato JSON / Netscape">
+          <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+          <span>Cookies</span>
+        </button>
+
+        <!-- Bulk Generator Button -->
+        <button onclick="toggleSheet('sheet-bulk')" class="h-10 px-3.5 rounded-xl bg-uber-surface hover:bg-neutral-900 border border-uber-border text-white text-xs font-semibold flex items-center gap-2 transition btn-tactile" title="Generar múltiples perfiles con rotación automática de huella">
+          <i data-lucide="boxes" class="w-4 h-4 text-neutral-400"></i>
+          <span>Crear Lote</span>
+        </button>
+
+        <div class="h-5 w-px bg-neutral-800 mx-1"></div>
+
+        <!-- Primary CTA: Create Profile -->
+        <button onclick="toggleSheet('sheet-create')" class="h-10 px-5 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold flex items-center gap-2 transition btn-tactile shadow-md">
+          <i data-lucide="plus" class="w-4 h-4 stroke-[2.6]"></i>
+          <span>Crear Perfil</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <div class="flex-1 flex flex-col overflow-hidden px-8 py-5">
+
+      <!-- FLEET METRIC CARDS -->
+      <div class="grid grid-cols-4 gap-4 mb-5 shrink-0">
+        <div class="p-4 rounded-2xl uber-card">
+          <div class="text-[11px] font-mono uppercase text-uber-textMuted mb-1 font-bold flex items-center justify-between">
+            <span>Perfiles en Flota</span>
+            <i data-lucide="layers" class="w-4 h-4 text-neutral-500"></i>
+          </div>
+          <div class="text-2xl font-extrabold text-white tracking-tight" id="metric-total">12</div>
+          <div class="text-[11px] text-uber-textMuted mt-1">Identidades registradas</div>
+        </div>
+
+        <div class="p-4 rounded-2xl uber-card">
+          <div class="text-[11px] font-mono uppercase text-uber-textMuted mb-1 font-bold flex items-center justify-between">
+            <span>Sesiones Activas</span>
+            <span class="w-2 h-2 rounded-full bg-uber-green pulse-beacon"></span>
+          </div>
+          <div class="text-2xl font-extrabold text-uber-green tracking-tight flex items-center gap-2">
+            <span>2</span>
+            <span class="text-xs font-mono font-normal text-uber-textMuted">/ 50 cupos</span>
+          </div>
+          <div class="text-[11px] text-uber-textMuted mt-1">RAM asignada: 820 MB</div>
+        </div>
+
+        <div class="p-4 rounded-2xl uber-card">
+          <div class="text-[11px] font-mono uppercase text-uber-textMuted mb-1 font-bold flex items-center justify-between">
+            <span>Salud de Red</span>
+            <i data-lucide="network" class="w-4 h-4 text-uber-green"></i>
+          </div>
+          <div class="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+            <span id="metric-ping">42ms</span>
+            <span class="text-xs font-mono text-uber-green font-bold">● Óptimo</span>
+          </div>
+          <div class="text-[11px] text-uber-textMuted mt-1">8 de 8 proxies en línea</div>
+        </div>
+
+        <div class="p-4 rounded-2xl uber-card">
+          <div class="text-[11px] font-mono uppercase text-uber-textMuted mb-1 font-bold flex items-center justify-between">
+            <span>Scoring Antidetect</span>
+            <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+          </div>
+          <div class="text-2xl font-extrabold text-white tracking-tight">0% Lies</div>
+          <div class="text-[11px] text-uber-textMuted mt-1">CreepJS & Turnstile Clean</div>
+        </div>
+      </div>
+
+      <!-- MAIN DATA TABLE -->
+      <div class="flex-1 overflow-hidden border border-uber-border rounded-2xl bg-uber-surface flex flex-col shadow-2xl">
+        
+        <!-- Sub-header Filters & Quick Counters -->
+        <div class="h-14 px-6 border-b border-uber-borderSubtle flex items-center justify-between text-xs shrink-0">
+          <div class="flex items-center gap-2">
+            <button onclick="filterByTag('all')" class="h-8 px-3 rounded-lg bg-white text-black font-bold text-xs flex items-center gap-1.5">
+              <i data-lucide="list-filter" class="w-3.5 h-3.5"></i>
+              <span>Todos (12)</span>
+            </button>
+            <button onclick="filterByStatus('running')" class="h-8 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-uber-textSecondary hover:text-white border border-white/5 font-semibold text-xs transition flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-uber-green"></span>
+              <span>En Marcha (2)</span>
+            </button>
+            <button onclick="filterByTag('shein')" class="h-8 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-uber-textSecondary hover:text-white border border-white/5 font-semibold text-xs transition flex items-center gap-1.5">
+              <i data-lucide="shopping-bag" class="w-3 h-3 text-pink-400"></i>
+              <span>#shein (4)</span>
+            </button>
+            <button onclick="filterByTag('facebook')" class="h-8 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-uber-textSecondary hover:text-white border border-white/5 font-semibold text-xs transition flex items-center gap-1.5">
+              <i data-lucide="megaphone" class="w-3 h-3 text-blue-400"></i>
+              <span>#facebook-ads (5)</span>
+            </button>
+            <button onclick="filterByTag('eneba')" class="h-8 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-uber-textSecondary hover:text-white border border-white/5 font-semibold text-xs transition flex items-center gap-1.5">
+              <i data-lucide="gamepad-2" class="w-3 h-3 text-amber-400"></i>
+              <span>#eneba (3)</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3 text-xs font-mono text-uber-textMuted">
+            <span>Mostrando <strong class="text-white">4</strong> perfiles activos</span>
+          </div>
+        </div>
+
+        <!-- Scrollable Table -->
+        <div class="flex-1 overflow-y-auto custom-scroll">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="sticky top-0 bg-[#11131c] z-10 border-b border-uber-borderSubtle text-[11px] font-mono uppercase text-uber-textMuted font-bold tracking-wider">
+              <tr>
+                <th class="w-12 px-6 py-3.5 text-center">
+                  <input type="checkbox" id="master-select" onchange="toggleSelectAll(this)" class="rounded bg-black border-neutral-700 text-white focus:ring-0 cursor-pointer">
+                </th>
+                <th class="px-6 py-3.5">Nombre & Perfil</th>
+                <th class="px-6 py-3.5">Ruta IP (Proxy)</th>
+                <th class="px-6 py-3.5">Huella Digital</th>
+                <th class="px-6 py-3.5">Estado</th>
+                <th class="w-52 px-6 py-3.5 text-right">Comandos</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-uber-borderSubtle font-sans" id="profiles-table-body">
+
+              <!-- ROW 1: SHEIN VIP (RUNNING) -->
+              <tr class="hover:bg-uber-cardHover transition group cursor-pointer border-l-2 border-uber-green" onclick="openDrawer('Shein VIP Enterprise 01', 'Windows 11 x64', '189.201.44.12:8080', 'Miami, US', 'RTX 4070', 'https://www.shein.com')">
+                <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded bg-black border-neutral-700 text-white focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <!-- Vector Windows Icon -->
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-inner shrink-0">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.401H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.799"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-extrabold text-white text-sm tracking-tight group-hover:underline flex items-center gap-2">
+                        <span>Shein VIP Enterprise 01</span>
+                        <span class="text-[10px] font-mono text-uber-textMuted font-normal">#sh-01</span>
+                      </div>
+                      <div class="text-[11px] font-mono text-uber-textMuted mt-0.5 flex items-center gap-2">
+                        <span class="hover:text-white transition flex items-center gap-1" onclick="copyId('prf_920f18aa', event)" title="Clic para copiar ID">
+                          <i data-lucide="copy" class="w-3 h-3 text-neutral-500"></i>
+                          <span>prf_920f18aa</span>
+                        </span>
+                        <span>·</span>
+                        <span class="text-uber-green font-semibold flex items-center gap-1">
+                          <i data-lucide="link" class="w-3 h-3"></i>
+                          <span>shein.com</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2.5">
+                    <!-- Vector Country Badge US -->
+                    <div class="w-7 h-5 rounded bg-neutral-900 border border-white/10 flex items-center justify-center text-[10px] font-mono font-black text-neutral-200 shadow-sm">
+                      US
+                    </div>
+                    <div>
+                      <div class="font-mono text-white text-xs font-semibold flex items-center gap-1.5">
+                        <span>189.201.44.12:8080</span>
+                        <div class="flex items-end gap-0.5 h-3 ml-1" title="Latencia excelente: 34ms">
+                          <span class="signal-bar h-1.5 bg-uber-green"></span>
+                          <span class="signal-bar h-2 bg-uber-green"></span>
+                          <span class="signal-bar h-3 bg-uber-green"></span>
+                        </div>
+                      </div>
+                      <div class="text-[10px] text-uber-textMuted flex items-center gap-1 mt-0.5">
+                        <i data-lucide="map-pin" class="w-3 h-3 text-neutral-500"></i>
+                        <span>Miami, United States · <strong class="text-uber-green font-mono">34ms</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5 text-neutral-200">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-neutral-500"></i>
+                    <span>RTX 4070 · 8 Cores</span>
+                  </div>
+                  <div class="text-uber-textMuted text-[10px] mt-0.5 flex items-center gap-1">
+                    <i data-lucide="shield" class="w-3 h-3 text-uber-green"></i>
+                    <span>1920×1080 · Canvas Noise OK</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-uber-green/10 border border-uber-green/30 text-uber-green font-mono text-[11px] font-extrabold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-uber-green pulse-beacon"></span>
+                    En Ejecución
+                  </span>
+                  <div class="text-[10px] font-mono text-uber-textMuted mt-0.5 ml-1 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3 h-3 text-neutral-500"></i>
+                    <span>14m · 410MB RAM</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1.5">
+                    <!-- Stop Action -->
+                    <button onclick="toggleRun(this)" class="h-8 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold transition btn-tactile flex items-center gap-1.5" title="Detener sesión activa y sincronizar cookies">
+                      <i data-lucide="square" class="w-3.5 h-3.5 fill-rose-400"></i>
+                      <span>Detener</span>
+                    </button>
+                    <!-- Cookies Button -->
+                    <button onclick="openCookiesModal('Shein VIP Enterprise 01')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+                    </button>
+                    <!-- Warmer Button -->
+                    <button onclick="openWarmer('Shein VIP Enterprise 01')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Calentar Sesión (Autónomo)">
+                      <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+                    </button>
+                    <!-- Duplicate Button -->
+                    <button onclick="alert('Perfil duplicado con nueva huella')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                    <!-- Edit Button -->
+                    <button onclick="toggleSheet('sheet-create')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Editar">
+                      <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 2: META ADS SCALER (IDLE) -->
+              <tr class="hover:bg-uber-cardHover transition group cursor-pointer" onclick="openDrawer('Meta Ads Scaling #04', 'macOS Sonoma M2', '187.190.22.4:3128', 'CDMX, MX', 'Apple M2 Max', 'https://adsmanager.facebook.com')">
+                <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded bg-black border-neutral-700 text-white focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <!-- Vector Apple Icon -->
+                    <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-neutral-300 shadow-inner shrink-0">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.4c.66-.82 1.11-1.96.99-3.1-.96.04-2.13.65-2.82 1.46-.61.71-1.15 1.87-1.01 2.98 1.07.08 2.18-.52 2.84-1.34z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-extrabold text-white text-sm tracking-tight group-hover:underline flex items-center gap-2">
+                        <span>Meta Ads Scaling #04</span>
+                        <span class="text-[10px] font-mono text-uber-textMuted font-normal">#fb-04</span>
+                      </div>
+                      <div class="text-[11px] font-mono text-uber-textMuted mt-0.5 flex items-center gap-2">
+                        <span class="hover:text-white transition flex items-center gap-1" onclick="copyId('prf_482c91bb', event)" title="Clic para copiar ID">
+                          <i data-lucide="copy" class="w-3 h-3 text-neutral-500"></i>
+                          <span>prf_482c91bb</span>
+                        </span>
+                        <span>·</span>
+                        <span class="text-neutral-400">macOS Sonoma</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2.5">
+                    <!-- Vector Country Badge MX -->
+                    <div class="w-7 h-5 rounded bg-neutral-900 border border-white/10 flex items-center justify-center text-[10px] font-mono font-black text-neutral-200 shadow-sm">
+                      MX
+                    </div>
+                    <div>
+                      <div class="font-mono text-white text-xs font-semibold flex items-center gap-1.5">
+                        <span>187.190.22.4:3128</span>
+                        <div class="flex items-end gap-0.5 h-3 ml-1" title="Latencia óptima: 42ms">
+                          <span class="signal-bar h-1.5 bg-uber-green"></span>
+                          <span class="signal-bar h-2 bg-uber-green"></span>
+                          <span class="signal-bar h-3 bg-uber-green"></span>
+                        </div>
+                      </div>
+                      <div class="text-[10px] text-uber-textMuted flex items-center gap-1 mt-0.5">
+                        <i data-lucide="map-pin" class="w-3 h-3 text-neutral-500"></i>
+                        <span>CDMX, Mexico · <strong class="text-uber-green font-mono">42ms</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5 text-neutral-200">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-neutral-500"></i>
+                    <span>Apple M2 Max · 12 Cores</span>
+                  </div>
+                  <div class="text-uber-textMuted text-[10px] mt-0.5 flex items-center gap-1">
+                    <i data-lucide="shield" class="w-3 h-3 text-uber-green"></i>
+                    <span>2560×1440 · CreepJS 0%</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 font-mono text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-neutral-600"></span>
+                    Detenido
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1.5">
+                    <!-- Launch Action (Stark White) -->
+                    <button onclick="toggleRun(this)" class="h-8 px-4 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition btn-tactile flex items-center gap-1.5 shadow-sm">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+                      <span>Iniciar</span>
+                    </button>
+                    <!-- Cookies Button -->
+                    <button onclick="openCookiesModal('Meta Ads Scaling #04')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+                    </button>
+                    <!-- Warmer Button -->
+                    <button onclick="openWarmer('Meta Ads Scaling #04')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Calentar Sesión">
+                      <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+                    </button>
+                    <!-- Duplicate Button -->
+                    <button onclick="alert('Perfil duplicado')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                    <!-- Edit Button -->
+                    <button onclick="toggleSheet('sheet-create')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Editar">
+                      <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 3: ENEBA GAMING BUYER (IDLE with DIRECT URL) -->
+              <tr class="hover:bg-uber-cardHover transition group cursor-pointer" onclick="openDrawer('Eneba Gaming Keys Buyer', 'Windows 11 x64', '45.142.122.9:8000', 'Frankfurt, DE', 'Intel Iris Xe', 'https://www.eneba.com')">
+                <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded bg-black border-neutral-700 text-white focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <!-- Vector Windows Icon -->
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-inner shrink-0">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.401H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.799"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-extrabold text-white text-sm tracking-tight group-hover:underline flex items-center gap-2">
+                        <span>Eneba Gaming Keys Buyer</span>
+                        <span class="text-[10px] font-mono text-uber-textMuted font-normal">#en-01</span>
+                      </div>
+                      <div class="text-[11px] font-mono text-uber-textMuted mt-0.5 flex items-center gap-2">
+                        <span class="hover:text-white transition flex items-center gap-1" onclick="copyId('prf_113a77fc', event)" title="Clic para copiar ID">
+                          <i data-lucide="copy" class="w-3 h-3 text-neutral-500"></i>
+                          <span>prf_113a77fc</span>
+                        </span>
+                        <span>·</span>
+                        <span class="text-uber-green font-semibold flex items-center gap-1">
+                          <i data-lucide="link" class="w-3 h-3"></i>
+                          <span>eneba.com</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2.5">
+                    <!-- Vector Country Badge DE -->
+                    <div class="w-7 h-5 rounded bg-neutral-900 border border-white/10 flex items-center justify-center text-[10px] font-mono font-black text-neutral-200 shadow-sm">
+                      DE
+                    </div>
+                    <div>
+                      <div class="font-mono text-white text-xs font-semibold flex items-center gap-1.5">
+                        <span>45.142.122.9:8000</span>
+                        <div class="flex items-end gap-0.5 h-3 ml-1" title="Latencia buena: 68ms">
+                          <span class="signal-bar h-1.5 bg-amber-400"></span>
+                          <span class="signal-bar h-2 bg-amber-400"></span>
+                          <span class="signal-bar h-3 bg-neutral-700"></span>
+                        </div>
+                      </div>
+                      <div class="text-[10px] text-uber-textMuted flex items-center gap-1 mt-0.5">
+                        <i data-lucide="map-pin" class="w-3 h-3 text-neutral-500"></i>
+                        <span>Frankfurt, DE · <strong class="text-amber-400 font-mono">68ms</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5 text-neutral-200">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-neutral-500"></i>
+                    <span>Intel Iris Xe · 8 Cores</span>
+                  </div>
+                  <div class="text-uber-textMuted text-[10px] mt-0.5 flex items-center gap-1">
+                    <i data-lucide="shield" class="w-3 h-3 text-uber-green"></i>
+                    <span>1920×1080 · Turnstile Bypass OK</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 font-mono text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-neutral-600"></span>
+                    Detenido
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1.5">
+                    <button onclick="toggleRun(this)" class="h-8 px-4 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition btn-tactile flex items-center gap-1.5 shadow-sm">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+                      <span>Iniciar</span>
+                    </button>
+                    <button onclick="openCookiesModal('Eneba Gaming Keys Buyer')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+                    </button>
+                    <button onclick="openWarmer('Eneba Gaming Keys Buyer')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Calentar Sesión">
+                      <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+                    </button>
+                    <button onclick="alert('Perfil duplicado')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="toggleSheet('sheet-create')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Editar">
+                      <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 4: DIRECT IP (NO PROXY) -->
+              <tr class="hover:bg-uber-cardHover transition group cursor-pointer" onclick="openDrawer('Crypto Airdrop Bot', 'Ubuntu 24.04', 'Conexión Directa', 'CDMX, MX', 'Mesa DRI', 'https://app.uniswap.org')">
+                <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded bg-black border-neutral-700 text-white focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3.5">
+                    <!-- Vector Linux Icon -->
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shadow-inner shrink-0">
+                      <i data-lucide="terminal" class="w-4 h-4 text-purple-400"></i>
+                    </div>
+                    <div>
+                      <div class="font-extrabold text-white text-sm tracking-tight group-hover:underline flex items-center gap-2">
+                        <span>Crypto Airdrop Bot</span>
+                        <span class="text-[10px] font-mono text-uber-textMuted font-normal">#cr-09</span>
+                      </div>
+                      <div class="text-[11px] font-mono text-uber-textMuted mt-0.5 flex items-center gap-2">
+                        <span class="hover:text-white transition flex items-center gap-1" onclick="copyId('prf_771b00ee', event)" title="Clic para copiar ID">
+                          <i data-lucide="copy" class="w-3 h-3 text-neutral-500"></i>
+                          <span>prf_771b00ee</span>
+                        </span>
+                        <span>·</span>
+                        <span class="text-neutral-400">Ubuntu 24.04</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-5 rounded bg-neutral-900 border border-white/10 flex items-center justify-center text-[10px] font-mono font-black text-neutral-400 shadow-sm">
+                      <i data-lucide="laptop" class="w-3 h-3"></i>
+                    </div>
+                    <div>
+                      <div class="font-mono text-neutral-300 text-xs">Directo (IP Local)</div>
+                      <div class="text-[10px] text-uber-textMuted">187.140.76.148 · Host Match</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5 text-neutral-200">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-neutral-500"></i>
+                    <span>Mesa DRI · 8 Cores</span>
+                  </div>
+                  <div class="text-uber-textMuted text-[10px] mt-0.5 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3 h-3 text-neutral-500"></i>
+                    <span>Auto Timezone / Locale</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 font-mono text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-neutral-600"></span>
+                    Detenido
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1.5">
+                    <button onclick="toggleRun(this)" class="h-8 px-4 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition btn-tactile flex items-center gap-1.5 shadow-sm">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+                      <span>Iniciar</span>
+                    </button>
+                    <button onclick="openCookiesModal('Crypto Airdrop Bot')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+                    </button>
+                    <button onclick="openWarmer('Crypto Airdrop Bot')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Calentar Sesión">
+                      <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+                    </button>
+                    <button onclick="alert('Perfil duplicado')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="toggleSheet('sheet-create')" class="w-8 h-8 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-white/5 text-uber-textSecondary hover:text-white flex items-center justify-center transition" title="Editar">
+                      <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SLIDE-OVER HARDWARE INSPECTOR DRAWER -->
+  <aside id="inspector-drawer" class="w-96 glass-drawer flex flex-col justify-between shrink-0 transform translate-x-full transition-transform duration-250 ease-out fixed right-0 top-16 bottom-0 z-30 shadow-2xl">
+    <div class="p-6 space-y-5 overflow-y-auto custom-scroll">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-3.5 border-b border-uber-borderSubtle">
+        <div>
+          <h3 class="text-sm font-extrabold text-white tracking-tight" id="drawer-title">Shein VIP Enterprise 01</h3>
+          <span class="text-[10px] font-mono text-uber-textMuted" id="drawer-id">ID: prf_920f18aa</span>
+        </div>
+        <button onclick="closeDrawer()" class="w-8 h-8 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Quick Trust Score Metric -->
+      <div class="p-4 rounded-2xl bg-uber-surface border border-uber-border space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-uber-textSecondary font-semibold">Integridad Antidetect</span>
+          <span class="text-uber-green font-mono font-bold flex items-center gap-1.5 text-xs">
+            <i data-lucide="shield-check" class="w-4 h-4"></i> 100% STEALTH
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+          <div class="p-2.5 rounded-xl bg-black border border-white/5">
+            <span class="text-uber-textMuted block text-[9.5px]">CreepJS Lies</span>
+            <span class="text-white font-bold">0 Lies (Pure)</span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-black border border-white/5">
+            <span class="text-uber-textMuted block text-[9.5px]">WebRTC UDP</span>
+            <span class="text-uber-green font-bold">Blocked & Safe</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hardware Specs Card -->
+      <div class="space-y-2 font-mono text-xs">
+        <div class="text-[10px] uppercase font-bold text-uber-textMuted tracking-wider">Especificaciones Hardware</div>
+        <div class="p-4 rounded-2xl bg-uber-surface border border-uber-border space-y-2.5 text-[11.5px]">
+          <div class="flex justify-between">
+            <span class="text-uber-textSecondary font-sans">Sistema OS:</span>
+            <span class="text-white font-semibold" id="drawer-os">Windows 11 x64</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-uber-textSecondary font-sans">Resolución:</span>
+            <span class="text-white font-semibold">1920 × 1080 (1.0x)</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-uber-textSecondary font-sans">CPU Cores:</span>
+            <span class="text-white font-semibold">8 núcleos</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-uber-textSecondary font-sans">Memoria RAM:</span>
+            <span class="text-white font-semibold">16 GB</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-uber-textSecondary font-sans">GPU Renderer:</span>
+            <span class="text-white font-semibold truncate max-w-[140px]" id="drawer-gpu">NVIDIA RTX 4070</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-uber-textSecondary font-sans">URL de Inicio:</span>
+            <span class="text-uber-green font-mono truncate max-w-[150px]" id="drawer-url">https://www.shein.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Protections with Tactile Switches -->
+      <div class="space-y-2">
+        <div class="text-[10px] uppercase font-mono font-bold text-uber-textMuted tracking-wider">Protecciones Activas</div>
+        <div class="space-y-2 text-xs font-sans">
+          
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-uber-surface border border-uber-border hover:border-neutral-700 transition">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="image" class="w-4 h-4 text-uber-green"></i>
+              <div>
+                <div class="text-white font-semibold">Ruido Canvas Inteligente</div>
+                <div class="text-[10.5px] text-uber-textMuted">Aplica a lienzos > 32px (emojis y fuentes auténticos)</div>
+              </div>
+            </div>
+            <div class="switch-track active" onclick="this.classList.toggle('active')">
+              <div class="switch-thumb"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-uber-surface border border-uber-border hover:border-neutral-700 transition">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="volume-2" class="w-4 h-4 text-uber-green"></i>
+              <div>
+                <div class="text-white font-semibold">AudioContext Spoofing</div>
+                <div class="text-[10.5px] text-uber-textMuted">Semilla matemática determinista por perfil</div>
+              </div>
+            </div>
+            <div class="switch-track active" onclick="this.classList.toggle('active')">
+              <div class="switch-thumb"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-uber-surface border border-uber-border hover:border-neutral-700 transition">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="globe" class="w-4 h-4 text-uber-green"></i>
+              <div>
+                <div class="text-white font-semibold">Alineación Geo / Locale</div>
+                <div class="text-[10.5px] text-uber-textMuted">Sincroniza con la IP de salida o host nativo</div>
+              </div>
+            </div>
+            <div class="switch-track active" onclick="this.classList.toggle('active')">
+              <div class="switch-thumb"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-5 border-t border-uber-border flex items-center gap-3 bg-black">
+      <button onclick="toggleSheet('sheet-create')" class="flex-1 h-11 rounded-xl bg-uber-surface hover:bg-neutral-800 text-white text-xs font-bold border border-uber-border flex items-center justify-center gap-2 transition btn-tactile">
+        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+        <span>Editar Perfil</span>
+      </button>
+      <button class="h-11 px-6 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold flex items-center gap-2 transition btn-tactile shadow-md">
+        <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+        <span>Iniciar</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- FLOATING BOTTOM MULTI-ACTION DOCK -->
+  <div id="batch-dock" class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-modal rounded-2xl px-5 py-3 flex items-center gap-4 shadow-2xl z-40 transform translate-y-28 transition-transform duration-300">
+    <div class="flex items-center gap-2 text-xs font-mono">
+      <span class="w-2 h-2 rounded-full bg-white"></span>
+      <span id="selected-count" class="font-extrabold text-white text-sm">2</span>
+      <span class="text-uber-textSecondary">perfiles seleccionados</span>
+    </div>
+
+    <div class="h-5 w-px bg-neutral-800"></div>
+
+    <div class="flex items-center gap-2">
+      <button onclick="alert('Iniciando perfiles seleccionados...')" class="h-8 px-4 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold flex items-center gap-1.5 transition btn-tactile shadow-sm">
+        <i data-lucide="play" class="w-3 h-3 fill-black"></i>
+        <span>Iniciar Todos</span>
+      </button>
+      <button onclick="openWarmer('Lote de Perfiles')" class="h-8 px-3.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-semibold border border-neutral-700 flex items-center gap-1.5 transition btn-tactile">
+        <i data-lucide="flame" class="w-3.5 h-3.5 text-orange-400"></i>
+        <span>Calentar</span>
+      </button>
+      <button onclick="testAllProxies()" class="h-8 px-3.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-semibold border border-neutral-700 flex items-center gap-1.5 transition btn-tactile">
+        <i data-lucide="wifi" class="w-3.5 h-3.5 text-neutral-300"></i>
+        <span>Test Proxies</span>
+      </button>
+      <button onclick="alert('¿Eliminar seleccionados?')" class="h-8 px-3.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-semibold border border-rose-500/30 flex items-center gap-1.5 transition btn-tactile">
+        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+        <span>Eliminar</span>
+      </button>
+      <button onclick="clearSelection()" class="w-8 h-8 rounded-xl hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition" title="Deseleccionar">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDE-OVER SHEET: CREAR PERFIL -->
+  <div id="sheet-create" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="w-full max-w-md glass-drawer h-full flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-200">
+      <div class="h-16 px-6 border-b border-uber-borderSubtle flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center font-bold text-xs">
+            <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+          </div>
+          <h2 class="font-extrabold text-base text-white tracking-tight">Nueva Identidad Stealth</h2>
+        </div>
+        <button onclick="toggleSheet('sheet-create')" class="w-8 h-8 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto custom-scroll flex-1 font-sans">
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Nombre del Perfil *</label>
+          <input type="text" placeholder="Ej: Shein VIP Buyer #02" class="w-full h-11 px-4 rounded-xl bg-uber-surface border border-uber-border text-white text-xs placeholder-uber-textMuted focus:outline-none focus:border-white transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Sistema Operativo</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="h-10 rounded-xl bg-white text-black font-bold text-xs flex items-center justify-center gap-2 shadow-sm">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.401H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.799"/>
+              </svg>
+              <span>Windows 11</span>
+            </button>
+            <button class="h-10 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-uber-border text-neutral-300 font-semibold text-xs flex items-center justify-center gap-2 transition">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.4c.66-.82 1.11-1.96.99-3.1-.96.04-2.13.65-2.82 1.46-.61.71-1.15 1.87-1.01 2.98 1.07.08 2.18-.52 2.84-1.34z"/>
+              </svg>
+              <span>macOS</span>
+            </button>
+            <button class="h-10 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-uber-border text-neutral-300 font-semibold text-xs flex items-center justify-center gap-2 transition">
+              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+              <span>Linux</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-bold text-neutral-300 uppercase tracking-wider">Proxy de Salida</label>
+            <span class="text-[10.5px] text-uber-textMuted font-mono">http://user:pass@host:port</span>
+          </div>
+          <div class="space-y-2">
+            <input type="text" placeholder="http://usuario:pass@ip:puerto" class="w-full h-11 px-4 rounded-xl bg-uber-surface border border-uber-border font-mono text-xs text-white placeholder-uber-textMuted focus:outline-none focus:border-white transition">
+            <div class="flex items-center justify-between text-[11px] text-uber-textMuted px-1">
+              <span>Soporta HTTP, HTTPS, SOCKS5</span>
+              <span class="text-white hover:underline cursor-pointer flex items-center gap-1">
+                <i data-lucide="wifi" class="w-3 h-3 text-uber-green"></i>
+                <span>Test de Conexión</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">URL de Inicio Directa</label>
+          <input type="text" placeholder="https://www.eneba.com" value="https://www.eneba.com" class="w-full h-11 px-4 rounded-xl bg-uber-surface border border-uber-border font-mono text-xs text-white placeholder-uber-textMuted focus:outline-none focus:border-white transition">
+          <p class="text-[11px] text-uber-textMuted mt-1.5 flex items-center gap-1.5">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+            <span>Navegar directo a la tienda o servicio sin pasar por el buscador de Google previene el captcha.</span>
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Etiquetas / Campañas</label>
+          <input type="text" placeholder="shein, ecommerce, vip" class="w-full h-11 px-4 rounded-xl bg-uber-surface border border-uber-border text-xs text-white placeholder-uber-textMuted focus:outline-none focus:border-white transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Notas Rápidas</label>
+          <textarea placeholder="Credenciales o datos del comprador..." class="w-full h-16 p-3 rounded-xl bg-uber-surface border border-uber-border text-xs text-white placeholder-uber-textMuted focus:outline-none focus:border-white transition custom-scroll"></textarea>
+        </div>
+      </div>
+
+      <div class="h-20 px-6 border-t border-uber-borderSubtle flex items-center justify-between bg-uber-canvas">
+        <button onclick="toggleSheet('sheet-create')" class="h-11 px-5 rounded-xl text-xs font-bold text-neutral-400 hover:text-white transition">
+          Cancelar
+        </button>
+        <button onclick="toggleSheet('sheet-create'); alert('¡Perfil generado y registrado en la flota!')" class="h-11 px-6 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition shadow-sm btn-tactile flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
+          <span>Generar Perfil</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE-OVER SHEET: CREAR LOTE -->
+  <div id="sheet-bulk" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="w-full max-w-md glass-drawer h-full flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-200">
+      <div class="h-16 px-6 border-b border-uber-borderSubtle flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="boxes" class="w-4 h-4 text-white"></i>
+          <h2 class="font-extrabold text-base text-white tracking-tight">Generación Masiva</h2>
+        </div>
+        <button onclick="toggleSheet('sheet-bulk')" class="w-8 h-8 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto custom-scroll flex-1 font-sans">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Cantidad</label>
+            <input type="number" value="10" min="1" max="50" class="w-full h-11 px-4 rounded-xl bg-uber-surface border border-uber-border text-white text-xs font-mono focus:outline-none focus:border-white">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Prefijo</label>
+            <input type="text" placeholder="Ej: Facebook Ads" class="w-full h-11 px-4 rounded-xl bg-uber-surface border border-uber-border text-white text-xs focus:outline-none focus:border-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Lista de Proxies (1 por línea)</label>
+          <textarea placeholder="http://user:pass@host:port&#10;http://user2:pass2@host2:port2" class="w-full h-36 p-3 rounded-xl bg-uber-surface border border-uber-border font-mono text-xs text-white placeholder-uber-textMuted focus:outline-none focus:border-white transition custom-scroll"></textarea>
+        </div>
+      </div>
+
+      <div class="h-20 px-6 border-t border-uber-borderSubtle flex items-center justify-between bg-uber-canvas">
+        <button onclick="toggleSheet('sheet-bulk')" class="h-11 px-5 rounded-xl text-xs font-bold text-neutral-400 hover:text-white transition">
+          Cancelar
+        </button>
+        <button onclick="toggleSheet('sheet-bulk'); alert('¡Lote generado exitosamente!')" class="h-11 px-6 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition shadow-sm btn-tactile flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
+          <span>Generar Lote</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GESTOR DE COOKIES -->
+  <div id="modal-cookies" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-modal rounded-2xl overflow-hidden shadow-2xl">
+      <div class="px-6 py-4 border-b border-uber-borderSubtle flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+          <h3 class="text-sm font-extrabold text-white tracking-tight" id="cookie-modal-title">Gestión de Cookies</h3>
+        </div>
+        <button onclick="toggleModal('modal-cookies')" class="text-neutral-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-uber-textSecondary">Formato JSON (EditThisCookie) o Netscape:</span>
+          <span class="text-[11px] font-mono text-uber-green font-bold flex items-center gap-1">
+            <i data-lucide="check-circle" class="w-3 h-3"></i>
+            <span>14 Cookies Activas</span>
+          </span>
+        </div>
+        <textarea 
+          placeholder='[{"name":"session_id","value":"920fa...","domain":".shein.com"}]'
+          class="w-full h-48 p-3 rounded-xl bg-black border border-uber-border font-mono text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-white custom-scroll"
+        ></textarea>
+
+        <div class="flex items-center justify-between pt-1">
+          <button class="text-xs text-rose-400 hover:underline flex items-center gap-1.5">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 
+            <span>Limpiar Todo</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white text-xs border border-white/5 flex items-center gap-1.5 transition">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> 
+              <span>Copiar</span>
+            </button>
+            <button class="px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white text-xs border border-white/5 flex items-center gap-1.5 transition">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> 
+              <span>Descargar .json</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-uber-borderSubtle bg-black/40 flex items-center justify-between">
+        <button onclick="toggleModal('modal-cookies')" class="text-xs font-bold text-neutral-400 hover:text-white">
+          Cerrar
+        </button>
+        <div class="flex items-center gap-2">
+          <button class="h-9 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold border border-white/5 flex items-center gap-1.5 transition">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+            <span>Solo Guardar</span>
+          </button>
+          <button onclick="toggleModal('modal-cookies'); alert('¡Cookies inyectadas y sesión iniciada!')" class="h-9 px-5 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition btn-tactile flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+            <span>Inyectar y Abrir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: WARMER STUDIO -->
+  <div id="modal-warmer" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-modal rounded-2xl overflow-hidden shadow-2xl">
+      <div class="px-6 py-4 border-b border-uber-borderSubtle flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+          <h3 class="text-sm font-extrabold text-white tracking-tight" id="warmer-modal-title">Warmer Autónomo: Perfil</h3>
+        </div>
+        <button onclick="toggleModal('modal-warmer')" class="text-neutral-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Objetivo de Sembrado</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="p-3 rounded-xl border border-white bg-neutral-900 text-left flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white">E-Commerce VIP</div>
+                <div class="text-[10px] text-neutral-400 font-mono">Akamai + Stripe Radar</div>
+              </div>
+            </button>
+            <button class="p-3 rounded-xl border border-white/5 bg-black text-left flex items-center gap-2.5 hover:border-neutral-700">
+              <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-neutral-400">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white">Cuentas Nuevas</div>
+                <div class="text-[10px] text-neutral-400 font-mono">Google & Meta Trust</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-black border border-white/5 space-y-2.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-neutral-300 font-medium flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-uber-green"></i>
+              <span>Modo Ahorro de Datos Proxy (-85% GB)</span>
+            </span>
+            <input type="checkbox" checked class="rounded bg-black border-neutral-700 text-white focus:ring-0">
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-neutral-300 font-medium flex items-center gap-2">
+              <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-neutral-400"></i>
+              <span>Desplazamiento suave humano (Smooth Scroll)</span>
+            </span>
+            <input type="checkbox" checked class="rounded bg-black border-neutral-700 text-white focus:ring-0">
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-neutral-300 font-medium flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-neutral-400"></i>
+              <span>Permanencia por sitio</span>
+            </span>
+            <span class="font-mono text-white font-bold">15 seg</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
+            <span>Rutas Activas (4 Sitios)</span>
+            <span class="text-white text-[11px] cursor-pointer hover:underline">Todos</span>
+          </div>
+          <div class="space-y-1.5 font-mono text-xs max-h-36 overflow-y-auto custom-scroll pr-1">
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-black border border-white/5 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="checkbox" checked class="rounded bg-black border-neutral-700 text-white">
+                <i data-lucide="compass" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span class="text-white font-sans text-xs">Google Search & Network</span>
+              </div>
+              <span class="text-[10px] text-neutral-500 font-mono">NID & AEC Cookies</span>
+            </label>
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-black border border-white/5 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="checkbox" checked class="rounded bg-black border-neutral-700 text-white">
+                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-pink-400"></i>
+                <span class="text-white font-sans text-xs">Shein Oficial</span>
+              </div>
+              <span class="text-[10px] text-orange-400 font-mono">Akamai Sensor</span>
+            </label>
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-black border border-white/5 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="checkbox" checked class="rounded bg-black border-neutral-700 text-white">
+                <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span class="text-white font-sans text-xs">Temu Marketplace</span>
+              </div>
+              <span class="text-[10px] text-neutral-400 font-mono">Kasada PoW</span>
+            </label>
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-black border border-white/5 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="checkbox" checked class="rounded bg-black border-neutral-700 text-white">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-uber-green"></i>
+                <span class="text-white font-sans text-xs">Shop Pay App</span>
+              </div>
+              <span class="text-[10px] text-uber-green font-mono">Stripe Radar</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-uber-borderSubtle bg-black/40 flex items-center justify-between">
+        <button onclick="toggleModal('modal-warmer')" class="text-xs font-bold text-neutral-400 hover:text-white">
+          Cancelar
+        </button>
+        <button onclick="toggleModal('modal-warmer'); alert('¡Iniciando Calentador Autónomo en segundo plano!')" class="h-9 px-5 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold flex items-center gap-2 transition btn-tactile shadow-sm">
+          <i data-lucide="flame" class="w-3.5 h-3.5 fill-black"></i>
+          <span>Ejecutar Calentador</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let isSidebarCollapsed = false;
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleIcon = document.getElementById('sidebar-toggle-icon');
+      const topbarIcon = document.getElementById('topbar-sidebar-icon');
+
+      isSidebarCollapsed = !isSidebarCollapsed;
+
+      if (isSidebarCollapsed) {
+        sidebar.classList.add('collapsed');
+        sidebar.classList.remove('w-64');
+        if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'panel-left-open');
+        if (topbarIcon) topbarIcon.setAttribute('data-lucide', 'panel-left-close');
+      } else {
+        sidebar.classList.remove('collapsed');
+        sidebar.classList.add('w-64');
+        if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'panel-left-close');
+        if (topbarIcon) topbarIcon.setAttribute('data-lucide', 'panel-left');
+      }
+
+      lucide.createIcons();
+    }
+
+    // Keyboard shortcut Ctrl+B or Cmd+B to toggle sidebar
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    });
+
+    function toggleSheet(id) {
+      const sheet = document.getElementById(id);
+      sheet.classList.toggle('hidden');
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+    }
+
+    function openCookiesModal(name) {
+      document.getElementById('cookie-modal-title').textContent = 'Cookies: ' + name;
+      toggleModal('modal-cookies');
+    }
+
+    function openWarmer(name) {
+      document.getElementById('warmer-modal-title').textContent = 'Warmer: ' + name;
+      toggleModal('modal-warmer');
+    }
+
+    function openDrawer(title, os, proxy, geo, gpu, startUrl) {
+      document.getElementById('drawer-title').textContent = title;
+      document.getElementById('drawer-os').textContent = os;
+      document.getElementById('drawer-gpu').textContent = gpu;
+      document.getElementById('drawer-url').textContent = startUrl || 'https://www.google.com';
+      document.getElementById('inspector-drawer').classList.remove('translate-x-full');
+    }
+
+    function closeDrawer() {
+      document.getElementById('inspector-drawer').classList.add('translate-x-full');
+    }
+
+    function copyId(id, e) {
+      e.stopPropagation();
+      navigator.clipboard.writeText(id);
+      alert('ID copiado al portapapeles: ' + id);
+    }
+
+    function toggleSelectAll(master) {
+      document.querySelectorAll('.profile-check').forEach(cb => cb.checked = master.checked);
+      updateSelection();
+    }
+
+    function updateSelection() {
+      const checked = document.querySelectorAll('.profile-check:checked');
+      const count = checked.length;
+      const dock = document.getElementById('batch-dock');
+      const countEl = document.getElementById('selected-count');
+
+      if (count > 0) {
+        countEl.textContent = count;
+        dock.classList.remove('translate-y-28');
+      } else {
+        dock.classList.add('translate-y-28');
+        document.getElementById('master-select').checked = false;
+      }
+    }
+
+    function clearSelection() {
+      document.querySelectorAll('.profile-check').forEach(cb => cb.checked = false);
+      document.getElementById('master-select').checked = false;
+      updateSelection();
+    }
+
+    function toggleRun(btn) {
+      const isRunning = btn.classList.contains('bg-rose-500/10');
+      if (isRunning) {
+        btn.className = "h-8 px-4 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition btn-tactile flex items-center gap-1.5 shadow-sm";
+        btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i><span>Iniciar</span>`;
+      } else {
+        btn.className = "h-8 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold transition btn-tactile flex items-center gap-1.5";
+        btn.innerHTML = `<i data-lucide="square" class="w-3.5 h-3.5 fill-rose-400"></i><span>Detener</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    function testAllProxies() {
+      const icon = document.getElementById('btn-wifi-icon');
+      icon.classList.add('animate-spin');
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        document.getElementById('metric-ping').textContent = '36ms';
+        alert('Prueba completada: 8 Proxies Saludables (Latencia media: 36ms)');
+      }, 750);
+    }
+
+    function filterByStatus(status) {
+      alert('Filtrando perfiles por estado: ' + status);
+    }
+
+    function filterByTag(tag) {
+      alert('Filtrando perfiles por etiqueta: #' + tag);
+    }
+
+    function handleSearch(val) {
+      console.log('Buscando:', val);
+    }
+  </script>
+</body>
+</html>

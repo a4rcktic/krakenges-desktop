@@ -1,0 +1,70 @@
+[package]
+name = "krakenges-app"
+version = "1.0.1"
+description = "Kraken Ges — Anti-Detect Browser & Multi-Account Fleet"
+authors = ["Kraken Ges"]
+edition = "2021"
+
+[lib]
+name = "krakenges_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["unstable", "image-png", "image-ico"] }
+tauri-plugin-opener = "2"
+# Updater nativo: verifica la firma Ed25519 del artefacto descargado antes de
+# instalarlo. Es lo que hace que una actualizacion manipulada en transito no
+# llegue a ejecutarse.
+tauri-plugin-updater = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+# bytes_stream() devuelve chunks: es lo que permite emitir progreso de descarga.
+# Sin esto la descarga es opaca y el usuario no sabe cuánto falta.
+futures-util = { version = "0.3", default-features = false, features = ["std"] }
+tokio = { version = "1", features = ["full"] }
+directories = "5.0"
+sysinfo = "0.31"
+ed25519-dalek = { version = "2.1", features = ["rand_core"] }
+sha2 = "0.10"
+base64 = "0.22"
+pbkdf2 = { version = "0.12", features = ["hmac"] }
+getrandom = "0.2"
+tungstenite = "0.24"
+# Extraccion del motor en Rust. Antes se delegaba en `unzip` del sistema, que
+# no esta garantizado en un runner limpio.
+zip = { version = "2", default-features = false, features = ["deflate"] }
+
+# tauri build (CLI) inyecta esto automáticamente para servir frontendDist
+# vía tauri://localhost; un cargo build a secas NO lo lleva y entonces el
+# binario carga devUrl (http://localhost:1420) en producción -> webview
+# muestra "Could not connect to localhost: Connection refused". El job de
+# Arch compila con cargo build directo, así que hay que pasarla explícita.
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[target.'cfg(target_os = "linux")'.dependencies]
+keyring = { version = "2", default-features = false, features = ["linux-secret-service", "linux-secret-service-rt-async-io-crypto-rust"] }
+# Motor de navegacion en Linux: ungoogled-chromium se publica como tar.xz
+# (Windows y macos siguen zip/CfT). "static" compila xz desde el vendored
+# source para no depender de liblzma instalada en los runners.
+tar = "0.4"
+xz2 = { version = "0.1", features = ["static"] }
+
+[target.'cfg(not(target_os = "linux"))'.dependencies]
+keyring = { version = "2", default-features = false }
+
+[profile.release]
+opt-level = 3
+# ring (vía reqwest/rustls) rompe el linkeado con LTO global + codegen-units=1
+# + strip=true en el toolchain de Arch (LLVM elimina los símbolos asm
+# ring_core_0_17_14__* → 'undefined reference'). Sin LTO y con codegen-units
+# default funciona en todos los linkers (bfd/gold/lld/msvc) y plataformas.
+lto = false
+codegen-units = 16
+panic = "abort"
+strip = true

@@ -1,0 +1,702 @@
+/* ==========================================================================
+   KRAKEN GES PLANS VIEW — Concept 4: Uber Fleet Monochromatic Architecture
+   Strict High-Density, Dedicated Semantic Styles, Zero Overlaps
+   ========================================================================== */
+
+.fleet-plans-view {
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  min-width: 0;
+  padding: 1.75rem 2rem 3rem 2rem;
+  background-color: #000000;
+  color: #ffffff;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Reserva de la zona de notificaciones y reloj.
+   Sin esto la cabecera queda debajo de la barra de estado del sistema. El
+   valor sale de env(safe-area-inset-top), que declara cada aparato. */
+@media (max-width: 768px) {
+  .fleet-plans-view {
+    padding-top: calc(var(--krakenges-inset-top) + 0.75rem);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .fleet-plans-view {
+    padding: 1rem 1rem calc(96px + env(safe-area-inset-bottom, 0px)) 1rem !important;
+    gap: 1.25rem;
+  }
+}
+
+/* ── Custom Scrollbar ── */
+.fleet-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.fleet-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fleet-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+.fleet-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Top Active Subscription Card ── */
+.plans-summary-card {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.plans-summary-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.plans-summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plans-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.plans-active-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #000000;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.plans-server-check {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.plans-summary-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.plans-summary-desc {
+  font-size: 0.75rem;
+  color: #71717a;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Key Redeem Box ── */
+.plans-redeem-box {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.plans-redeem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plans-redeem-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plans-redeem-input {
+  flex: 1;
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.plans-redeem-input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px #ffffff;
+}
+
+.plans-redeem-btn {
+  height: 2.25rem;
+  padding: 0 1rem;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+}
+
+.plans-redeem-btn:hover:not(:disabled) {
+  background: #e4e4e7;
+}
+
+.plans-redeem-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+
+/* ── Tiers Matrix Section ── */
+.plans-matrix-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.plans-matrix-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.5rem;
+}
+
+.plans-matrix-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.plans-matrix-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #71717a;
+}
+
+.plans-matrix-h3 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+/* Billing Toggle */
+.plans-billing-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #111114;
+  padding: 0.25rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.plans-billing-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.plans-billing-btn:hover {
+  color: #ffffff;
+}
+
+.plans-billing-btn.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 800;
+}
+
+/* ── 4 Tiers Grid ── */
+.plans-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 1200px) {
+  .plans-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .plans-summary-card {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .plans-summary-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  .plans-redeem-box {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem;
+  }
+  .plans-redeem-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .plans-redeem-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .plans-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .plans-history-card {
+    padding: 1rem;
+  }
+  .plans-advisor-card {
+    padding: 1rem;
+  }
+  .plans-seller-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .plans-seller-controls {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.75rem;
+  }
+  .plans-seller-field {
+    width: 100%;
+  }
+  .plans-seller-mint-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.plans-tier-card {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  position: relative;
+}
+
+.plans-tier-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.plans-tier-card.featured {
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.9);
+}
+
+.plans-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.plans-tier-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.plans-tier-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.plans-tier-tag.recommended {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  font-weight: 800;
+}
+
+.plans-tier-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.plans-tier-name {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.plans-tier-desc {
+  font-size: 0.75rem;
+  color: #71717a;
+  line-height: 1.4;
+  min-height: 2.1rem;
+}
+
+.plans-tier-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.plans-tier-price {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.plans-tier-period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #71717a;
+}
+
+.plans-features-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: 0.75rem;
+  color: #d4d4d8;
+}
+
+.plans-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.35;
+}
+
+.plans-feature-item.negative {
+  color: #52525b;
+}
+
+/* Card Action Button */
+.plans-card-btn-active {
+  width: 100%;
+  height: 2.35rem;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid #ffffff;
+  cursor: default;
+}
+
+.plans-card-btn-available {
+  width: 100%;
+  height: 2.35rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #a1a1aa;
+  font-size: 0.6875rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Bottom Section: Historial & Asesor ── */
+.plans-bottom-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 960px) {
+  .plans-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plans-history-card {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.plans-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.plans-history-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.plans-history-subtitle {
+  font-size: 0.6875rem;
+  color: #71717a;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.plans-history-table {
+  width: 100%;
+  min-width: 440px;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+
+.plans-history-table th {
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  color: #71717a;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.plans-history-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.plans-advisor-card {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.plans-advisor-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.plans-advisor-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plans-advisor-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.plans-advisor-desc {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  line-height: 1.45;
+}
+
+.plans-advisor-info-box {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.85rem;
+  font-size: 0.6875rem;
+  color: #71717a;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.4;
+}
+
+/* ── Seller Console Card ── */
+.plans-seller-card {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.plans-seller-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.plans-seller-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.85rem;
+}
+
+.plans-seller-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.plans-seller-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a1a1aa;
+}
+
+.plans-seller-select,
+.plans-seller-input {
+  height: 2.35rem;
+  padding: 0 0.75rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.plans-seller-select:focus,
+.plans-seller-input:focus {
+  border-color: #ffffff;
+}
+
+.plans-seller-mint-btn {
+  height: 2.35rem;
+  padding: 0 1.25rem;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.12s ease;
+}
+
+.plans-seller-mint-btn:hover:not(:disabled) {
+  background: #e4e4e7;
+}
+
+.plans-seller-mint-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

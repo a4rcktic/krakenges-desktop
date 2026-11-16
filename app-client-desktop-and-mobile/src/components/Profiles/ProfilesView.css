@@ -1,0 +1,1237 @@
+/* ==========================================================================
+   KRAKEN GES PROFILES VIEW — Concept 4: Uber Fleet Architecture
+   100% Stark Monochromatic (#000000 / #ffffff) & Pure Vector Iconography
+   ========================================================================== */
+
+.fleet-profiles-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background-color: #000000;
+  color: #ffffff;
+  /* El contenedor YA NO hace scroll.
+     Antes lo hacia (overflow-y: auto), y eso rompia la pantalla de dos formas:
+       1. La barra de busqueda y los filtros se iban con el contenido, en vez
+          de quedarse arriba.
+       2. Al bajar aparecia un hueco negro grande, porque el alto de la pantalla
+          no se repartia bien entre cabecera y lista.
+     Ahora el scroll vive en las listas (.fleet-table-wrapper y
+     .fleet-mobile-cards), que son las unicas que tienen contenido largo.
+     Aqui solo hay que dejar que el contenedor ocupe el alto disponible. */
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 1.25rem 1.75rem 2.5rem 1.75rem;
+  box-sizing: border-box;
+}
+
+/* Reserva de la zona de notificaciones y reloj.
+   Sin esto la cabecera queda debajo de la barra de estado del sistema. El
+   valor sale de env(safe-area-inset-top), que declara cada aparato. */
+@media (max-width: 768px) {
+  .fleet-profiles-view {
+    padding-top: calc(var(--krakenges-inset-top) + 0.75rem);
+  }
+}
+
+
+/* La lista de perfiles es la que se desplaza. min-height: 0 es lo que permite
+   que un hijo flex se encoja por debajo de su contenido en vez de desbordar. */
+.fleet-table-wrapper,
+.fleet-mobile-cards {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Estados de carga / error / vacio de la lista ── */
+.fleet-list-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  flex: 1;
+  min-height: 0;
+}
+.fleet-list-status-txt {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+.fleet-list-status-err {
+  font-size: 0.85rem;
+  color: #f87171;
+}
+.fleet-list-retry {
+  padding: 0.5rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.fleet-list-retry:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 768px) {
+  .fleet-profiles-view {
+    padding: 1rem 1rem calc(96px + env(safe-area-inset-bottom, 0px)) 1rem !important;
+  }
+}
+
+/* ── Custom Scrollbar ── */
+.fleet-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.fleet-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fleet-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+.fleet-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Fleet Top Toolbar ── */
+.fleet-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.fleet-search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 480px;
+  min-width: 260px;
+}
+
+.fleet-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #5d6375;
+  pointer-events: none;
+}
+
+.fleet-search-input {
+  width: 100%;
+  height: 2.5rem;
+  padding-left: 2.4rem;
+  padding-right: 1rem;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fleet-search-input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.fleet-search-input::placeholder {
+  color: #5d6375;
+}
+
+.fleet-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Tactile Buttons */
+.btn-fleet-tactile {
+  transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-fleet-tactile:active {
+  transform: scale(0.96);
+}
+
+.btn-fleet-secondary {
+  height: 2.5rem;
+  padding: 0 0.9rem;
+  border-radius: 0.75rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.btn-fleet-secondary:hover:not(:disabled) {
+  background: #181c28;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.btn-fleet-primary {
+  height: 2.5rem;
+  padding: 0 1.25rem;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.12);
+  transition: all 0.15s ease;
+}
+
+.btn-fleet-primary:hover:not(:disabled) {
+  background: #e5e5e5;
+  transform: translateY(-1px);
+}
+
+/* ── Fleet Metric Cards ── */
+.fleet-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .fleet-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .fleet-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+  }
+  .fleet-search-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .fleet-toolbar-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .fleet-toolbar-actions .btn-fleet-secondary,
+  .fleet-toolbar-actions .btn-fleet-primary {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+    box-sizing: border-box;
+  }
+  .fleet-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+  }
+  .fleet-metric-card {
+    padding: 0.75rem;
+  }
+  .fleet-metric-val {
+    font-size: 1.25rem;
+  }
+  .fleet-metric-sub {
+    font-size: 0.625rem;
+  }
+}
+
+.fleet-metric-card {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1rem;
+  padding: 1rem;
+  transition: border-color 0.15s ease;
+}
+
+.fleet-metric-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.fleet-metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #5d6375;
+  margin-bottom: 0.25rem;
+}
+
+.fleet-metric-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.fleet-metric-sub {
+  font-size: 0.6875rem;
+  color: #5d6375;
+  margin-top: 0.25rem;
+}
+
+/* Pulse Beacon */
+.pulse-beacon {
+  animation: beacon-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes beacon-ring {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.85); }
+}
+
+/* ── Main Fleet Table Container ── */
+.fleet-table-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 420px;
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+}
+
+/* Table Sub-header Filters */
+.fleet-sub-header {
+  min-height: 3rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fleet-sub-header::-webkit-scrollbar {
+  display: none;
+}
+
+.fleet-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.fleet-filter-pill {
+  height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.04);
+  color: #9499ad;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.fleet-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.fleet-filter-pill.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 800;
+}
+
+/* Table layout */
+.fleet-table-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.fleet-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.fleet-thead {
+  position: sticky;
+  top: 0;
+  background: #11131c;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  color: #5d6375;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.fleet-th {
+  padding: 0.8rem 1.25rem;
+}
+
+.fleet-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.fleet-row:hover {
+  background: #181c28;
+}
+
+.fleet-row.running {
+  border-left: 2px solid #06c167;
+}
+
+.fleet-row.selected {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fleet-td {
+  padding: 0.85rem 1.25rem;
+  vertical-align: middle;
+}
+
+/* Country Pill */
+.fleet-country-badge {
+  width: 1.75rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 900;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+/* Signal Bars */
+.signal-bar {
+  width: 2.5px;
+  border-radius: 1px;
+  display: inline-block;
+}
+
+/* Status Badges */
+.fleet-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 800;
+}
+
+.fleet-status-pill.running {
+  background: rgba(6, 193, 103, 0.1);
+  border: 1px solid rgba(6, 193, 103, 0.3);
+  color: #06c167;
+}
+
+.fleet-status-pill.stopped {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #5d6375;
+}
+
+/* Row Action Buttons */
+.fleet-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fleet-btn-start {
+  height: 2rem;
+  padding: 0 0.85rem;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+}
+
+.fleet-btn-start:hover:not(:disabled) {
+  background: #e5e5e5;
+}
+
+.fleet-btn-stop {
+  height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 0.65rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fleet-btn-stop:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.fleet-btn-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.65rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #9499ad;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+  cursor: pointer;
+}
+
+.fleet-btn-icon:hover {
+  background: #1e2230;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.fleet-btn-icon.danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ── Hardware Inspector Drawer ── */
+.fleet-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  max-width: 90vw;
+  background: rgba(10, 12, 17, 0.98);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 80;
+  box-shadow: -15px 0 40px rgba(0, 0, 0, 0.8);
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.fleet-drawer.open {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Mobile Bottom Sheet Drawer Override */
+.is-mobile-view .fleet-drawer,
+.mob-phone-frame .fleet-drawer {
+  position: absolute !important;
+  inset: auto 0 0 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 85% !important;
+  max-height: 85% !important;
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+  border-left: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  transform: translateY(100%) !important;
+  box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.95) !important;
+  background: #09090b !important;
+  z-index: 90 !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s !important;
+}
+
+.is-mobile-view .fleet-drawer.open,
+.mob-phone-frame .fleet-drawer.open {
+  transform: translateY(0) !important;
+}
+
+@media (max-width: 768px) {
+  .fleet-drawer {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 85% !important;
+    max-height: 85% !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+    transform: translateY(100%) !important;
+    box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.95) !important;
+    background: #09090b !important;
+    z-index: 90 !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s !important;
+  }
+  .fleet-drawer.open {
+    transform: translateY(0) !important;
+  }
+}
+
+.fleet-drawer-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fleet-drawer-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #000000;
+}
+
+/* Switch track & thumb */
+.switch-track {
+  width: 36px;
+  height: 20px;
+  background: #242836;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.switch-track.active {
+  background: #06c167;
+}
+
+.switch-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border-radius: 999px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.switch-track.active .switch-thumb {
+  transform: translateX(16px);
+}
+
+/* ── Floating Batch Dock ── */
+.fleet-batch-dock {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: rgba(13, 15, 22, 0.96);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 0.65rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+  z-index: 50;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, visibility 0.2s;
+  max-width: calc(100vw - 2rem);
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.fleet-batch-dock.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+@media (max-width: 768px) {
+  .fleet-batch-dock {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 2rem);
+    padding: 0.6rem 0.85rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+/* ── Glass Modals & Dialogs (Pure OLED Black) ── */
+.glass-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  box-sizing: border-box;
+}
+
+/* Mobile Bottom Sheet & Chassis Containment */
+.mob-phone-frame .glass-modal-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  align-items: flex-end !important;
+  padding: 0 !important;
+  z-index: 100 !important;
+}
+
+@media (max-width: 768px) {
+  .glass-modal-overlay,
+  .is-mobile-view .glass-modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    z-index: 99999 !important;
+  }
+}
+
+.modal-bottom-sheet {
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 85% !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
+  animation: slideUpMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpMobile {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-drag-handle {
+  width: 38px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 0.6rem auto 0.2rem auto;
+}
+
+.glass-modal-box {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(720px, calc(100vh - 2.5rem));
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.glass-modal-box form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.glass-modal-header {
+  padding: 1rem 1.25rem;
+  background: #050505;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.glass-modal-body {
+  padding: 1.1rem 1.25rem;
+  background: #080808;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-sizing: border-box;
+}
+
+.glass-modal-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.glass-modal-body::-webkit-scrollbar-track {
+  background: #080808;
+}
+
+.glass-modal-body::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+.glass-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+.modal-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #a1a1aa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+/* OS Selector Grid */
+.modal-os-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 500px) {
+  .modal-os-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.modal-os-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.65rem 0.5rem;
+  border-radius: 10px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.modal-os-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.modal-os-card.active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
+}
+
+.modal-os-card.active svg {
+  color: #000000;
+}
+
+/* Modern Input Controls */
+.modal-input {
+  width: 100%;
+  height: 2.35rem;
+  padding: 0 0.85rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px #ffffff;
+}
+
+.modal-input::placeholder {
+  color: #52525b;
+}
+
+.modal-textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  resize: vertical;
+}
+
+.modal-textarea:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px #ffffff;
+}
+
+.modal-textarea::placeholder {
+  color: #52525b;
+}
+
+/* Modal Footer */
+.glass-modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* ── Action Strips: Desktop vs Mobile ── */
+.desktop-actions-only {
+  display: flex;
+}
+
+.mobile-actions-only {
+  display: none !important;
+}
+
+.mobile-actions-carousel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.25rem 0;
+  width: 100%;
+}
+.mobile-actions-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* AVISO DE QUE LA FILA SIGUE.
+ *
+ * Hay cinco acciones (Nuevo, Fantasma, Test Red, Rotar IP y una quinta) y en
+ * un movil de 360 px solo caben tres y media. La ultima se veia cortada por el
+ * borde derecho, sin ningun indicio: es un boton real (rotar la IP) que el
+ * usuario no descubriria que existe.
+ *
+ * El degradado NO se pone siempre, solo cuando la fila desborda. Ponerlo
+ * siempre seria un defecto: en un movil ancho, donde todo cabe, se veria un
+ * borde difuminado sobre el ultimo boton sin motivo. Por eso la clase
+ * .has-overflow la pone el componente, que mide el desbordamiento real.
+ *
+ * El margen de padding-right deja sitio al propio boton al final del recorrido,
+ * para que tampoco quede cortado al desplazarlo entero.
+ *
+ * El degradado es negro porque el fondo de la tarjeta es negro; si cambia el
+ * fondo, hay que cambiar esto tambien.
+ */
+@media (max-width: 768px) {
+  .mobile-actions-carousel.has-overflow {
+    padding-right: 1.5rem;
+    -webkit-mask-image: linear-gradient(to right, #000 88%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 88%, transparent 100%);
+  }
+}
+
+.btn-mob-primary {
+  height: 2.25rem;
+  padding: 0 0.95rem;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  border: none;
+  transition: all 0.12s ease;
+}
+.btn-mob-primary:active {
+  transform: scale(0.96);
+  background: #e5e5e5;
+}
+
+.btn-mob-chip {
+  height: 2.25rem;
+  padding: 0 0.8rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e4e4e7;
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.btn-mob-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.btn-mob-chip:active {
+  transform: scale(0.96);
+}
+
+/* ── Responsive Mobile Cards Layout ── */
+.desktop-table-only {
+  display: block;
+}
+
+.mobile-cards-only {
+  display: none;
+}
+
+.fleet-mobile-card {
+  background: #0d0d10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.fleet-mobile-card:hover {
+  background: #121216;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.fleet-mobile-card.running {
+  border-left: 3px solid #10b981;
+  background: rgba(16, 185, 129, 0.03);
+}
+
+.fleet-mobile-card.selected {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Scoped Mobile Adaptations (Supports native screen width, mobile mode, or chassis preview) */
+.is-mobile-view,
+.mob-phone-frame .fleet-profiles-view {
+  padding: 0.85rem 0.85rem calc(88px + env(safe-area-inset-bottom, 0px)) 0.85rem !important;
+}
+
+.is-mobile-view .desktop-actions-only,
+.mob-phone-frame .desktop-actions-only {
+  display: none !important;
+}
+
+.is-mobile-view .mobile-actions-only,
+.mob-phone-frame .mobile-actions-only {
+  display: flex !important;
+}
+
+.is-mobile-view .desktop-table-only,
+.mob-phone-frame .desktop-table-only {
+  display: none !important;
+}
+
+.is-mobile-view .mobile-cards-only,
+.mob-phone-frame .mobile-cards-only {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.is-mobile-view .fleet-toolbar,
+.mob-phone-frame .fleet-toolbar {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.65rem !important;
+  margin-bottom: 0.85rem !important;
+}
+
+.is-mobile-view .fleet-search-wrap,
+.mob-phone-frame .fleet-search-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.is-mobile-view .fleet-metrics-grid,
+.mob-phone-frame .fleet-metrics-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 0.5rem !important;
+  margin-bottom: 0.85rem !important;
+}
+
+.is-mobile-view .fleet-metric-card,
+.mob-phone-frame .fleet-metric-card {
+  padding: 0.75rem !important;
+  border-radius: 12px !important;
+}
+
+.is-mobile-view .fleet-metric-val,
+.mob-phone-frame .fleet-metric-val {
+  font-size: 1.25rem !important;
+}
+
+.is-mobile-view .fleet-sub-header,
+.mob-phone-frame .fleet-sub-header {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 0.5rem !important;
+  padding: 0 0 0.5rem 0 !important;
+}
+
+.is-mobile-view .fleet-table-card,
+.mob-phone-frame .fleet-table-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-actions-only {
+    display: none !important;
+  }
+  .mobile-actions-only {
+    display: flex !important;
+  }
+  .desktop-table-only {
+    display: none !important;
+  }
+  .mobile-cards-only {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .fleet-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.65rem !important;
+  }
+  .fleet-search-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .fleet-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+  .fleet-table-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kraken Ges</string>
+    <string name="title_activity_main">Kraken Ges</string>
+    <string name="title_activity_browser">Kraken Ges Browser</string>
+    <string name="package_name">com.krakenges.fleet</string>
+    <string name="custom_url_scheme">com.krakenges.fleet</string>
+</resources>

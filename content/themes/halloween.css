@@ -1,0 +1,846 @@
+/*
+ * Tema Halloween 2026 para Kraken Ges.
+ *
+ * Se publica con el contenido (`theme.css`) y la app lo inyecta en caliente.
+ * No usa fuentes ni imágenes externas: todo es CSS para que funcione igual en
+ * escritorio, APK y webview sin depender de otra descarga.
+ *
+ * Paleta: noche #07060a, cripta #100c16, panel #15101f, naranja #ff7a18,
+ * ambar #f5a524, violeta #8b5cf6, hueso #f5efe6.
+ */
+
+html[data-theme="halloween"] {
+  color-scheme: dark;
+  --h-night: #07060a;
+  --h-crypt: #100c16;
+  --h-panel: #15101f;
+  --h-panel-2: #1b1526;
+  --h-line: rgba(243, 232, 216, 0.1);
+  --h-line-strong: rgba(255, 122, 24, 0.32);
+  --h-orange: #ff7a18;
+  --h-orange-2: #e2570b;
+  --h-amber: #f5a524;
+  --h-violet: #8b5cf6;
+  --h-bone: #f5efe6;
+  --h-muted: #a79daf;
+  --h-dim: #706779;
+  --h-green: #3ddc97;
+  --h-glow: 0 18px 48px rgba(0, 0, 0, 0.46);
+}
+
+/* ── Lienzo general ─────────────────────────────────────────── */
+
+html[data-theme="halloween"],
+html[data-theme="halloween"] body,
+html[data-theme="halloween"] #root {
+  background-color: var(--h-night) !important;
+  color: var(--h-bone);
+}
+
+html[data-theme="halloween"] body {
+  background-image:
+    radial-gradient(circle at 12% -8%, rgba(255, 122, 24, 0.12), transparent 34%),
+    radial-gradient(circle at 92% 4%, rgba(139, 92, 246, 0.14), transparent 30%),
+    linear-gradient(180deg, #09070d 0%, var(--h-night) 45%, #050408 100%);
+  background-attachment: fixed;
+}
+
+html[data-theme="halloween"] .app-layout,
+html[data-theme="halloween"] .app-main,
+html[data-theme="halloween"] .app-content,
+html[data-theme="halloween"] .fleet-dashboard,
+html[data-theme="halloween"] .fleet-profiles-view,
+html[data-theme="halloween"] .fleet-sessions-view,
+html[data-theme="halloween"] .fleet-plans-view,
+html[data-theme="halloween"] .settings-view,
+html[data-theme="halloween"] .admin-panel-view,
+html[data-theme="halloween"] .mob-native-screen,
+html[data-theme="halloween"] .mob-phone-screen {
+  background-color: transparent !important;
+  color: var(--h-bone);
+}
+
+html[data-theme="halloween"] .app-layout {
+  background-image:
+    radial-gradient(circle at 8% 8%, rgba(255, 122, 24, 0.08), transparent 28%),
+    radial-gradient(circle at 96% 88%, rgba(139, 92, 246, 0.09), transparent 30%),
+    linear-gradient(145deg, #0b0810 0%, var(--h-night) 50%, #050408 100%) !important;
+}
+
+html[data-theme="halloween"] .app-content,
+html[data-theme="halloween"] .fleet-dashboard,
+html[data-theme="halloween"] .fleet-profiles-view,
+html[data-theme="halloween"] .fleet-sessions-view,
+html[data-theme="halloween"] .fleet-plans-view,
+html[data-theme="halloween"] .settings-view {
+  background-image:
+    radial-gradient(circle at 14% 0%, rgba(255, 122, 24, 0.07), transparent 28%),
+    radial-gradient(circle at 88% 100%, rgba(139, 92, 246, 0.07), transparent 32%) !important;
+}
+
+html[data-theme="halloween"] .app-topbar {
+  background: rgba(16, 12, 22, 0.92) !important;
+  border-bottom-color: var(--h-line-strong) !important;
+  backdrop-filter: blur(18px);
+}
+
+html[data-theme="halloween"] .app-topbar-title {
+  color: var(--h-bone) !important;
+}
+
+/* ── Tipografía y superficies ───────────────────────────────── */
+
+html[data-theme="halloween"] h1,
+html[data-theme="halloween"] h2,
+html[data-theme="halloween"] h3,
+html[data-theme="halloween"] h4,
+html[data-theme="halloween"] .fleet-dash-title,
+html[data-theme="halloween"] .sessions-title,
+html[data-theme="halloween"] .settings-title,
+html[data-theme="halloween"] .plans-matrix-h3,
+html[data-theme="halloween"] .content-subsection-title {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] p,
+html[data-theme="halloween"] .fleet-dash-card-sub,
+html[data-theme="halloween"] .fleet-dash-panel-subtitle,
+html[data-theme="halloween"] .settings-subtitle,
+html[data-theme="halloween"] .sessions-subtitle,
+html[data-theme="halloween"] .plans-summary-desc,
+html[data-theme="halloween"] .plans-tier-desc,
+html[data-theme="halloween"] .content-subsection-note,
+html[data-theme="halloween"] .content-field-key,
+html[data-theme="halloween"] .desk-hero-desc,
+html[data-theme="halloween"] .mob-subtitle {
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] .fleet-dash-badge,
+html[data-theme="halloween"] .fleet-dash-plan-chip,
+html[data-theme="halloween"] .sessions-version-pill,
+html[data-theme="halloween"] .settings-badge,
+html[data-theme="halloween"] .content-version-chip {
+  background: rgba(255, 122, 24, 0.09) !important;
+  border-color: var(--h-line-strong) !important;
+  color: var(--h-amber) !important;
+}
+
+/* ── Tarjetas, paneles y tablas ─────────────────────────────── */
+
+html[data-theme="halloween"] :is(
+  .fleet-dash-card,
+  .fleet-dash-panel,
+  .fleet-metric-card,
+  .fleet-table-card,
+  .fleet-mobile-card,
+  .sessions-card,
+  .plans-summary-card,
+  .plans-tier-card,
+  .plans-history-card,
+  .plans-advisor-card,
+  .plans-seller-card,
+  .plans-redeem-box,
+  .settings-card,
+  .content-theme-card,
+  .content-plan-card,
+  .content-history-row,
+  .content-modal,
+  .glass-modal-box,
+  .fleet-drawer-content,
+  .pfm-card,
+  .desk-master-card,
+  .mob-hero-card,
+  .mob-stat-card,
+  .mob-quick-tile,
+  .mob-session-card,
+  .mob-section
+) {
+  background: linear-gradient(145deg, rgba(27, 21, 38, 0.9), rgba(10, 7, 15, 0.96)) !important;
+  border-color: var(--h-line) !important;
+  box-shadow: var(--h-glow);
+}
+
+html[data-theme="halloween"] :is(
+  .fleet-dash-card,
+  .fleet-metric-card,
+  .fleet-mobile-card,
+  .plans-tier-card,
+  .settings-card,
+  .mob-quick-tile
+):hover {
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .plans-tier-card.featured,
+html[data-theme="halloween"] .fleet-dash-card.fleet-dash-status-online,
+html[data-theme="halloween"] .fleet-mobile-card.running,
+html[data-theme="halloween"] .fleet-row.running {
+  border-color: var(--h-line-strong) !important;
+  box-shadow: 0 0 0 1px rgba(255, 122, 24, 0.12), var(--h-glow);
+}
+
+html[data-theme="halloween"] .fleet-dash-card-head,
+html[data-theme="halloween"] .sessions-header,
+html[data-theme="halloween"] .settings-header,
+html[data-theme="halloween"] .plans-summary-top,
+html[data-theme="halloween"] .plans-matrix-header,
+html[data-theme="halloween"] .content-modal-header,
+html[data-theme="halloween"] .fleet-drawer-footer {
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .fleet-thead,
+html[data-theme="halloween"] .fleet-sub-header,
+html[data-theme="halloween"] .sessions-table th,
+html[data-theme="halloween"] .plans-history-table th {
+  background: rgba(255, 122, 24, 0.06) !important;
+  border-color: var(--h-line) !important;
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] .fleet-row,
+html[data-theme="halloween"] .sessions-table td,
+html[data-theme="halloween"] .plans-history-table td,
+html[data-theme="halloween"] .fleet-td,
+html[data-theme="halloween"] .fleet-th {
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .fleet-row:hover,
+html[data-theme="halloween"] .sessions-table tr:hover td {
+  background: rgba(255, 122, 24, 0.055) !important;
+}
+
+html[data-theme="halloween"] .fleet-dash-card-value,
+html[data-theme="halloween"] .fleet-metric-val,
+html[data-theme="halloween"] .plans-tier-price,
+html[data-theme="halloween"] .mob-stat-value,
+html[data-theme="halloween"] .mob-hero-title {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .fleet-dash-card-label,
+html[data-theme="halloween"] .fleet-metric-sub,
+html[data-theme="halloween"] .plans-matrix-eyebrow,
+html[data-theme="halloween"] .content-plan-id,
+html[data-theme="halloween"] .content-history-meta {
+  color: var(--h-dim) !important;
+}
+
+/* ── Barra lateral ──────────────────────────────────────────── */
+
+html[data-theme="halloween"] .uber-sidebar {
+  background: linear-gradient(180deg, #120d1a 0%, #0b0810 62%, #07050a 100%) !important;
+  border-right-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .uber-sidebar-header,
+html[data-theme="halloween"] .uber-nav-section {
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .uber-brand-badge,
+html[data-theme="halloween"] .desk-logo-box,
+html[data-theme="halloween"] .mob-logo-box {
+  background: linear-gradient(145deg, #2a1730, #0a0710) !important;
+  border-color: var(--h-line-strong) !important;
+  box-shadow: 0 0 22px rgba(255, 122, 24, 0.2) !important;
+}
+
+html[data-theme="halloween"] .uber-brand-name,
+html[data-theme="halloween"] .desk-brand-name,
+html[data-theme="halloween"] .mob-title {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .uber-brand-caption,
+html[data-theme="halloween"] .desk-brand-badge,
+html[data-theme="halloween"] .mob-version-badge {
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .uber-brand-caption::after {
+  content: " · HALLOWEEN 2026";
+  color: var(--h-orange);
+  letter-spacing: 0.08em;
+}
+
+html[data-theme="halloween"] .uber-nav-btn {
+  color: var(--h-muted) !important;
+  border-color: transparent !important;
+}
+
+html[data-theme="halloween"] .uber-nav-btn:hover {
+  background: rgba(255, 122, 24, 0.08) !important;
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .uber-nav-btn.active {
+  background: linear-gradient(90deg, rgba(255, 122, 24, 0.22), rgba(255, 122, 24, 0.035)) !important;
+  border-color: rgba(255, 122, 24, 0.24) !important;
+  color: var(--h-bone) !important;
+  box-shadow: inset 2px 0 0 var(--h-orange);
+}
+
+html[data-theme="halloween"] .uber-nav-btn.active svg,
+html[data-theme="halloween"] .uber-nav-btn.active .uber-nav-icon {
+  color: var(--h-orange) !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme="halloween"] .uber-live-dot,
+html[data-theme="halloween"] .desk-live-dot,
+html[data-theme="halloween"] .sessions-live-dot,
+html[data-theme="halloween"] .fleet-live-pulse-dot,
+html[data-theme="halloween"] .mob-pulse-dot {
+  background: var(--h-orange) !important;
+  box-shadow: 0 0 10px rgba(255, 122, 24, 0.8) !important;
+}
+
+html[data-theme="halloween"] .uber-user-card {
+  background: rgba(255, 122, 24, 0.045) !important;
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .uber-user-avatar {
+  background: #21152c !important;
+  border-color: var(--h-line-strong) !important;
+  color: var(--h-amber);
+}
+
+html[data-theme="halloween"] .uber-avatar-beacon {
+  background: var(--h-orange) !important;
+  border-color: var(--h-night) !important;
+}
+
+html[data-theme="halloween"] .uber-user-name {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .uber-role-bar,
+html[data-theme="halloween"] .uber-role-pill {
+  background: rgba(245, 165, 36, 0.09) !important;
+  border-color: rgba(245, 165, 36, 0.3) !important;
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .uber-logout-btn:hover {
+  color: var(--h-orange) !important;
+}
+
+/* ── Botones ───────────────────────────────────────────────── */
+
+html[data-theme="halloween"] :is(
+  .btn-dash-primary,
+  .btn-fleet-primary,
+  .btn-mob-primary,
+  .btn-start,
+  .settings-btn-primary,
+  .admin-btn-primary,
+  .desk-submit-btn,
+  .master-btn-submit,
+  .mob-btn-action,
+  .plans-redeem-btn,
+  .plans-seller-mint-btn,
+  .fleet-btn-start,
+  .fleet-list-retry,
+  .plans-card-btn-active
+) {
+  background: linear-gradient(135deg, #ff9a3c 0%, var(--h-orange) 48%, var(--h-orange-2) 100%) !important;
+  border-color: rgba(255, 154, 60, 0.72) !important;
+  color: #1a0b03 !important;
+  box-shadow: 0 10px 26px rgba(255, 122, 24, 0.18) !important;
+}
+
+html[data-theme="halloween"] :is(
+  .btn-dash-primary,
+  .btn-fleet-primary,
+  .btn-mob-primary,
+  .btn-start,
+  .settings-btn-primary,
+  .admin-btn-primary,
+  .desk-submit-btn,
+  .master-btn-submit,
+  .mob-btn-action,
+  .plans-redeem-btn,
+  .plans-seller-mint-btn,
+  .fleet-btn-start,
+  .fleet-list-retry,
+  .plans-card-btn-active
+) :is(span, strong, small, svg) {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme="halloween"] :is(
+  .btn-dash-secondary,
+  .btn-fleet-secondary,
+  .settings-btn-secondary,
+  .admin-btn-secondary,
+  .desk-footer-btn,
+  .master-footer-link,
+  .fleet-btn-icon,
+  .content-icon-btn,
+  .plans-card-btn-available,
+  .plans-billing-btn
+) {
+  background: rgba(16, 12, 22, 0.86) !important;
+  border-color: var(--h-line) !important;
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] :is(
+  .btn-dash-secondary,
+  .btn-fleet-secondary,
+  .settings-btn-secondary,
+  .admin-btn-secondary,
+  .desk-footer-btn,
+  .master-footer-link,
+  .fleet-btn-icon,
+  .content-icon-btn,
+  .plans-card-btn-available,
+  .plans-billing-btn
+):hover {
+  border-color: var(--h-line-strong) !important;
+  color: var(--h-bone) !important;
+  background: rgba(255, 122, 24, 0.08) !important;
+}
+
+html[data-theme="halloween"] :is(
+  .desk-submit-btn,
+  .settings-btn-primary,
+  .admin-btn-primary,
+  .btn-dash-primary,
+  .btn-mob-primary
+):disabled {
+  opacity: 0.5 !important;
+  filter: none !important;
+}
+
+html[data-theme="halloween"] .fleet-btn-stop {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.32) !important;
+  color: #ff8b8b !important;
+}
+
+html[data-theme="halloween"] .plans-billing-btn.active,
+html[data-theme="halloween"] .fleet-filter-pill.active,
+html[data-theme="halloween"] .sessions-filter-btn.active,
+html[data-theme="halloween"] .admin-tab-btn.active {
+  background: rgba(255, 122, 24, 0.14) !important;
+  border-color: var(--h-line-strong) !important;
+  color: var(--h-amber) !important;
+}
+
+/* ── Formularios ───────────────────────────────────────────── */
+
+html[data-theme="halloween"] :is(
+  .desk-input,
+  .master-input,
+  .mob-input,
+  .settings-text-input,
+  .modal-input,
+  .plans-redeem-input,
+  .plans-seller-input,
+  .plans-seller-select,
+  .fleet-search-input,
+  .content-input,
+  .content-textarea,
+  .content-select,
+  .pfm-input
+) {
+  background-color: #0b0710 !important;
+  border-color: var(--h-line) !important;
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] :is(
+  .desk-input,
+  .master-input,
+  .mob-input,
+  .settings-text-input,
+  .modal-input,
+  .plans-redeem-input,
+  .plans-seller-input,
+  .plans-seller-select,
+  .fleet-search-input,
+  .content-input,
+  .content-textarea,
+  .content-select,
+  .pfm-input
+):focus {
+  border-color: var(--h-orange) !important;
+  box-shadow: 0 0 0 1px rgba(255, 122, 24, 0.28) !important;
+}
+
+html[data-theme="halloween"] :is(
+  .desk-input,
+  .master-input,
+  .mob-input,
+  .settings-text-input,
+  .modal-input,
+  .plans-redeem-input,
+  .plans-seller-input,
+  .content-input,
+  .content-textarea,
+  .fleet-search-input
+)::placeholder {
+  color: #6f6678 !important;
+}
+
+html[data-theme="halloween"] .desk-input-box,
+html[data-theme="halloween"] .mob-input-slot,
+html[data-theme="halloween"] .desk-field {
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .settings-switch input:checked + .settings-switch-slider {
+  background: var(--h-orange) !important;
+}
+
+html[data-theme="halloween"] input[type="checkbox"],
+html[data-theme="halloween"] input[type="radio"] {
+  accent-color: var(--h-orange);
+}
+
+/* ── Badges de estado ──────────────────────────────────────── */
+
+html[data-theme="halloween"] :is(
+  .fleet-badge-active,
+  .fleet-status-pill.running,
+  .mob-live-badge,
+  .mob-status-tag,
+  .desk-live-pill
+) {
+  background: rgba(61, 220, 151, 0.1) !important;
+  border-color: rgba(61, 220, 151, 0.28) !important;
+  color: var(--h-green) !important;
+}
+
+html[data-theme="halloween"] .fleet-badge-stopped,
+html[data-theme="halloween"] .fleet-status-pill.stopped {
+  background: rgba(167, 157, 175, 0.08) !important;
+  border-color: var(--h-line) !important;
+  color: var(--h-muted) !important;
+}
+
+/* ── Login de escritorio ───────────────────────────────────── */
+
+html[data-theme="halloween"] .desk-auth-screen {
+  background:
+    radial-gradient(circle at 15% 12%, rgba(255, 122, 24, 0.14), transparent 28%),
+    radial-gradient(circle at 86% 8%, rgba(139, 92, 246, 0.18), transparent 30%),
+    radial-gradient(circle at 50% 110%, rgba(255, 122, 24, 0.07), transparent 44%),
+    #050408 !important;
+}
+
+html[data-theme="halloween"] .desk-auth-screen::before {
+  content: "";
+  position: fixed;
+  top: 6vh;
+  right: 7vw;
+  width: clamp(110px, 13vw, 190px);
+  height: clamp(110px, 13vw, 190px);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle at 38% 35%, #ffe1b8 0%, #f5a524 38%, #ff7a18 58%, transparent 70%);
+  filter: blur(0.4px);
+  opacity: 0.32;
+  box-shadow: 0 0 80px rgba(255, 122, 24, 0.22);
+}
+
+html[data-theme="halloween"] .desk-auth-screen::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image:
+    repeating-radial-gradient(circle at 0 0, rgba(245, 165, 36, 0.75) 0 1px, transparent 1px 34px),
+    repeating-conic-gradient(from 0deg at 0 0, rgba(245, 165, 36, 0.6) 0deg 0.55deg, transparent 0.55deg 30deg);
+  background-size: 220px 220px, 220px 220px;
+  background-repeat: no-repeat;
+  mask-image: linear-gradient(135deg, #000 0%, transparent 42%);
+  -webkit-mask-image: linear-gradient(135deg, #000 0%, transparent 42%);
+}
+
+html[data-theme="halloween"] .desk-master-rim {
+  background: linear-gradient(135deg, rgba(255, 154, 60, 0.72) 0%, rgba(139, 92, 246, 0.22) 46%, rgba(245, 165, 36, 0.55) 100%) !important;
+  box-shadow:
+    0 40px 110px -20px rgba(0, 0, 0, 1),
+    0 0 70px rgba(255, 122, 24, 0.13) !important;
+}
+
+html[data-theme="halloween"] .desk-master-card {
+  background: rgba(11, 7, 16, 0.96) !important;
+}
+
+html[data-theme="halloween"] .desk-showcase-pane {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 122, 24, 0.1), transparent 44%),
+    linear-gradient(180deg, rgba(255, 122, 24, 0.055), transparent 70%) !important;
+  border-right-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .desk-hero-title span {
+  color: var(--h-orange) !important;
+}
+
+html[data-theme="halloween"] .desk-brand-badge {
+  background: rgba(255, 122, 24, 0.1) !important;
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .desk-real-widget {
+  background: rgba(255, 122, 24, 0.035) !important;
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .desk-real-widget:hover {
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .desk-widget-title,
+html[data-theme="halloween"] .desk-cell-val {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .desk-cell-head,
+html[data-theme="halloween"] .desk-widget-top {
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] .desk-check-icon {
+  color: var(--h-orange) !important;
+  background: rgba(255, 122, 24, 0.1) !important;
+}
+
+html[data-theme="halloween"] .desk-tab-switcher {
+  background: #0b0710 !important;
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .desk-tab-trigger {
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] .desk-tab-trigger.active {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .desk-tab-slider {
+  background: rgba(255, 122, 24, 0.16) !important;
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .desk-forgot-link,
+html[data-theme="halloween"] .desk-demo-btn {
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .desk-error-banner,
+html[data-theme="halloween"] .mob-error-banner {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+/* ── Login móvil ───────────────────────────────────────────── */
+
+html[data-theme="halloween"] .mob-native-screen {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 122, 24, 0.12), transparent 32%),
+    radial-gradient(circle at 90% 100%, rgba(139, 92, 246, 0.12), transparent 34%),
+    #050408 !important;
+}
+
+html[data-theme="halloween"] .mob-logo-box {
+  box-shadow: 0 0 26px rgba(255, 122, 24, 0.2) !important;
+}
+
+html[data-theme="halloween"] .mob-tab-switch {
+  background: #0b0710 !important;
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .mob-tab-indicator {
+  background: rgba(255, 122, 24, 0.16) !important;
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .mob-checklist,
+html[data-theme="halloween"] .mob-check-icon {
+  color: var(--h-orange) !important;
+}
+
+html[data-theme="halloween"] .mob-forgot-link,
+html[data-theme="halloween"] .mob-footer-link {
+  color: var(--h-amber) !important;
+}
+
+/* ── Dashboard móvil ───────────────────────────────────────── */
+
+html[data-theme="halloween"] .mob-hero-card {
+  background:
+    radial-gradient(circle at 85% 8%, rgba(255, 122, 24, 0.18), transparent 42%),
+    linear-gradient(145deg, #1c1327 0%, #0d0913 100%) !important;
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .mob-hero-bg-glow {
+  background: radial-gradient(circle, rgba(255, 122, 24, 0.3), transparent 70%) !important;
+}
+
+html[data-theme="halloween"] .mob-hero-tag,
+html[data-theme="halloween"] .mob-plan-chip,
+html[data-theme="halloween"] .mob-section-badge {
+  background: rgba(255, 122, 24, 0.1) !important;
+  border-color: var(--h-line-strong) !important;
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .mob-quick-icon,
+html[data-theme="halloween"] .mob-stat-icon-wrap {
+  background: rgba(255, 122, 24, 0.1) !important;
+  border-color: var(--h-line) !important;
+  color: var(--h-orange) !important;
+}
+
+html[data-theme="halloween"] .mob-btn-create-profile,
+html[data-theme="halloween"] .mob-btn-toggle-session {
+  background: linear-gradient(135deg, #ff9a3c, var(--h-orange-2)) !important;
+  border-color: rgba(255, 154, 60, 0.7) !important;
+  color: #1a0b03 !important;
+}
+
+html[data-theme="halloween"] .mob-btn-create-profile svg,
+html[data-theme="halloween"] .mob-btn-toggle-session svg {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme="halloween"] .mob-nav-item.active,
+html[data-theme="halloween"] .mobile-nav-item.active {
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .mobile-bottom-nav,
+html[data-theme="halloween"] .mob-phone-bottom-bar {
+  background: rgba(12, 8, 17, 0.96) !important;
+  border-top-color: var(--h-line-strong) !important;
+  backdrop-filter: blur(18px);
+}
+
+html[data-theme="halloween"] .mobile-nav-indicator,
+html[data-theme="halloween"] .mob-nav-indicator {
+  background: var(--h-orange) !important;
+  box-shadow: 0 0 10px rgba(255, 122, 24, 0.7) !important;
+}
+
+html[data-theme="halloween"] .mob-phone-frame {
+  border-color: var(--h-line-strong) !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 122, 24, 0.08) !important;
+}
+
+/* ── Planes y contenido ────────────────────────────────────── */
+
+html[data-theme="halloween"] .plans-tier-code,
+html[data-theme="halloween"] .fleet-dash-card-label,
+html[data-theme="halloween"] .content-preview-eyebrow {
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .plans-tier-tag.recommended {
+  background: rgba(255, 122, 24, 0.12) !important;
+  border-color: var(--h-line-strong) !important;
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .plans-feature-item svg {
+  color: var(--h-green) !important;
+}
+
+html[data-theme="halloween"] .plans-feature-item.negative {
+  color: var(--h-dim) !important;
+}
+
+html[data-theme="halloween"] .content-version-chip {
+  color: var(--h-amber) !important;
+}
+
+html[data-theme="halloween"] .content-field label {
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] .admin-tab-switcher {
+  background: rgba(16, 12, 22, 0.8) !important;
+  border-color: var(--h-line) !important;
+}
+
+html[data-theme="halloween"] .admin-tab-btn {
+  color: var(--h-muted) !important;
+}
+
+html[data-theme="halloween"] .admin-tab-btn:hover {
+  color: var(--h-bone) !important;
+}
+
+html[data-theme="halloween"] .content-theme-css {
+  background-image:
+    linear-gradient(rgba(255, 122, 24, 0.025) 1px, transparent 1px);
+  background-size: 100% 1.55em;
+}
+
+html[data-theme="halloween"] .content-preview-hero h3 span {
+  color: var(--h-orange) !important;
+}
+
+html[data-theme="halloween"] .content-preview-plan {
+  background: rgba(255, 122, 24, 0.04) !important;
+  border-color: var(--h-line) !important;
+}
+
+/* ── Carga y detalles ──────────────────────────────────────── */
+
+html[data-theme="halloween"] .app-loading {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 122, 24, 0.13), transparent 38%),
+    #050408 !important;
+}
+
+html[data-theme="halloween"] .app-loading-inner {
+  background: rgba(16, 12, 22, 0.8) !important;
+  border-color: var(--h-line-strong) !important;
+}
+
+html[data-theme="halloween"] .app-loading-progress-beam {
+  background: linear-gradient(90deg, transparent, var(--h-orange), transparent) !important;
+}
+
+html[data-theme="halloween"] ::selection {
+  background: rgba(255, 122, 24, 0.35);
+  color: #fff7ed;
+}
+
+html[data-theme="halloween"] * {
+  scrollbar-color: rgba(255, 122, 24, 0.35) rgba(16, 12, 22, 0.6);
+}
+
+html[data-theme="halloween"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 122, 24, 0.28) !important;
+  border-radius: 999px;
+}
+
+html[data-theme="halloween"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 122, 24, 0.48) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="halloween"] *,
+  html[data-theme="halloween"] *::before,
+  html[data-theme="halloween"] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

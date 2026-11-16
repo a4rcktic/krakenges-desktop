@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Planes & Cuotas de Flota (Uber Fleet)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            uber: {
+              black: '#000000',
+              canvas: '#060608',
+              sidebar: '#0a0b0f',
+              surface: '#0e1017',
+              card: '#131620',
+              cardHover: '#181c28',
+              border: 'rgba(255, 255, 255, 0.07)',
+              borderSubtle: 'rgba(255, 255, 255, 0.035)',
+              borderHover: 'rgba(255, 255, 255, 0.15)',
+              textPrimary: '#ffffff',
+              textSecondary: '#9499ad',
+              textMuted: '#5d6375',
+              green: '#06c167',
+              greenDark: '#048c4a',
+              amber: '#f59e0b',
+              red: '#ef4444',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .uber-card {
+      background: #0e1017;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .uber-card:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+    .btn-tactile {
+      transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn-tactile:active {
+      transform: scale(0.96);
+    }
+    .pulse-beacon {
+      animation: beacon-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes beacon-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.85); }
+    }
+    /* Collapsible Sidebar Styles */
+    #app-sidebar {
+      transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #app-sidebar.collapsed {
+      width: 70px !important;
+    }
+    #app-sidebar.collapsed .sidebar-label,
+    #app-sidebar.collapsed .sidebar-badge,
+    #app-sidebar.collapsed .sidebar-section-title,
+    #app-sidebar.collapsed .sidebar-user-details,
+    #app-sidebar.collapsed .sidebar-brand-text {
+      display: none !important;
+    }
+    #app-sidebar.collapsed .sidebar-toggle-btn {
+      display: none !important;
+    }
+    #app-sidebar.collapsed nav {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-btn {
+      justify-content: center !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      width: 100% !important;
+    }
+    #app-sidebar.collapsed .sidebar-btn > div {
+      justify-content: center !important;
+      gap: 0 !important;
+    }
+    #app-sidebar.collapsed .sidebar-brand-inner {
+      justify-content: center !important;
+      width: 100% !important;
+      cursor: pointer;
+    }
+    #app-sidebar.collapsed .sidebar-brand {
+      justify-content: center !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-footer {
+      padding: 0.75rem 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-footer-header {
+      display: none !important;
+    }
+    #app-sidebar.collapsed .sidebar-user-box {
+      justify-content: center !important;
+      padding: 0.5rem !important;
+    }
+    #app-sidebar.collapsed .sidebar-user-box button {
+      display: none !important;
+    }
+    #app-sidebar.collapsed .sidebar-section-divider {
+      display: block !important;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 10px 8px;
+    }
+    .pricing-card-popular {
+      background: linear-gradient(180deg, #161926 0%, #0d0f17 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden select-none bg-black">
+
+  <!-- LEFT SIDEBAR: PURE LUCIDE & VECTOR ICONOGRAPHY (COLLAPSIBLE) -->
+  <aside id="app-sidebar" class="w-64 border-r border-uber-border bg-uber-sidebar flex flex-col justify-between shrink-0 select-none">
+    <div>
+      <!-- Brand Header -->
+      <div class="h-16 px-5 flex items-center justify-between border-b border-uber-borderSubtle sidebar-brand">
+        <div onclick="if(isSidebarCollapsed) toggleSidebar()" class="sidebar-brand-inner flex items-center gap-3 overflow-hidden" title="Kraken Ges Core (Click para expandir)">
+          <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center font-black text-black text-sm tracking-tighter shadow-sm shrink-0">
+            <i data-lucide="shield" class="w-4 h-4 fill-black text-black"></i>
+          </div>
+          <div class="flex flex-col sidebar-brand-text">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-base tracking-tight text-white leading-none">Kraken Ges</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-neutral-300 font-bold">FLEET</span>
+            </div>
+            <span class="text-[10px] font-mono text-uber-textMuted uppercase tracking-widest mt-1">Enterprise Core</span>
+          </div>
+        </div>
+
+        <button onclick="toggleSidebar()" class="sidebar-toggle-btn text-uber-textMuted hover:text-white transition p-1.5 rounded-lg hover:bg-white/5" title="Colapsar / Desplegar Barra Lateral (Ctrl+B)">
+          <i id="sidebar-toggle-icon" data-lucide="panel-left-close" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="p-3.5 space-y-1 font-sans text-xs">
+        <div class="sidebar-section-title text-[10px] font-mono tracking-wider uppercase text-uber-textMuted px-3 py-1 font-bold">
+          Gestión de Flota
+        </div>
+
+        <!-- Perfiles Stealth -->
+        <a href="concept4_uber_fleet.html" class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center justify-between transition btn-tactile" title="Perfiles Stealth">
+          <div class="flex items-center gap-3">
+            <i data-lucide="layers" class="w-4 h-4 shrink-0"></i>
+            <span class="sidebar-label tracking-tight">Perfiles Stealth</span>
+          </div>
+          <span class="sidebar-badge px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-neutral-400">12</span>
+        </a>
+
+        <!-- Sesiones en Vivo -->
+        <button class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center justify-between transition btn-tactile" title="Sesiones en Marcha (2)">
+          <div class="flex items-center gap-3">
+            <i data-lucide="radio" class="w-4 h-4 text-uber-green shrink-0"></i>
+            <span class="sidebar-label">Sesiones en Marcha</span>
+          </div>
+          <span class="sidebar-badge flex items-center gap-1.5 font-mono text-[11px] text-uber-green font-bold">
+            <span class="w-2 h-2 rounded-full bg-uber-green pulse-beacon"></span>
+            2
+          </span>
+        </button>
+
+        <!-- Rutas Proxy -->
+        <button class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center gap-3 transition btn-tactile" title="Rutas Proxy & Nodos">
+          <i data-lucide="network" class="w-4 h-4 text-neutral-400 shrink-0"></i>
+          <span class="sidebar-label">Rutas Proxy & Nodos</span>
+        </button>
+
+        <!-- Calentador Autónomo -->
+        <button class="sidebar-btn w-full h-10 px-3.5 rounded-lg text-uber-textSecondary hover:text-white hover:bg-uber-surface font-semibold flex items-center gap-3 transition btn-tactile" title="Warmer Studio">
+          <i data-lucide="flame" class="w-4 h-4 text-amber-500 shrink-0"></i>
+          <span class="sidebar-label">Warmer Studio</span>
+        </button>
+
+        <!-- Planes & Cuotas (ACTIVE) -->
+        <button class="sidebar-btn w-full h-10 px-3.5 rounded-lg bg-white text-black font-bold flex items-center justify-between shadow-sm" title="Planes & Cuotas">
+          <div class="flex items-center gap-3">
+            <i data-lucide="credit-card" class="w-4 h-4 stroke-[2.4] shrink-0 text-black"></i>
+            <span class="sidebar-label tracking-tight">Planes & Cuotas</span>
+          </div>
+          <span class="sidebar-badge px-1.5 py-0.2 rounded bg-black/15 text-[10px] font-mono font-extrabold uppercase">Activo</span>
+        </button>
+
+        <!-- Divider in collapsed mode -->
+        <div class="sidebar-section-divider hidden"></div>
+
+        <!-- Atención & Soporte para el Usuario -->
+        <div class="sidebar-section-title pt-5 text-[10px] font-mono tracking-wider uppercase text-uber-textMuted px-3 py-1 font-bold flex items-center justify-between">
+          <span>Atención al Cliente</span>
+        </div>
+
+        <div class="space-y-0.5">
+          <button class="sidebar-btn w-full h-8 px-3 rounded-md text-uber-textSecondary hover:text-white hover:bg-uber-surface text-xs flex items-center justify-between transition" title="Contactar Asesor de Ventas">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="message-square" class="w-3.5 h-3.5 text-uber-green shrink-0"></i>
+              <span class="sidebar-label">Contactar Asesor</span>
+            </div>
+            <span class="sidebar-badge font-mono text-[10px] text-uber-green font-bold">Online</span>
+          </button>
+          <button class="sidebar-btn w-full h-8 px-3 rounded-md text-uber-textSecondary hover:text-white hover:bg-uber-surface text-xs flex items-center justify-between transition" title="Guía de Activación">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="book-open" class="w-3.5 h-3.5 text-neutral-400 shrink-0"></i>
+              <span class="sidebar-label">Guía de Activación</span>
+            </div>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Node Footprint & Host Telemetry -->
+    <div class="sidebar-footer p-4 border-t border-uber-borderSubtle bg-black/50">
+      <div class="sidebar-footer-header flex items-center justify-between mb-2">
+        <span class="text-[10px] font-mono text-uber-textMuted uppercase font-bold tracking-wider">Nodo Host</span>
+        <span class="text-[10.5px] font-mono text-uber-green font-bold flex items-center gap-1">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 0 Lies
+        </span>
+      </div>
+
+      <div class="sidebar-user-box flex items-center gap-3 p-2.5 rounded-xl bg-uber-surface border border-uber-borderSubtle" title="usuario · Plan Shadow">
+        <div class="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center text-xs font-bold text-white shadow-inner shrink-0 relative">
+          <i data-lucide="user" class="w-4 h-4 text-neutral-300"></i>
+          <span class="w-2 h-2 rounded-full bg-uber-green absolute -bottom-0.5 -right-0.5 border-2 border-black"></span>
+        </div>
+        <div class="sidebar-user-details flex-1 min-w-0">
+          <div class="text-xs font-bold text-white truncate">usuario</div>
+          <div class="text-[10px] text-uber-textMuted font-mono truncate">Plan: Shadow (50 Profiles)</div>
+        </div>
+        <button class="text-uber-textMuted hover:text-white transition" title="Configuración">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 flex flex-col overflow-hidden bg-black">
+
+    <!-- TOP TOOLBAR -->
+    <header class="h-16 px-6 lg:px-8 border-b border-uber-border flex items-center justify-between bg-uber-canvas shrink-0">
+      <div class="flex items-center gap-3">
+        <!-- Sidebar Toggle Trigger Button -->
+        <button onclick="toggleSidebar()" class="h-10 w-10 rounded-xl bg-uber-surface hover:bg-neutral-900 border border-uber-border text-uber-textSecondary hover:text-white flex items-center justify-center transition btn-tactile shrink-0" title="Desplegar / Colapsar Menú (Ctrl+B)">
+          <i id="topbar-sidebar-icon" data-lucide="panel-left" class="w-4 h-4"></i>
+        </button>
+
+        <div class="flex items-center gap-2 text-xs font-mono text-uber-textMuted">
+          <a href="concept4_uber_fleet.html" class="hover:text-white transition">Flota</a>
+          <span>/</span>
+          <span class="text-white font-bold">Planes & Licencias</span>
+        </div>
+      </div>
+
+      <!-- Quick Action: Canjear Licencia Directa -->
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-uber-surface border border-uber-border">
+          <span class="w-2 h-2 rounded-full bg-uber-green pulse-beacon"></span>
+          <span class="text-[11px] font-mono text-neutral-300">Licencias en Línea · Servidor Autorizado</span>
+        </div>
+        <a href="concept4_uber_fleet.html" class="h-9 px-3.5 rounded-xl bg-uber-surface hover:bg-neutral-900 border border-uber-border text-white text-xs font-semibold flex items-center gap-2 transition btn-tactile">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Volver a Perfiles</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- CONTENT SCROLLER -->
+    <div class="flex-1 overflow-y-auto custom-scroll p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
+
+      <!-- SECTION 1: ACTIVE TICKET TELEMETRY & HARDWARE GAUGES -->
+      <div class="uber-card p-6 rounded-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white/[0.02] rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-uber-borderSubtle">
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-0.5 rounded-md bg-white text-black text-[11px] font-mono font-extrabold uppercase tracking-wider">
+                Plan Activo: SHADOW FLEET
+              </span>
+              <span class="text-xs font-mono text-uber-green font-semibold flex items-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verificado en Servidor
+              </span>
+            </div>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Capacidad Asignada & Cuotas de Flota</h2>
+            <p class="text-xs text-uber-textSecondary font-mono">ID de Suscripción: <span class="text-white font-mono">SUB-SHADOW-2026-9481A</span> · Renovación automática: <span class="text-white">14 de Octubre de 2026</span></p>
+          </div>
+
+          <!-- License Key Input Box -->
+          <div class="w-full lg:w-96 bg-black/60 border border-uber-border rounded-xl p-3">
+            <div class="text-[11px] font-mono text-uber-textMuted uppercase font-bold mb-1.5 flex items-center justify-between">
+              <span>Canjear Clave de Licencia</span>
+              <i data-lucide="key" class="w-3.5 h-3.5 text-amber-400"></i>
+            </div>
+            <form onsubmit="handleRedeem(event)" class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input 
+                  type="text" 
+                  id="license-key-input"
+                  placeholder="MSK-SHDW-XXXX-XXXX" 
+                  class="w-full h-9 pl-3 pr-2 text-xs font-mono bg-uber-surface border border-uber-border rounded-lg text-white placeholder-neutral-600 focus:outline-none focus:border-white transition"
+                  required
+                >
+              </div>
+              <button type="submit" id="btn-redeem" class="h-9 px-3.5 rounded-lg bg-white hover:bg-neutral-200 text-black text-xs font-bold transition btn-tactile shrink-0 flex items-center gap-1.5 shadow-sm">
+                <span>Canjear</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </form>
+            <div id="redeem-feedback" class="hidden text-[11px] font-mono mt-1.5 text-uber-green"></div>
+          </div>
+        </div>
+
+        <!-- 3 Hardware Telemetry Meters -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 font-mono">
+          <!-- Meter 1: Perfiles -->
+          <div class="p-4 rounded-xl bg-black/40 border border-uber-borderSubtle space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-uber-textMuted flex items-center gap-1.5">
+                <i data-lucide="layers" class="w-3.5 h-3.5 text-neutral-400"></i> Perfiles Stealth
+              </span>
+              <span class="text-white font-bold">12 <span class="text-neutral-500 font-normal">/ 50</span></span>
+            </div>
+            <div class="w-full h-2 bg-neutral-900 rounded-full overflow-hidden">
+              <div class="h-full bg-white rounded-full transition-all duration-500" style="width: 24%"></div>
+            </div>
+            <div class="text-[10px] text-uber-textMuted flex justify-between">
+              <span>24% asignado</span>
+              <span class="text-neutral-400">38 restantes</span>
+            </div>
+          </div>
+
+          <!-- Meter 2: Sesiones -->
+          <div class="p-4 rounded-xl bg-black/40 border border-uber-borderSubtle space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-uber-textMuted flex items-center gap-1.5">
+                <i data-lucide="radio" class="w-3.5 h-3.5 text-uber-green"></i> Instancias en Marcha
+              </span>
+              <span class="text-white font-bold">2 <span class="text-neutral-500 font-normal">/ 5</span></span>
+            </div>
+            <div class="w-full h-2 bg-neutral-900 rounded-full overflow-hidden">
+              <div class="h-full bg-uber-green rounded-full transition-all duration-500" style="width: 40%"></div>
+            </div>
+            <div class="text-[10px] text-uber-textMuted flex justify-between">
+              <span>40% en uso simultáneo</span>
+              <span class="text-uber-green">3 disponibles</span>
+            </div>
+          </div>
+
+          <!-- Meter 3: API Keys -->
+          <div class="p-4 rounded-xl bg-black/40 border border-uber-borderSubtle space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-uber-textMuted flex items-center gap-1.5">
+                <i data-lucide="key" class="w-3.5 h-3.5 text-amber-400"></i> API Keys de Flota
+              </span>
+              <span class="text-white font-bold">1 <span class="text-neutral-500 font-normal">/ 2</span></span>
+            </div>
+            <div class="w-full h-2 bg-neutral-900 rounded-full overflow-hidden">
+              <div class="h-full bg-amber-400 rounded-full transition-all duration-500" style="width: 50%"></div>
+            </div>
+            <div class="text-[10px] text-uber-textMuted flex justify-between">
+              <span>50% asignadas</span>
+              <span class="text-neutral-400">1 llave libre</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: THE 4 ENTERPRISE TIERS (MONOCHROMATIC STARK PRICING MATRIX) -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+          <div>
+            <div class="text-[10px] font-mono tracking-wider uppercase text-uber-textMuted font-bold">
+              Escalabilidad de Infraestructura
+            </div>
+            <h3 class="text-xl font-extrabold text-white tracking-tight">Tiers de Potencia & Huella Digital</h3>
+          </div>
+          <div class="flex items-center gap-2 p-1 rounded-xl bg-uber-surface border border-uber-border text-xs font-mono">
+            <button class="px-3 py-1 rounded-lg bg-white text-black font-bold shadow-sm">Facturación Mensual</button>
+            <button class="px-3 py-1 rounded-lg text-uber-textMuted hover:text-white transition">Anual (-20%)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+          
+          <!-- TIER 1: GHOST (FREE) -->
+          <div class="uber-card p-6 rounded-2xl flex flex-col justify-between hover:border-white/20 transition group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-neutral-400 tracking-wider uppercase">Tier 01</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-neutral-400">Pruebas</span>
+              </div>
+
+              <div>
+                <h4 class="text-xl font-extrabold text-white">Ghost</h4>
+                <p class="text-xs text-uber-textMuted mt-1 h-8">Invisibilidad esencial para validación local y desarrollo.</p>
+              </div>
+
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-black text-white">$0</span>
+                  <span class="text-xs font-mono text-uber-textMuted">/ permanente</span>
+                </div>
+              </div>
+
+              <div class="h-px bg-white/5 my-3"></div>
+
+              <ul class="space-y-2.5 text-xs text-neutral-300 font-sans">
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+                  <span><strong>3 Perfiles</strong> aislados</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+                  <span><strong>2 Sesiones</strong> simultáneas</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+                  <span>Huella Mulberry32 PRNG</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+                  <span>Proxy checker y GeoIP auto-align</span>
+                </li>
+                <li class="flex items-center gap-2.5 text-neutral-500">
+                  <i data-lucide="x" class="w-4 h-4 text-neutral-600 shrink-0"></i>
+                  <span>Sin API Keys de automatización</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-6">
+              <button disabled class="w-full h-10 rounded-xl bg-white/5 border border-white/10 text-neutral-500 text-xs font-bold cursor-not-allowed">
+                Plan Gratuito
+              </button>
+            </div>
+          </div>
+
+          <!-- TIER 2: SHADOW ($29) - POPULAR & ACTIVE -->
+          <div class="pricing-card-popular p-6 rounded-2xl flex flex-col justify-between relative group">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span class="px-3 py-1 rounded-full bg-white text-black text-[10px] font-mono font-extrabold uppercase tracking-widest shadow-md">
+                Plan Actual · Recomendado
+              </span>
+            </div>
+
+            <div class="space-y-4 pt-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-uber-green tracking-wider uppercase">Tier 02</span>
+                <span class="px-2 py-0.5 rounded bg-uber-green/10 border border-uber-green/30 text-[10px] font-mono text-uber-green font-bold">Activo</span>
+              </div>
+
+              <div>
+                <h4 class="text-xl font-extrabold text-white">Shadow</h4>
+                <p class="text-xs text-neutral-300 mt-1 h-8">Operaciones individuales y multicuenta estándar de alta rotación.</p>
+              </div>
+
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-black text-white">$29</span>
+                  <span class="text-xs font-mono text-uber-textMuted">/ mes</span>
+                </div>
+              </div>
+
+              <div class="h-px bg-white/10 my-3"></div>
+
+              <ul class="space-y-2.5 text-xs text-neutral-200 font-sans">
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-uber-green shrink-0"></i>
+                  <span><strong>50 Perfiles</strong> totalmente aislados</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-uber-green shrink-0"></i>
+                  <span><strong>5 Sesiones</strong> simultáneas activas</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-uber-green shrink-0"></i>
+                  <span><strong>2 API Keys</strong> de automatización</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-uber-green shrink-0"></i>
+                  <span>Sincronización Cloud cifrada</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-uber-green shrink-0"></i>
+                  <span>Emulación WebGL / Direct3D 11</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-uber-green shrink-0"></i>
+                  <span>Soporte prioritario por ticket</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-6">
+              <button class="w-full h-10 rounded-xl bg-white text-black font-extrabold text-xs shadow-md flex items-center justify-center gap-2 transition btn-tactile">
+                <i data-lucide="check-circle" class="w-4 h-4 text-black"></i>
+                <span>Suscripción Vigente</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- TIER 3: SPECTER ($79) -->
+          <div class="uber-card p-6 rounded-2xl flex flex-col justify-between hover:border-white/20 transition group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-neutral-400 tracking-wider uppercase">Tier 03</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-neutral-300">Media Buyers</span>
+              </div>
+
+              <div>
+                <h4 class="text-xl font-extrabold text-white">Specter</h4>
+                <p class="text-xs text-uber-textMuted mt-1 h-8">Alto rendimiento para automatización intensiva y arbitraje.</p>
+              </div>
+
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-black text-white">$79</span>
+                  <span class="text-xs font-mono text-uber-textMuted">/ mes</span>
+                </div>
+              </div>
+
+              <div class="h-px bg-white/5 my-3"></div>
+
+              <ul class="space-y-2.5 text-xs text-neutral-300 font-sans">
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-white shrink-0"></i>
+                  <span><strong>200 Perfiles</strong> aislados</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-white shrink-0"></i>
+                  <span><strong>15 Sesiones</strong> simultáneas activas</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-white shrink-0"></i>
+                  <span><strong>5 API Keys</strong> de automatización</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-white shrink-0"></i>
+                  <span>Rotación de proxies móviles por URL</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-white shrink-0"></i>
+                  <span>Integración Puppeteer / Playwright CDP</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-white shrink-0"></i>
+                  <span>Soporte VIP Telegram 24/7</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-6">
+              <button onclick="upgradePlan('Specter', 79)" class="w-full h-10 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-uber-border hover:border-white text-white font-bold text-xs flex items-center justify-center gap-2 transition btn-tactile">
+                <span>Escalar a Specter</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- TIER 4: PHANTOM PRIME ($199) - ENTERPRISE -->
+          <div class="uber-card p-6 rounded-2xl flex flex-col justify-between hover:border-white/20 transition group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-amber-400 tracking-wider uppercase">Tier 04</span>
+                <span class="px-2 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 text-[10px] font-mono text-amber-400 font-bold">Ilimitado</span>
+              </div>
+
+              <div>
+                <h4 class="text-xl font-extrabold text-white flex items-center gap-2">
+                  <span>Phantom Prime</span>
+                  <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i>
+                </h4>
+                <p class="text-xs text-uber-textMuted mt-1 h-8">Capacidad total para agencias masivas y granjas de navegación.</p>
+              </div>
+
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-3xl font-black text-white">$199</span>
+                  <span class="text-xs font-mono text-uber-textMuted">/ mes</span>
+                </div>
+              </div>
+
+              <div class="h-px bg-white/5 my-3"></div>
+
+              <ul class="space-y-2.5 text-xs text-neutral-300 font-sans">
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                  <span><strong>Perfiles Ilimitados (∞)</strong></span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                  <span><strong>Sesiones Ilimitadas (∞)</strong></span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                  <span><strong>API Keys Ilimitadas (∞)</strong></span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                  <span>Gestión Centralizada de Operadores & Equipos</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                  <span>Acceso prioritario a fingerprints 0-day</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                  <span>Ingeniero de soporte dedicado L3</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-6">
+              <button onclick="upgradePlan('Phantom Prime', 199)" class="w-full h-10 rounded-xl bg-uber-surface hover:bg-neutral-800 border border-uber-border hover:border-amber-400 text-white font-bold text-xs flex items-center justify-center gap-2 transition btn-tactile">
+                <span>Desplegar Phantom</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SECTION 3: CLIENT ACTIVATION HISTORY & SALES ADVISOR DIRECT CONTACT -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Activation History Table (2 cols) -->
+        <div class="lg:col-span-2 uber-card p-6 rounded-2xl border border-white/10 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-uber-borderSubtle">
+            <div>
+              <h3 class="text-base font-extrabold text-white tracking-tight">Historial de Activaciones</h3>
+              <p class="text-xs text-uber-textMuted font-mono">Registro de claves y vigencias canjeadas en esta cuenta</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-white/5 text-[11px] font-mono text-neutral-300 font-semibold flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-uber-green"></i> 1 Clave Vigente
+            </span>
+          </div>
+
+          <!-- Table of client keys -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left font-mono text-xs">
+              <thead>
+                <tr class="text-[10px] text-uber-textMuted uppercase border-b border-uber-borderSubtle pb-2">
+                  <th class="py-2 font-bold">Clave de Licencia</th>
+                  <th class="py-2 font-bold">Tier / Plan</th>
+                  <th class="py-2 font-bold">Activación</th>
+                  <th class="py-2 font-bold">Vencimiento</th>
+                  <th class="py-2 font-bold text-right">Estado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-uber-borderSubtle">
+                <!-- Current Key Row -->
+                <tr class="hover:bg-white/[0.02] transition">
+                  <td class="py-3 text-white font-bold flex items-center gap-2">
+                    <i data-lucide="key" class="w-3.5 h-3.5 text-uber-green"></i>
+                    <span>MSK-SHDW-30D-9481</span>
+                  </td>
+                  <td class="py-3 text-neutral-300">
+                    <span class="px-2 py-0.5 rounded bg-white/10 text-[10.5px] font-bold">Shadow (50 Perfiles)</span>
+                  </td>
+                  <td class="py-3 text-uber-textSecondary text-[11px]">14 Sep 2026</td>
+                  <td class="py-3 text-white font-semibold text-[11px]">14 Oct 2026</td>
+                  <td class="py-3 text-right">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-uber-green/10 text-uber-green text-[10.5px] font-bold">
+                      <span class="w-1.5 h-1.5 rounded-full bg-uber-green"></span>
+                      Vigente
+                    </span>
+                  </td>
+                </tr>
+
+                <!-- Previous Key Row -->
+                <tr class="hover:bg-white/[0.02] transition opacity-50">
+                  <td class="py-3 text-neutral-400 flex items-center gap-2">
+                    <i data-lucide="key" class="w-3.5 h-3.5 text-neutral-500"></i>
+                    <span>MSK-GHST-FREE-INIT</span>
+                  </td>
+                  <td class="py-3 text-neutral-400 text-[11px]">Ghost (Free Trial)</td>
+                  <td class="py-3 text-neutral-500 text-[11px]">10 Sep 2026</td>
+                  <td class="py-3 text-neutral-500 text-[11px]">14 Sep 2026</td>
+                  <td class="py-3 text-right">
+                    <span class="text-neutral-500 text-[10.5px]">Completada</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sales Advisor Contact Card (1 col) -->
+        <div class="uber-card p-6 rounded-2xl border border-white/10 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center font-bold shadow-md">
+              <i data-lucide="message-square" class="w-5 h-5 text-black"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-extrabold text-white tracking-tight">¿Deseas Renovar o Escalar?</h3>
+              <p class="text-xs text-uber-textSecondary mt-1 leading-relaxed">
+                Para extender tu vigencia o subir a un plan superior (Specter o Phantom), contacta a tu asesor de ventas asignado.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-black/50 border border-uber-border text-xs font-mono space-y-1.5">
+              <div class="text-[10px] text-uber-textMuted uppercase">Mecanismo de Entrega</div>
+              <div class="text-neutral-300 text-[11px]">
+                Tu asesor te entrega un código de activación oficial. Solo ingrésalo arriba para renovar al instante sin perder perfiles.
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button onclick="alert('Abriendo canal oficial de atención al cliente...')" class="w-full h-10 rounded-xl bg-white hover:bg-neutral-200 text-black font-extrabold text-xs flex items-center justify-center gap-2 transition btn-tactile shadow-sm">
+              <i data-lucide="message-square" class="w-4 h-4 fill-black"></i>
+              <span>Contactar Asesor Oficial</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    let isSidebarCollapsed = false;
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('app-sidebar');
+      const toggleIcon = document.getElementById('sidebar-toggle-icon');
+      const topbarIcon = document.getElementById('topbar-sidebar-icon');
+
+      isSidebarCollapsed = !isSidebarCollapsed;
+
+      if (isSidebarCollapsed) {
+        sidebar.classList.add('collapsed');
+        sidebar.classList.remove('w-64');
+        if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'panel-left-open');
+        if (topbarIcon) topbarIcon.setAttribute('data-lucide', 'panel-left-close');
+      } else {
+        sidebar.classList.remove('collapsed');
+        sidebar.classList.add('w-64');
+        if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'panel-left-close');
+        if (topbarIcon) topbarIcon.setAttribute('data-lucide', 'panel-left');
+      }
+
+      lucide.createIcons();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    });
+
+    function handleRedeem(e) {
+      e.preventDefault();
+      const input = document.getElementById('license-key-input');
+      const feedback = document.getElementById('redeem-feedback');
+      const val = input.value.trim();
+
+      if (!val) return;
+
+      feedback.classList.remove('hidden');
+      feedback.textContent = 'Validando ticket con el servidor de licencias...';
+
+      setTimeout(() => {
+        feedback.innerHTML = `<span class="text-uber-green font-bold">✓ ¡Licencia canjeada con éxito!</span> Cuotas actualizadas.`;
+        input.value = '';
+      }, 800);
+    }
+
+    function upgradePlan(name, price) {
+      alert(`Iniciando checkout de actualización a ${name} ($${price}/mes). Redirigiendo a pasarela segura...`);
+    }
+
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text);
+      const original = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-black"></i><span>¡Copiado!</span>`;
+      btn.className = "px-2.5 py-1 rounded bg-uber-green text-black font-sans font-bold text-[11px] flex items-center gap-1 transition";
+      lucide.createIcons();
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.className = "px-2.5 py-1 rounded bg-white/10 hover:bg-white text-white hover:text-black font-sans font-bold text-[11px] flex items-center gap-1 transition";
+        lucide.createIcons();
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

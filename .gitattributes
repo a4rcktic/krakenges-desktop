@@ -1,0 +1,16 @@
+# El proyecto se compila en Linux, Windows y contenedores. Forzar LF evita
+# que el chequeo de marca falle en Windows por finales de línea CRLF.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.icns binary
+*.keystore binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.gz binary

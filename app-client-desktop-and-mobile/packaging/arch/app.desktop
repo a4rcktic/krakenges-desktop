@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Kraken Ges
+Comment=Kraken Ges — Anti-Detect Browser & Multi-Account Fleet
+Exec=/usr/bin/krakenges
+Icon=krakenges
+Terminal=false
+Categories=Network;WebBrowser;
+StartupWMClass=krakenges

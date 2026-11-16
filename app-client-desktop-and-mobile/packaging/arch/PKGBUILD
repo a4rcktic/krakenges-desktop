@@ -1,0 +1,59 @@
+# Maintainer: Kraken Ges <https://app.krakenchk.com>
+#
+# Native Arch package. Compiles against the system's own WebKitGTK/Mesa
+# stack, avoiding the bundled GTK/EGL stack of the Ubuntu-built AppImage
+# that causes a blank window on Arch.
+#
+# Package-only PKGBUILD. El sandbox de makepkg mezcla el -fuse-ld=lld por
+# defecto de Arch con el -fuse-ld=bfd que exigía ring y rompe el link de su
+# asm (ring_core_0_17_14__* undefined). Por eso el binario lo compila el CI
+# con cargo directo (codegen-units=16 + RUSTFLAGS=-fuse-ld=bfd, verificado) y
+# makepkg aquí solo ejecuta package(): no hace build() ni necesita rust.
+#
+# Para empaquetar hay que colocar en ESTE directorio:
+#   krakenges-app   (binario ya compilado, release)
+#   app.desktop      (lo genera tools/brand/apply.mjs)
+#   128x128.png    (icono)
+# y ejecutar makepkg. La versión la inyecta el CI vía sed sobre tauri.conf.json.
+
+# Marca: estas cinco líneas las reescribe tools/brand/apply.mjs desde
+# brand.config.json. No las edites a mano.
+_slug=krakenges
+_appname="Kraken Ges"
+_identifier=com.krakenges.desktop
+_url="https://app.krakenchk.com"
+_desc="Kraken Ges — Anti-Detect Browser & Multi-Account Fleet"
+
+pkgname=${_slug}
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="${_desc} (native Arch build)"
+arch=('x86_64')
+url="${_url}"
+license=("custom:${_appname}")
+depends=('webkit2gtk-4.1' 'gtk3' 'libsoup3' 'openssl' 'gcc-libs' 'glibc')
+options=('!debug')
+source=('krakenges-app' 'app.desktop' '32x32.png' '128x128.png' 'icon.png')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+build() {
+  # El binario ya viene compilado por el CI; no hay nada que construir.
+  true
+}
+
+package() {
+  install -Dm755 "$srcdir/krakenges-app" "$pkgdir/usr/bin/${_slug}"
+  install -Dm644 "$srcdir/app.desktop" \
+    "$pkgdir/usr/share/applications/${_slug}.desktop"
+  install -Dm644 "$srcdir/32x32.png" \
+    "$pkgdir/usr/share/icons/hicolor/32x32/apps/${_slug}.png"
+  install -Dm644 "$srcdir/128x128.png" \
+    "$pkgdir/usr/share/icons/hicolor/128x128/apps/${_slug}.png"
+  install -Dm644 "$srcdir/icon.png" \
+    "$pkgdir/usr/share/icons/hicolor/512x512/apps/${_slug}.png"
+
+  ln -sf ${_slug}.png "$pkgdir/usr/share/icons/hicolor/128x128/apps/krakenges-app.png"
+  ln -sf ${_slug}.png "$pkgdir/usr/share/icons/hicolor/128x128/apps/${_identifier}.png"
+  ln -sf ${_slug}.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/krakenges-app.png"
+  ln -sf ${_slug}.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/${_identifier}.png"
+}

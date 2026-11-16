@@ -1,0 +1,36 @@
+[Unit]
+Description=Kraken Ges — copia de seguridad de PostgreSQL
+Documentation=https://krakenges.example
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=krakenges
+Group=krakenges
+EnvironmentFile=/etc/krakenges/backend.env
+ExecStart=/opt/krakenges/backend/ops/backup/krakenges-backup.sh
+UMask=0077
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/var/backups/krakenges
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=krakenges-backup

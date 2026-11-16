@@ -1,0 +1,91 @@
+/* ============================================================
+   Register Screen Pitch Black OLED Stealth Additions
+   ============================================================ */
+
+/* Stepped Entropy Meter */
+.master-krakenges-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 0 2px;
+}
+
+.master-krakenges-bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.master-krakenges-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  transition: background-color 0.25s ease;
+}
+
+.master-krakenges-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  min-width: 85px;
+  text-align: right;
+  transition: color 0.25s ease;
+}
+
+/* Required Badge */
+.master-req-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: #a1a1aa;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+/* License Key Input (Pitch Black Monolith) */
+.master-input-key-wrap {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: #020204 !important;
+}
+
+.master-input-key-wrap:focus-within {
+  border-color: #ffffff !important;
+  box-shadow: 
+    0 0 0 1px #ffffff,
+    0 0 18px rgba(255, 255, 255, 0.12),
+    inset 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+}
+
+.master-key-input {
+  letter-spacing: 0.12em !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  text-transform: uppercase !important;
+}
+
+.master-field-hint {
+  font-size: 10.5px;
+  color: #52525b;
+  margin: 3px 0 0 2px;
+}
+
+/* Password Mismatch */
+.master-input-mismatch {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px #ef4444, 0 0 14px rgba(239, 68, 68, 0.2) !important;
+}
+
+.master-mismatch-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: #f87171;
+  margin-top: 3px;
+  margin-left: 2px;
+}

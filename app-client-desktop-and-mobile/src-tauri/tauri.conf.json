@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Kraken Ges",
+  "version": "1.0.1",
+  "identifier": "com.krakenges.desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Kraken Ges - Anti-Detect Manager",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 400,
+        "minHeight": 400,
+        "resizable": true,
+        "maximized": true,
+        "decorations": true,
+        "transparent": false,
+        "theme": "Dark",
+        "devtools": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "createUpdaterArtifacts": true,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": false,
+      "endpoints": [
+        "https://app.krakenchk.com/api/updates/manifest"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJDQzJCNkJCQzkyQ0ZBRDkKUldUWitpekp1N2JDdkNFV2ZNczE3OW9NL3ROVnZuRVMrQjlCeHBLRjM5Sm1RVnJ1TzhJR1R6OHoK",
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}

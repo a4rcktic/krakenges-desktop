@@ -1,0 +1,685 @@
+@import "tailwindcss";
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: #06070a;
+  color: #f8fafc;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #06070a;
+}
+
+/* ── Reserva de las zonas del sistema ──
+ *
+ * En movil, arriba esta el reloj y las notificaciones, y abajo la barra de
+ * navegacion (tres botones o gestos). Esas zonas NO son de la app, asi que si
+ * el contenido no las reserva, la cabecera queda debajo del reloj y el pie
+ * debajo de la barra.
+ *
+ * Es el mismo defecto en los dos extremos, y ya se vio en los dos: el boton
+ * Guardar del sheet quedaba bajo la barra de navegacion, y las cabeceras de
+ * Perfiles, Overview y Planes quedan bajo el reloj.
+ *
+ * Los valores salen del sistema en cada pantalla, no de un modelo medido.
+ * 24px es el suelo para los que no reportan inset (los que no llevan notch).
+ */
+:root {
+  --krakenges-inset-top: max(24px, env(safe-area-inset-top, 0px));
+  --krakenges-inset-bottom: max(34px, env(safe-area-inset-bottom, 0px));
+}
+
+/* Ensure native form elements never inherit browser white backgrounds or dark text */
+input, select, textarea {
+  font-family: inherit;
+  color: #f8fafc;
+}
+
+button {
+  font-family: inherit;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #06080d inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CYBER STEALTH FORM CONTROLS (CHECKBOXES, SELECTS, INPUTS)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Cyber Checkbox ── */
+input[type="checkbox"],
+.cyber-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  min-height: 17px;
+  background-color: #070a10;
+  border: 1.5px solid #223048;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  position: relative;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+input[type="checkbox"]:hover,
+.cyber-checkbox:hover {
+  border-color: #00f0ff;
+  background-color: #0c121e;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+input[type="checkbox"]:checked,
+.cyber-checkbox:checked {
+  background-color: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.45);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2305070a'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-size: 13px 13px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+input[type="checkbox"]:indeterminate,
+.cyber-checkbox:indeterminate {
+  background-color: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.45);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2305070a'%3E%3Cpath fill-rule='evenodd' d='M4 10a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-size: 13px 13px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+input[type="checkbox"]:focus-visible,
+.cyber-checkbox:focus-visible {
+  outline: none;
+  border-color: #00f0ff;
+  box-shadow: 0 0 0 2px #06070a, 0 0 0 4px rgba(0, 240, 255, 0.4);
+}
+
+/* ── Cyber Radio ── */
+input[type="radio"],
+.cyber-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  min-height: 17px;
+  background-color: #070a10;
+  border: 1.5px solid #223048;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  position: relative;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+input[type="radio"]:hover,
+.cyber-radio:hover {
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.25);
+}
+
+input[type="radio"]:checked,
+.cyber-radio:checked {
+  border-color: #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2300f0ff'%3E%3Ccircle cx='8' cy='8' r='4'/%3E%3C/svg%3E");
+  background-size: 10px 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ── Cyber Select Dropdowns ── */
+select,
+.pfm-select,
+.cyber-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-color: #06080d !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300f0ff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: 14px 14px !important;
+  border: 1px solid #141b29 !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  padding: 10px 36px 10px 12px !important;
+  font-size: 13px !important;
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+select:hover,
+.pfm-select:hover,
+.cyber-select:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: #000000;
+}
+
+select:focus,
+.pfm-select:focus,
+.cyber-select:focus {
+  border-color: #ffffff !important;
+  box-shadow: 0 0 0 1px #ffffff !important;
+  background-color: #000000 !important;
+}
+
+select option {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 8px 12px;
+}
+
+/* Remove ugly number spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ── Global Modal / Form Classes (pfm-*) ── */
+/* ── Global Modal / Form Classes (pfm-*) ── */
+.pfm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.pfm-card {
+  width: 100%;
+  max-width: 540px;
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+  animation: pfmFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pfmFadeIn {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.pfm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #050505;
+}
+
+.pfm-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pfm-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pfm-close:hover {
+  background: #18181b;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.pfm-body {
+  padding: 22px;
+  background: #080808;
+  max-height: calc(85vh - 140px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pfm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pfm-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pfm-input,
+.pfm-select {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.pfm-input:focus,
+.pfm-select:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px #ffffff;
+}
+
+.pfm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #050505;
+}
+
+.pfm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pfm-btn.cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #a1a1aa;
+}
+
+.pfm-btn.cancel:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.pfm-btn.confirm {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  color: #000000;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+}
+
+.pfm-btn.confirm:hover {
+  background: #e4e4e7;
+  border-color: #e4e4e7;
+}
+
+/* ── Universal Monochromatic Buttons (formerly cyber) ── */
+.btn-cyber-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  color: #000000 !important;
+  font-weight: 800;
+  font-size: 12.5px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+  text-decoration: none;
+}
+
+.btn-cyber-primary:hover:not(:disabled) {
+  background: #e4e4e7;
+  border-color: #e4e4e7;
+  transform: translateY(-1px);
+}
+
+.btn-cyber-primary:active {
+  transform: translateY(0);
+}
+
+.btn-cyber-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-cyber-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-cyber-secondary:hover {
+  background: #181818;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff !important;
+}
+
+/* Robust scrollbar theme for WebKitGTK and all browsers */
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) #000000;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #000000 !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+::-webkit-scrollbar-track-piece {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px;
+  border: 1px solid #000000 !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   GLOBAL MODAL & MOBILE BOTTOM SHEET SYSTEM (OLED BLACK)
+   ══════════════════════════════════════════════════════════ */
+.glass-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .glass-modal-overlay,
+  .is-mobile-view .glass-modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    z-index: 99999 !important;
+    /* NO padding: 0.
+       Con padding 0 y align-items: flex-end, el sheet se pegaba al borde
+       inferior de la pantalla, que en Android esta por DETRAS de la barra de
+       navegacion del sistema. El boton Guardar del modal de perfil acababa
+       bajo esa barra y no se podia pulsar.
+
+       La reserva sale de las medidas que da el propio sistema, no de un numero
+       inventado: env(safe-area-inset-bottom) cubre el recorte y la barra de
+       navegacion en los moviles con pantalla completa, y 34px es el alto
+       tipico de la barra de tres botones en los que no la reporta.
+
+       Importante: no se mide a ojo ningun modelo. Un Samsung de 2024 con barra
+       de gestos mide 0 en safe-area y da 34px de reserva; uno con tres botones
+       da lo que reporte el sistema. El valor se lee del aparato en cada
+       pantalla. */
+    padding: 0 0 max(34px, env(safe-area-inset-bottom, 0px)) 0 !important;
+  }
+}
+
+.mob-phone-frame .glass-modal-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  align-items: flex-end !important;
+  /* Mismo criterio que el overlay de movil: la reserva la da el sistema, no un
+     numero medido en un modelo concreto. */
+  padding: 0 0 max(34px, env(safe-area-inset-bottom, 0px)) 0 !important;
+  z-index: 100 !important;
+}
+
+.modal-bottom-sheet {
+  width: 100% !important;
+  max-width: 100% !important;
+  /* El alto maximo se calcula sobre la altura REAL de la ventana (100dvh, que
+     en moviles cambia al rotar o al abrir el teclado) menos la misma reserva
+     que deja el overlay. Asi el footer nunca cae por debajo de la barra, en
+     ningun movil, sin depender de medidas fijas.
+
+     Antes era 85%, un numero redondo que no queria decir nada. */
+  max-height: calc(100dvh - max(34px, env(safe-area-inset-bottom, 0px)) - 24px) !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
+  animation: slideUpMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* La reserva por la barra de navegacion la pone el overlay. Si el sheet
+     tambien la sumara, el hueco seria del doble. */
+  padding-bottom: 1rem !important;
+}
+
+@keyframes slideUpMobile {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-drag-handle {
+  width: 38px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 0.6rem auto 0.4rem auto;
+  flex-shrink: 0;
+}
+
+.glass-modal-box {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(720px, calc(100vh - 2.5rem));
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.glass-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-modal-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+  /* min-height: 0 es lo que permite a un hijo flex encogerse por debajo de su
+     contenido. Sin esto el body no cede espacio al footer y el footer se sale
+     de la hoja. */
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.glass-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.5);
+  /* Sin esto el footer se APLASTA dentro del flex del modal (que tiene
+     max-height) y el boton Guardar queda fuera de la hoja, tapado por la barra
+     de navegacion. En movil no habia forma de crear un perfil: se veia el
+     borde del boton asomando y no se podia pulsar.
+     flex-shrink: 0 obliga a que mantenga su altura y a que el body sea el que
+     se encoja. */
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .glass-modal-footer {
+    /* Sin safe-area aqui: la reserva por la barra de navegacion la pone el
+       overlay, una sola vez. Si se sumara tambien en el footer, el boton
+       Guardar quedaria dos veces mas lejos del borde del sheet. */
+    padding-bottom: 0.85rem;
+  }
+}
+
+/* ── Aviso de backend caido en el dashboard movil ──
+   Se muestra cuando el servidor no responde. Es preferible a rellenar con
+   datos de ejemplo: un cero con aviso dice la verdad; un 145 inventado, no. */
+.mob-dash-error {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #fca5a5;
+  font-size: 12px;
+  padding: 0.7rem 0.9rem;
+  margin: 0.75rem;
+  border-radius: 12px;
+  line-height: 1.45;
+}
+
+/* ── Modo de rendimiento de los indicadores ──
+   Los puntos "en vivo" y el brillo del botón de acceso son decorativos. Con
+   WebKitGTK en software rendering, una animación infinita obliga a repintar
+   la ventana completa aunque el punto mida 6 px; en el login medía ~40 % de
+   CPU en reposo. Se conservan los puntos y el estado visual, pero sin
+   animación: el color sigue comunicando lo mismo y la app deja de trabajar
+   cuando está quieta. Los spinners de carga sí se mantienen porque indican
+   una operación en curso. */
+@media (min-width: 769px) {
+  .desk-btn-shine {
+    display: none !important;
+  }
+
+  .desk-live-dot,
+  .uber-live-dot,
+  .fleet-live-pulse-dot,
+  .pulse-beacon,
+  .metric-status-dot.pulse,
+  .session-beacon-dot {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .mob-pulse-dot {
+    animation: none !important;
+  }
+}

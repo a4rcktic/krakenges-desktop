@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Linear Obsidian Pro (Diseño Completo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              bg: '#08090d',
+              surface: '#0f1118',
+              card: '#141722',
+              cardHover: '#191d2c',
+              border: 'rgba(255, 255, 255, 0.08)',
+              borderSubtle: 'rgba(255, 255, 255, 0.04)',
+              borderFocus: '#00f0ff',
+              cyan: '#00f0ff',
+              cyanHover: '#33f3ff',
+              emerald: '#10b981',
+              emeraldHover: '#059669',
+              amber: '#f59e0b',
+              orange: '#f97316',
+              rose: '#f43f5e',
+              roseHover: '#e11d48',
+              muted: '#7e869c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #08090d;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .glass-panel {
+      background: rgba(15, 17, 24, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .action-btn {
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .action-btn:active {
+      transform: scale(0.96);
+    }
+    .pulse-green {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.85); }
+    }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden select-none bg-obsidian-bg">
+
+  <!-- LEFT MAIN SIDEBAR (LINEAR STYLE) -->
+  <aside class="w-60 border-r border-obsidian-border bg-obsidian-surface flex flex-col justify-between shrink-0">
+    <div>
+      <!-- Brand Header -->
+      <div class="h-14 px-5 flex items-center justify-between border-b border-obsidian-borderSubtle">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-obsidian-cyan to-blue-600 flex items-center justify-center font-black text-black text-xs shadow-md shadow-cyan-500/20">
+            M
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-sm tracking-tight text-white">Kraken Ges</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-obsidian-cyan/10 text-obsidian-cyan border border-obsidian-cyan/20 font-bold">PRO</span>
+          </div>
+        </div>
+
+        <button class="text-obsidian-muted hover:text-white transition" title="Colapsar menú">
+          <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="p-3 space-y-1 font-sans text-xs">
+        <div class="text-[10px] font-mono tracking-wider uppercase text-obsidian-muted px-2.5 py-1.5 font-bold">
+          Gestión Principal
+        </div>
+
+        <button class="w-full h-9 px-3 rounded-lg bg-white/10 text-white font-bold flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="layers" class="w-4 h-4 text-obsidian-cyan stroke-[2.2]"></i>
+            <span>Perfiles Stealth</span>
+          </div>
+          <span class="px-1.5 py-0.2 rounded bg-white/15 text-[11px] font-mono font-bold">12</span>
+        </button>
+
+        <button class="w-full h-9 px-3 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 font-medium flex items-center justify-between transition action-btn">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="play-circle" class="w-4 h-4 text-obsidian-emerald"></i>
+            <span>Sesiones Activas</span>
+          </div>
+          <span class="flex items-center gap-1 font-mono text-[11px] text-obsidian-emerald font-bold">
+            <span class="w-1.5 h-1.5 rounded-full bg-obsidian-emerald pulse-green"></span>
+            2
+          </span>
+        </button>
+
+        <button class="w-full h-9 px-3 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 font-medium flex items-center gap-2.5 transition action-btn">
+          <i data-lucide="network" class="w-4 h-4 text-slate-400"></i>
+          <span>Gestor de Proxies</span>
+        </button>
+
+        <button class="w-full h-9 px-3 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 font-medium flex items-center gap-2.5 transition action-btn">
+          <i data-lucide="flame" class="w-4 h-4 text-obsidian-orange"></i>
+          <span>Warmer Studio</span>
+        </button>
+
+        <button class="w-full h-9 px-3 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 font-medium flex items-center gap-2.5 transition action-btn">
+          <i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i>
+          <span>Planes & Cuotas</span>
+        </button>
+
+        <div class="pt-4 text-[10px] font-mono tracking-wider uppercase text-obsidian-muted px-2.5 py-1.5 font-bold">
+          Etiquetas / Grupos
+        </div>
+
+        <div class="space-y-0.5">
+          <button class="w-full h-7 px-3 rounded-md text-slate-400 hover:text-white hover:bg-white/5 text-[11px] flex items-center justify-between transition">
+            <span class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
+              <span>#shein-latam</span>
+            </span>
+            <span class="font-mono text-[10px] text-slate-600">4</span>
+          </button>
+          <button class="w-full h-7 px-3 rounded-md text-slate-400 hover:text-white hover:bg-white/5 text-[11px] flex items-center justify-between transition">
+            <span class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              <span>#facebook-ads</span>
+            </span>
+            <span class="font-mono text-[10px] text-slate-600">5</span>
+          </button>
+          <button class="w-full h-7 px-3 rounded-md text-slate-400 hover:text-white hover:bg-white/5 text-[11px] flex items-center justify-between transition">
+            <span class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              <span>#eneba-gaming</span>
+            </span>
+            <span class="font-mono text-[10px] text-slate-600">3</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- User / System Health Footer -->
+    <div class="p-3 border-t border-obsidian-borderSubtle bg-black/20">
+      <div class="p-2 rounded-lg bg-white/[0.02] border border-white/5 space-y-1.5">
+        <div class="flex items-center justify-between text-[10.5px] font-mono">
+          <span class="text-obsidian-muted">Motor Antidetect</span>
+          <span class="text-obsidian-emerald font-bold flex items-center gap-1">
+            <i data-lucide="shield-check" class="w-3 h-3"></i> 0 Lies
+          </span>
+        </div>
+        <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full bg-obsidian-cyan w-[25%] rounded-full"></div>
+        </div>
+        <div class="flex items-center justify-between text-[10px] font-mono text-slate-500">
+          <span>RAM: 840 MB / 16 GB</span>
+          <span>v3.4.0</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 px-1">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-md bg-neutral-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white">
+            U
+          </div>
+          <span class="text-xs font-semibold text-white truncate max-w-[100px]">usuario</span>
+        </div>
+        <button class="text-slate-500 hover:text-white transition" title="Ajustes del Sistema">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="flex-1 flex flex-col overflow-hidden bg-obsidian-bg">
+
+    <!-- TOP HEADER TOOLBAR -->
+    <header class="h-14 px-6 border-b border-obsidian-border bg-obsidian-surface/60 backdrop-blur flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-4 flex-1 max-w-lg">
+        <!-- Global Search Input -->
+        <div class="relative w-full">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            placeholder="Buscar por nombre, proxy, tag o notas..." 
+            class="w-full h-8 pl-8 pr-12 text-xs bg-obsidian-bg border border-obsidian-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-obsidian-cyan/50 font-mono transition"
+          >
+          <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-500 border border-white/10 px-1 rounded bg-white/5">⌘K</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons Bar with Precise Contextual Icons -->
+      <div class="flex items-center gap-2.5">
+        <!-- Test Proxies Button -->
+        <button onclick="testAllProxies()" class="h-8 px-3 rounded-lg border border-white/10 hover:border-white/20 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition action-btn" title="Probar latencia de todos los proxies">
+          <i data-lucide="wifi" class="w-3.5 h-3.5 text-obsidian-cyan" id="btn-wifi-icon"></i>
+          <span>Test Proxies</span>
+        </button>
+
+        <!-- Import Cookies Button -->
+        <button onclick="openCookiesModal('Importar Lote')" class="h-8 px-3 rounded-lg border border-white/10 hover:border-white/20 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition action-btn" title="Inyectar archivo de cookies JSON o Netscape">
+          <i data-lucide="cookie" class="w-3.5 h-3.5 text-obsidian-amber"></i>
+          <span>Cookies</span>
+        </button>
+
+        <!-- Bulk Creator Button -->
+        <button onclick="toggleModal('modal-bulk')" class="h-8 px-3 rounded-lg border border-white/10 hover:border-white/20 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition action-btn" title="Generar múltiples perfiles en lote">
+          <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span>Crear Lote</span>
+        </button>
+
+        <div class="h-4 w-px bg-white/10"></div>
+
+        <!-- Primary CTA: Create Profile -->
+        <button onclick="toggleModal('modal-create')" class="h-8 px-4 rounded-lg bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-cyan-500/20 transition action-btn">
+          <i data-lucide="plus" class="w-3.5 h-3.5 stroke-[2.5]"></i>
+          <span>Nuevo Perfil</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <div class="flex-1 flex flex-col overflow-hidden px-6 py-4">
+
+      <!-- SUB-HEADER FILTERS & VIEW MODE -->
+      <div class="flex items-center justify-between mb-3 shrink-0">
+        <!-- Quick Filter Pills -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[11px] font-mono text-slate-500 mr-1 flex items-center gap-1">
+            <i data-lucide="filter" class="w-3 h-3"></i> Filtros:
+          </span>
+
+          <button class="h-7 px-2.5 rounded-md bg-white/10 text-white text-xs font-semibold border border-white/10 flex items-center gap-1.5">
+            <span>Todos</span>
+            <span class="text-[10px] font-mono text-obsidian-cyan font-bold">12</span>
+          </button>
+
+          <button class="h-7 px-2.5 rounded-md bg-white/[0.02] hover:bg-white/5 text-slate-400 hover:text-white text-xs font-medium border border-white/5 transition flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-obsidian-emerald"></span>
+            <span>En Ejecución (2)</span>
+          </button>
+
+          <button class="h-7 px-2.5 rounded-md bg-white/[0.02] hover:bg-white/5 text-slate-400 hover:text-white text-xs font-medium border border-white/5 transition flex items-center gap-1.5">
+            <span class="text-[11px]">🪟</span>
+            <span>Windows (8)</span>
+          </button>
+
+          <button class="h-7 px-2.5 rounded-md bg-white/[0.02] hover:bg-white/5 text-slate-400 hover:text-white text-xs font-medium border border-white/5 transition flex items-center gap-1.5">
+            <span class="text-[11px]">🍎</span>
+            <span>macOS (3)</span>
+          </button>
+
+          <button class="h-7 px-2.5 rounded-md bg-white/[0.02] hover:bg-white/5 text-slate-400 hover:text-white text-xs font-medium border border-white/5 transition flex items-center gap-1.5">
+            <span class="text-[11px]">🐧</span>
+            <span>Linux (1)</span>
+          </button>
+        </div>
+
+        <!-- Telemetry Summary Pill -->
+        <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-obsidian-emerald pulse-green"></span>
+            <span class="text-white font-semibold">2 sesiones vivas</span>
+          </div>
+          <span>·</span>
+          <span class="text-obsidian-cyan">Proxy Shield OK</span>
+        </div>
+      </div>
+
+      <!-- MAIN HIGH-DENSITY DATA TABLE -->
+      <div class="flex-1 overflow-hidden border border-obsidian-border rounded-xl bg-obsidian-surface flex flex-col shadow-xl">
+        
+        <div class="flex-1 overflow-auto custom-scroll">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="sticky top-0 bg-[#12151f] z-10 border-b border-obsidian-border text-[11px] font-mono uppercase text-slate-400 font-semibold tracking-wider">
+              <tr>
+                <th class="w-10 px-4 py-3 text-center">
+                  <input type="checkbox" id="master-select" onchange="toggleSelectAll(this)" class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0 cursor-pointer">
+                </th>
+                <th class="w-24 px-3 py-3">Estado</th>
+                <th class="px-4 py-3">Perfil / Identidad</th>
+                <th class="px-4 py-3">Ruta IP & Latencia</th>
+                <th class="px-4 py-3">Hardware Spoofing</th>
+                <th class="px-4 py-3">Etiquetas</th>
+                <th class="w-44 px-4 py-3 text-right">Comandos</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-obsidian-border/50 font-sans" id="profiles-table-body">
+
+              <!-- ROW 1: SHEIN VIP (RUNNING) -->
+              <tr class="hover:bg-white/[0.025] transition group cursor-pointer" onclick="openDrawer('Shein VIP Enterprise #01', 'Windows 11 x64', '189.201.44.12:8080', 'Miami, US', 'RTX 4070')">
+                <td class="px-4 py-3 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-3 py-3">
+                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-obsidian-emerald/10 border border-obsidian-emerald/30 text-obsidian-emerald font-mono text-[10px] font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-obsidian-emerald pulse-green"></span>
+                    Activo
+                  </div>
+                  <div class="text-[9px] font-mono text-slate-400 mt-0.5">14m · 410MB</div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 text-sm shrink-0">
+                      🪟
+                    </div>
+                    <div>
+                      <div class="font-bold text-white text-xs tracking-tight group-hover:text-obsidian-cyan transition flex items-center gap-1.5">
+                        <span>Shein VIP Enterprise #01</span>
+                        <span class="text-[9px] font-mono text-slate-400">#sh-01</span>
+                      </div>
+                      <div class="text-[10px] font-mono text-slate-400 flex items-center gap-2 mt-0.5">
+                        <span>ID: prf_920f18aa</span>
+                        <span>·</span>
+                        <span class="text-obsidian-cyan">Chrome 134</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm">🇺🇸</span>
+                    <div>
+                      <div class="font-mono text-white text-[11px] font-semibold">189.201.44.12:8080</div>
+                      <div class="text-[10px] text-slate-400">Miami, United States</div>
+                    </div>
+                    <span class="px-1.5 py-0.2 rounded bg-obsidian-emerald/10 text-obsidian-emerald border border-obsidian-emerald/20 text-[10px] font-mono font-bold">
+                      34ms
+                    </span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-slate-200">Win 11</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-obsidian-cyan font-bold">Creep 0%</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-400">RTX 4070</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">8 Cores · 16GB RAM · Canvas Noise</div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-1">
+                    <span class="px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-300 border border-pink-500/20 text-[10px] font-mono">#shein-latam</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1">
+                    <!-- Stop Button -->
+                    <button onclick="toggleRun(this)" class="h-7 px-2.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold flex items-center gap-1 transition action-btn" title="Detener sesión activa y sincronizar cookies">
+                      <i data-lucide="square" class="w-3 h-3 fill-rose-400"></i>
+                      <span>Detener</span>
+                    </button>
+                    <!-- Cookies Button -->
+                    <button onclick="openCookiesModal('Shein VIP Enterprise #01')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-3.5 h-3.5 text-obsidian-amber"></i>
+                    </button>
+                    <!-- Warmer Button -->
+                    <button onclick="openWarmer('Shein VIP Enterprise #01')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Calentar Sesión (Autónomo)">
+                      <i data-lucide="flame" class="w-3.5 h-3.5 text-obsidian-orange"></i>
+                    </button>
+                    <!-- Clone Button -->
+                    <button onclick="alert('Perfil duplicado con nueva huella hardware')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <!-- Edit Button -->
+                    <button onclick="toggleModal('modal-create')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Editar Perfil">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 2: META ADS SCALER (IDLE) -->
+              <tr class="hover:bg-white/[0.025] transition group cursor-pointer" onclick="openDrawer('Meta Ads Scaler Latam', 'macOS Sonoma M2', '187.190.22.4:3128', 'CDMX, MX', 'Apple M2 Max')">
+                <td class="px-4 py-3 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-3 py-3">
+                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400 font-mono text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                    Inactivo
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 text-sm shrink-0">
+                      🍎
+                    </div>
+                    <div>
+                      <div class="font-bold text-white text-xs tracking-tight group-hover:text-obsidian-cyan transition flex items-center gap-1.5">
+                        <span>Meta Ads Scaler Latam</span>
+                        <span class="text-[9px] font-mono text-slate-400">#fb-03</span>
+                      </div>
+                      <div class="text-[10px] font-mono text-slate-400 flex items-center gap-2 mt-0.5">
+                        <span>ID: prf_482c91bb</span>
+                        <span>·</span>
+                        <span class="text-obsidian-cyan">macOS Sonoma</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm">🇲🇽</span>
+                    <div>
+                      <div class="font-mono text-white text-[11px] font-semibold">187.190.22.4:3128</div>
+                      <div class="text-[10px] text-slate-400">CDMX, Mexico</div>
+                    </div>
+                    <span class="px-1.5 py-0.2 rounded bg-obsidian-emerald/10 text-obsidian-emerald border border-obsidian-emerald/20 text-[10px] font-mono font-bold">
+                      42ms
+                    </span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-slate-200">macOS</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-obsidian-cyan font-bold">Creep 0%</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-400">M2 Max</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">12 Cores · 32GB RAM · Audio Spoof</div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-1">
+                    <span class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20 text-[10px] font-mono">#facebook-ads</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1">
+                    <!-- Launch Button -->
+                    <button onclick="toggleRun(this)" class="h-7 px-3 rounded-md bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-bold flex items-center gap-1 shadow-sm shadow-cyan-500/15 transition action-btn">
+                      <i data-lucide="play" class="w-3 h-3 fill-black"></i>
+                      <span>Iniciar</span>
+                    </button>
+                    <!-- Cookies Button -->
+                    <button onclick="openCookiesModal('Meta Ads Scaler Latam')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-3.5 h-3.5 text-obsidian-amber"></i>
+                    </button>
+                    <!-- Warmer Button -->
+                    <button onclick="openWarmer('Meta Ads Scaler Latam')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Calentar Sesión">
+                      <i data-lucide="flame" class="w-3.5 h-3.5 text-obsidian-orange"></i>
+                    </button>
+                    <!-- Clone Button -->
+                    <button onclick="alert('Perfil duplicado')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <!-- Edit Button -->
+                    <button onclick="toggleModal('modal-create')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Editar Perfil">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 3: ENEBA GAMING BUYER (IDLE with DIRECT START URL) -->
+              <tr class="hover:bg-white/[0.025] transition group cursor-pointer" onclick="openDrawer('Eneba Gaming Keys Buyer', 'Windows 11 x64', '45.142.122.9:8000', 'Frankfurt, DE', 'Intel Iris Xe')">
+                <td class="px-4 py-3 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-3 py-3">
+                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400 font-mono text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                    Inactivo
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 text-sm shrink-0">
+                      🪟
+                    </div>
+                    <div>
+                      <div class="font-bold text-white text-xs tracking-tight group-hover:text-obsidian-cyan transition flex items-center gap-1.5">
+                        <span>Eneba Gaming Keys Buyer</span>
+                        <span class="text-[9px] font-mono text-slate-400">#en-01</span>
+                      </div>
+                      <div class="text-[10px] font-mono text-slate-400 flex items-center gap-2 mt-0.5">
+                        <span>ID: prf_113a77fc</span>
+                        <span>·</span>
+                        <span class="text-obsidian-emerald font-semibold">Start: eneba.com</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm">🇩🇪</span>
+                    <div>
+                      <div class="font-mono text-white text-[11px] font-semibold">45.142.122.9:8000</div>
+                      <div class="text-[10px] text-slate-400">Frankfurt, Germany</div>
+                    </div>
+                    <span class="px-1.5 py-0.2 rounded bg-obsidian-emerald/10 text-obsidian-emerald border border-obsidian-emerald/20 text-[10px] font-mono font-bold">
+                      68ms
+                    </span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-slate-200">Win 11</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-obsidian-cyan font-bold">Turnstile OK</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-400">Iris Xe</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">8 Cores · 16GB · Direct URL (No Google Captcha)</div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[10px] font-mono">#gaming</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="toggleRun(this)" class="h-7 px-3 rounded-md bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-bold flex items-center gap-1 shadow-sm shadow-cyan-500/15 transition action-btn">
+                      <i data-lucide="play" class="w-3 h-3 fill-black"></i>
+                      <span>Iniciar</span>
+                    </button>
+                    <button onclick="openCookiesModal('Eneba Gaming Keys Buyer')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-3.5 h-3.5 text-obsidian-amber"></i>
+                    </button>
+                    <button onclick="openWarmer('Eneba Gaming Keys Buyer')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Calentar Sesión">
+                      <i data-lucide="flame" class="w-3.5 h-3.5 text-obsidian-orange"></i>
+                    </button>
+                    <button onclick="alert('Perfil duplicado')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="toggleModal('modal-create')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Editar Perfil">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ROW 4: DIRECT IP (NO PROXY) -->
+              <tr class="hover:bg-white/[0.025] transition group cursor-pointer" onclick="openDrawer('Crypto Airdrop Bot', 'Ubuntu 24.04', 'Conexión Directa', 'CDMX, MX', 'Mesa DRI')">
+                <td class="px-4 py-3 text-center" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="profile-check rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0 cursor-pointer" onchange="updateSelection()">
+                </td>
+                <td class="px-3 py-3">
+                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400 font-mono text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                    Inactivo
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 text-sm shrink-0">
+                      🐧
+                    </div>
+                    <div>
+                      <div class="font-bold text-white text-xs tracking-tight group-hover:text-obsidian-cyan transition flex items-center gap-1.5">
+                        <span>Crypto Airdrop Bot</span>
+                        <span class="text-[9px] font-mono text-slate-400">#cr-09</span>
+                      </div>
+                      <div class="text-[10px] font-mono text-slate-400 flex items-center gap-2 mt-0.5">
+                        <span>ID: prf_771b00ee</span>
+                        <span>·</span>
+                        <span class="text-slate-300">Ubuntu 24.04</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm">💻</span>
+                    <div>
+                      <div class="font-mono text-slate-300 text-[11px]">Directo (IP Local)</div>
+                      <div class="text-[10px] text-slate-500">187.140.76.148 · CDMX</div>
+                    </div>
+                    <span class="px-1.5 py-0.2 rounded bg-white/5 text-slate-400 border border-white/10 text-[10px] font-mono">
+                      Host Match
+                    </span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-[11px]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-slate-200">Linux</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-obsidian-cyan font-bold">Creep 0%</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-400">Mesa DRI</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">8 Cores · Auto Timezone / Locale</div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-1">
+                    <span class="px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[10px] font-mono">#crypto</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="toggleRun(this)" class="h-7 px-3 rounded-md bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-bold flex items-center gap-1 shadow-sm shadow-cyan-500/15 transition action-btn">
+                      <i data-lucide="play" class="w-3 h-3 fill-black"></i>
+                      <span>Iniciar</span>
+                    </button>
+                    <button onclick="openCookiesModal('Crypto Airdrop Bot')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Gestionar Cookies">
+                      <i data-lucide="cookie" class="w-3.5 h-3.5 text-obsidian-amber"></i>
+                    </button>
+                    <button onclick="openWarmer('Crypto Airdrop Bot')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Calentar Sesión">
+                      <i data-lucide="flame" class="w-3.5 h-3.5 text-obsidian-orange"></i>
+                    </button>
+                    <button onclick="alert('Perfil duplicado')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Duplicar">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="toggleModal('modal-create')" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Editar Perfil">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SLIDE-OVER HARDWARE INSPECTOR DRAWER (DOLPHIN/LINEAR STYLE) -->
+  <aside id="inspector-drawer" class="w-84 border-l border-obsidian-border bg-obsidian-surface/95 backdrop-blur flex flex-col justify-between shrink-0 transform translate-x-full transition-transform duration-200 ease-out fixed right-0 top-14 bottom-0 z-30 shadow-2xl">
+    <div class="p-5 space-y-4 overflow-y-auto custom-scroll">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-obsidian-border">
+        <div>
+          <h3 class="text-sm font-bold text-white tracking-tight" id="drawer-title">Shein VIP Enterprise #01</h3>
+          <span class="text-[10px] font-mono text-obsidian-muted" id="drawer-id">ID: prf_920f18aa</span>
+        </div>
+        <button onclick="closeDrawer()" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Quick Trust Score Badge -->
+      <div class="p-3 rounded-xl bg-obsidian-card border border-obsidian-border space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400">Scoring Antidetect</span>
+          <span class="text-obsidian-emerald font-mono font-bold flex items-center gap-1 text-xs">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 100% PASSED
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+          <div class="p-2 rounded-lg bg-black/40 border border-white/5">
+            <span class="text-slate-500 block text-[9.5px]">CreepJS Score</span>
+            <span class="text-obsidian-cyan font-bold">0% (0 Lies)</span>
+          </div>
+          <div class="p-2 rounded-lg bg-black/40 border border-white/5">
+            <span class="text-slate-500 block text-[9.5px]">WebRTC Leak</span>
+            <span class="text-obsidian-emerald font-bold">UDP Blocked</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hardware Specs Block -->
+      <div class="space-y-2 font-mono text-xs">
+        <div class="text-[10px] uppercase font-bold text-obsidian-muted tracking-wider">Identidad de Hardware</div>
+        <div class="p-3 rounded-xl bg-obsidian-card border border-obsidian-border space-y-2 text-[11.5px]">
+          <div class="flex justify-between">
+            <span class="text-slate-400 font-sans">Sistema OS:</span>
+            <span class="text-white" id="drawer-os">Windows 11 x64</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400 font-sans">Resolución:</span>
+            <span class="text-white">1920 × 1080 (1.0x)</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400 font-sans">CPU Cores:</span>
+            <span class="text-white">8 núcleos</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400 font-sans">Memoria RAM:</span>
+            <span class="text-white">16 GB</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400 font-sans">Tarjeta Gráfica:</span>
+            <span class="text-white truncate max-w-[130px]" id="drawer-gpu">NVIDIA RTX 4070</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Shield Protections -->
+      <div class="space-y-2">
+        <div class="text-[10px] uppercase font-mono font-bold text-obsidian-muted tracking-wider">Protecciones Activas</div>
+        <div class="space-y-1.5 text-xs font-sans">
+          <label class="flex items-center justify-between p-2.5 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer hover:border-slate-600 transition">
+            <div class="flex items-center gap-2">
+              <i data-lucide="image" class="w-3.5 h-3.5 text-obsidian-cyan"></i>
+              <span class="text-slate-200">Ruido Canvas Inteligente (>32px)</span>
+            </div>
+            <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0">
+          </label>
+
+          <label class="flex items-center justify-between p-2.5 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer hover:border-slate-600 transition">
+            <div class="flex items-center gap-2">
+              <i data-lucide="volume-2" class="w-3.5 h-3.5 text-obsidian-cyan"></i>
+              <span class="text-slate-200">AudioContext Spoofing</span>
+            </div>
+            <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0">
+          </label>
+
+          <label class="flex items-center justify-between p-2.5 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer hover:border-slate-600 transition">
+            <div class="flex items-center gap-2">
+              <i data-lucide="globe" class="w-3.5 h-3.5 text-obsidian-cyan"></i>
+              <span class="text-slate-200">Alineación Geo/Idioma por Host</span>
+            </div>
+            <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-4 border-t border-obsidian-border flex items-center gap-2 bg-obsidian-surface">
+      <button onclick="toggleModal('modal-create')" class="flex-1 h-9 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-white/10 flex items-center justify-center gap-1.5 transition action-btn">
+        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+        <span>Editar Perfil</span>
+      </button>
+      <button class="h-9 px-5 rounded-lg bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-black flex items-center gap-1.5 transition action-btn shadow-sm shadow-cyan-500/20">
+        <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+        <span>Iniciar</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- FLOATING BOTTOM MULTI-ACTION DOCK (ACTIVATES WHEN ROWS CHECKED) -->
+  <div id="batch-dock" class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel rounded-xl px-4 py-2.5 flex items-center gap-4 shadow-2xl border border-white/15 z-40 transform translate-y-28 transition-transform duration-300">
+    <div class="flex items-center gap-2 text-xs font-mono">
+      <span class="w-2 h-2 rounded-full bg-obsidian-cyan"></span>
+      <span id="selected-count" class="font-bold text-white text-sm">2</span>
+      <span class="text-slate-400">perfiles seleccionados</span>
+    </div>
+
+    <div class="h-4 w-px bg-white/10"></div>
+
+    <div class="flex items-center gap-2">
+      <!-- Batch Start -->
+      <button onclick="alert('Iniciando perfiles seleccionados...')" class="h-8 px-3.5 rounded-lg bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-black flex items-center gap-1.5 transition action-btn shadow-sm shadow-cyan-500/20">
+        <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+        <span>Iniciar Todos</span>
+      </button>
+      <!-- Batch Warm -->
+      <button onclick="openWarmer('Lote de Perfiles')" class="h-8 px-3.5 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs font-semibold border border-white/10 flex items-center gap-1.5 transition action-btn">
+        <i data-lucide="flame" class="w-3.5 h-3.5 text-obsidian-orange"></i>
+        <span>Calentar</span>
+      </button>
+      <!-- Batch Test -->
+      <button onclick="testAllProxies()" class="h-8 px-3.5 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs font-semibold border border-white/10 flex items-center gap-1.5 transition action-btn">
+        <i data-lucide="wifi" class="w-3.5 h-3.5 text-obsidian-cyan"></i>
+        <span>Test Proxies</span>
+      </button>
+      <!-- Batch Delete -->
+      <button onclick="alert('¿Eliminar seleccionados?')" class="h-8 px-3.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 flex items-center gap-1.5 transition action-btn">
+        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+        <span>Eliminar</span>
+      </button>
+      <!-- Deselect -->
+      <button onclick="clearSelection()" class="w-8 h-8 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="Deseleccionar">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: CREAR PERFIL (NO VERBOSE PARAGRAPHS, INTENTIONAL FIELDS) -->
+  <div id="modal-create" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+      <div class="px-6 py-4 border-b border-obsidian-border flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-obsidian-cyan/10 border border-obsidian-cyan/20 flex items-center justify-center text-obsidian-cyan">
+            <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white tracking-tight">Nuevo Perfil Stealth</h3>
+        </div>
+        <button onclick="toggleModal('modal-create')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Nombre del Perfil *</label>
+          <input type="text" placeholder="Ej: Shein VIP Buyer #02" class="w-full h-10 px-3.5 rounded-lg bg-obsidian-bg border border-obsidian-border text-white text-xs placeholder-slate-500 focus:outline-none focus:border-obsidian-cyan transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Sistema Operativo</label>
+            <select class="w-full h-10 px-3 rounded-lg bg-obsidian-bg border border-obsidian-border text-white text-xs focus:outline-none">
+              <option>Windows 11 x64 (Recomendado)</option>
+              <option>macOS Sonoma</option>
+              <option>Linux Ubuntu</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Grupo / Tags</label>
+            <input type="text" placeholder="shein, ecommerce" class="w-full h-10 px-3.5 rounded-lg bg-obsidian-bg border border-obsidian-border text-white text-xs focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Proxy de Salida (Opcional)</label>
+            <span class="text-[10px] text-slate-500 font-mono">http://user:pass@host:port</span>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" placeholder="http://usr:pwd@189.201.44.12:8080" class="flex-1 h-10 px-3.5 rounded-lg bg-obsidian-bg border border-obsidian-border text-white font-mono text-xs focus:outline-none focus:border-obsidian-cyan">
+            <button class="px-3.5 h-10 rounded-lg bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 text-xs font-bold flex items-center gap-1.5 transition action-btn">
+              <i data-lucide="wifi" class="w-3.5 h-3.5 text-obsidian-cyan"></i>
+              <span>Test</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">URL de Inicio Directa</label>
+          <input type="text" placeholder="https://www.eneba.com" value="https://www.eneba.com" class="w-full h-10 px-3.5 rounded-lg bg-obsidian-bg border border-obsidian-border text-white font-mono text-xs focus:outline-none focus:border-obsidian-cyan">
+          <span class="text-[10.5px] text-slate-500 mt-1 block">💡 Navegar directo a la URL de la tienda previene el Captcha del buscador de Google.</span>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 border-t border-obsidian-border bg-black/40 flex items-center justify-between">
+        <button onclick="toggleModal('modal-create')" class="text-xs font-bold text-slate-400 hover:text-white">
+          Cancelar
+        </button>
+        <button onclick="toggleModal('modal-create'); alert('¡Perfil creado exitosamente!')" class="h-9 px-5 rounded-lg bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-bold shadow-md shadow-cyan-500/20 transition action-btn flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5 stroke-[2.5]"></i>
+          <span>Generar Perfil</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: COOKIE VAULT (INSPECTOR, INJECT & CLEAN) -->
+  <div id="modal-cookies" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+      <div class="px-6 py-4 border-b border-obsidian-border flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="cookie" class="w-4 h-4 text-obsidian-amber"></i>
+          <h3 class="text-sm font-bold text-white tracking-tight" id="cookie-modal-title">Gestión de Cookies</h3>
+        </div>
+        <button onclick="toggleModal('modal-cookies')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400">Pega formato JSON (EditThisCookie) o Netscape:</span>
+          <span class="text-[11px] font-mono text-obsidian-emerald font-bold">● 14 Cookies Activas</span>
+        </div>
+        <textarea 
+          placeholder='[{"name":"session_id","value":"920fa...","domain":".shein.com"}]'
+          class="w-full h-44 p-3 rounded-xl bg-obsidian-bg border border-obsidian-border font-mono text-xs text-white placeholder-slate-600 focus:outline-none focus:border-obsidian-cyan custom-scroll"
+        ></textarea>
+
+        <div class="flex items-center justify-between pt-1">
+          <button class="text-xs text-rose-400 hover:underline flex items-center gap-1">
+            <i data-lucide="trash-2" class="w-3 h-3"></i> Limpiar Todo
+          </button>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs border border-white/10 flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-3 h-3"></i> Copiar
+            </button>
+            <button class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs border border-white/10 flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3 h-3"></i> Descargar .json
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 border-t border-obsidian-border bg-black/40 flex items-center justify-between">
+        <button onclick="toggleModal('modal-cookies')" class="text-xs font-bold text-slate-400 hover:text-white">
+          Cerrar
+        </button>
+        <div class="flex items-center gap-2">
+          <button class="h-9 px-4 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-white/10 flex items-center gap-1.5">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+            <span>Solo Guardar</span>
+          </button>
+          <button onclick="toggleModal('modal-cookies'); alert('¡Cookies inyectadas y navegador iniciado!')" class="h-9 px-4 rounded-lg bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-black shadow-md shadow-cyan-500/20 flex items-center gap-1.5 transition action-btn">
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+            <span>Inyectar y Abrir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: WARMER STUDIO (CONCISE, NO WALL OF TEXT) -->
+  <div id="modal-warmer" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+      <div class="px-6 py-4 border-b border-obsidian-border flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="flame" class="w-4 h-4 text-obsidian-orange"></i>
+          <h3 class="text-sm font-bold text-white tracking-tight" id="warmer-modal-title">Warmer Autónomo: Perfil</h3>
+        </div>
+        <button onclick="toggleModal('modal-warmer')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <!-- Target Objective Pills -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Objetivo de Calentamiento</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="p-2.5 rounded-xl border border-obsidian-cyan bg-obsidian-cyan/10 text-left flex items-center gap-2">
+              <span class="text-base">🛒</span>
+              <div>
+                <div class="text-xs font-bold text-white">E-Commerce VIP</div>
+                <div class="text-[10px] text-obsidian-cyan font-mono">Akamai + Stripe Radar</div>
+              </div>
+            </button>
+            <button class="p-2.5 rounded-xl border border-white/10 bg-obsidian-bg text-left flex items-center gap-2 hover:border-slate-500">
+              <span class="text-base">📱</span>
+              <div>
+                <div class="text-xs font-bold text-white">Cuentas Nuevas</div>
+                <div class="text-[10px] text-slate-400 font-mono">Google & Meta Trust</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Automation Settings -->
+        <div class="p-3 rounded-xl bg-obsidian-card border border-obsidian-border space-y-2.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-300 font-medium">Ahorro de Datos Proxy (-85% GB)</span>
+            <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0">
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-300 font-medium">Desplazamiento suave humano (Smooth Scroll)</span>
+            <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan focus:ring-0">
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-300 font-medium">Tiempo de lectura por sitio</span>
+            <span class="font-mono text-obsidian-cyan font-bold">15 seg</span>
+          </div>
+        </div>
+
+        <!-- Selected Sites Checklist -->
+        <div>
+          <div class="flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+            <span>Rutas Activas (4 Sitios)</span>
+            <span class="text-obsidian-cyan text-[11px] cursor-pointer hover:underline">Seleccionar Todos</span>
+          </div>
+          <div class="space-y-1 font-mono text-xs max-h-36 overflow-y-auto custom-scroll pr-1">
+            <label class="flex items-center justify-between p-2 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan">
+                <span class="text-white font-sans">Google Search & Network</span>
+              </div>
+              <span class="text-[10px] text-slate-500">NID & AEC Cookies</span>
+            </label>
+            <label class="flex items-center justify-between p-2 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan">
+                <span class="text-white font-sans">Shein Oficial</span>
+              </div>
+              <span class="text-[10px] text-obsidian-orange">Akamai Sensor</span>
+            </label>
+            <label class="flex items-center justify-between p-2 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan">
+                <span class="text-white font-sans">Temu Marketplace</span>
+              </div>
+              <span class="text-[10px] text-obsidian-cyan">Kasada PoW</span>
+            </label>
+            <label class="flex items-center justify-between p-2 rounded-lg bg-obsidian-card border border-obsidian-border cursor-pointer">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded border-white/20 bg-obsidian-bg text-obsidian-cyan">
+                <span class="text-white font-sans">Shop Pay App</span>
+              </div>
+              <span class="text-[10px] text-obsidian-emerald">Stripe Radar</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 border-t border-obsidian-border bg-black/40 flex items-center justify-between">
+        <button onclick="toggleModal('modal-warmer')" class="text-xs font-bold text-slate-400 hover:text-white">
+          Cancelar
+        </button>
+        <button onclick="toggleModal('modal-warmer'); alert('¡Iniciando Calentador Autónomo en segundo plano!')" class="h-9 px-5 rounded-lg bg-obsidian-orange hover:bg-orange-500 text-black text-xs font-black shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition action-btn">
+          <i data-lucide="flame" class="w-3.5 h-3.5 fill-black"></i>
+          <span>Ejecutar Calentador</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+    }
+
+    function openCookiesModal(name) {
+      document.getElementById('cookie-modal-title').textContent = 'Cookies: ' + name;
+      toggleModal('modal-cookies');
+    }
+
+    function openWarmer(name) {
+      document.getElementById('warmer-modal-title').textContent = 'Warmer Autónomo: ' + name;
+      toggleModal('modal-warmer');
+    }
+
+    function openDrawer(title, os, proxy, geo, gpu) {
+      document.getElementById('drawer-title').textContent = title;
+      document.getElementById('drawer-os').textContent = os;
+      document.getElementById('drawer-gpu').textContent = gpu;
+      document.getElementById('inspector-drawer').classList.remove('translate-x-full');
+    }
+
+    function closeDrawer() {
+      document.getElementById('inspector-drawer').classList.add('translate-x-full');
+    }
+
+    function toggleSelectAll(master) {
+      document.querySelectorAll('.profile-check').forEach(cb => cb.checked = master.checked);
+      updateSelection();
+    }
+
+    function updateSelection() {
+      const checked = document.querySelectorAll('.profile-check:checked');
+      const count = checked.length;
+      const dock = document.getElementById('batch-dock');
+      const countEl = document.getElementById('selected-count');
+
+      if (count > 0) {
+        countEl.textContent = count;
+        dock.classList.remove('translate-y-28');
+      } else {
+        dock.classList.add('translate-y-28');
+        document.getElementById('master-select').checked = false;
+      }
+    }
+
+    function clearSelection() {
+      document.querySelectorAll('.profile-check').forEach(cb => cb.checked = false);
+      document.getElementById('master-select').checked = false;
+      updateSelection();
+    }
+
+    function toggleRun(btn) {
+      const isRunning = btn.classList.contains('bg-rose-500/10');
+      if (isRunning) {
+        btn.className = "h-7 px-3 rounded-md bg-obsidian-cyan hover:bg-obsidian-cyanHover text-black text-xs font-bold flex items-center gap-1 shadow-sm shadow-cyan-500/15 transition action-btn";
+        btn.innerHTML = `<i data-lucide="play" class="w-3 h-3 fill-black"></i><span>Iniciar</span>`;
+      } else {
+        btn.className = "h-7 px-2.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold flex items-center gap-1 transition action-btn";
+        btn.innerHTML = `<i data-lucide="square" class="w-3 h-3 fill-rose-400"></i><span>Detener</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    function testAllProxies() {
+      const icon = document.getElementById('btn-wifi-icon');
+      icon.classList.add('animate-pulse');
+      setTimeout(() => {
+        icon.classList.remove('animate-pulse');
+        alert('Prueba completada: 3 Proxies Activos (Latencia promedio: 48ms)');
+      }, 700);
+    }
+  </script>
+</body>
+</html>

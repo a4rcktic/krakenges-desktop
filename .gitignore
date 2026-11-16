@@ -1,0 +1,73 @@
+# Credenciales y secretos — NUNCA deben viajar en el paquete ni en git
+credenciales/
+*.env
+.env
+.env.*
+!.env.example
+backend-server/.env
+backend-server/keys/
+# Par de claves de licencias que genera `npm run keys:generate`. La privada
+# firma las licencias: NUNCA al repo (va al VPS o a KRAKENGES_LICENSE_PRIVATE_KEY).
+backend-server/.keys/
+*.pem
+
+# Clave de firma de Android. Sin esto, cualquiera con el repo puede firmar APKs
+# que se presentan como Kraken Ges. La copia buena está en ~/.config/<tu-app>/.
+# La app aún NO está en Play Store (versionCode 1), así que rotarla es gratis.
+*.keystore
+*.jks
+android/app/release.keystore
+keystore.properties
+
+# Template de inyección: SE VERSIONA (01/10). Antes estaba en .gitignore, lo que
+# hacía que build.rs fallara ("injector_template.js no encontrado") y que la app
+# no compilase desde un clon limpio: el shim es fuente, no un secreto. Sigue
+# cifrándose al compilar (build.rs: XOR + LCG), así que no aparece en claro en
+# el binario. El repo es privado; si algún día se hace público, este archivo
+# debe salir de aquí y el CI debe inyectarlo.
+
+# Sesión de servidor / datos locales
+*server_session.json
+*krakenges_db.json
+*owner_credentials.txt
+# Contenido público editado en producción; el ejemplo sí se versiona.
+backend-server/content/public-content.json
+# Bases SQLite locales: el backend usa MongoDB, no deben versionarse.
+*.db
+*.sqlite
+*.sqlite3
+
+# Node / build
+node_modules/
+dist/
+target/
+*.log
+
+# Binarios compilados: 222 MB que se regeneran con `npm run tauri build` /
+# `npx cap sync android`. No se versionan. OJO: packaging/, installer/ y
+# native-injector/ SÍ son código fuente (injector.cpp, Kraken Ges-Setup.iss) y
+# deben seguir versionándose.
+releases-instaladores/
+packaging/arch/*.AppImage
+packaging/arch/*.pkg.tar.zst
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Symlinks locales de node_modules (creados para testear sin instalar)
+backend-server/node_modules
+
+# Clave de firma del updater de Tauri (Ed25519). Solo la publica va en el
+# repo (tauri.conf.json plugins.updater.pubkey); la privada, en
+# ~/.config/<tu-app>/updater/.
+*.key
+tauri-updater.key
+updater-manifest.json
+
+# Helper huerfano: importa clsx y tailwind-merge, que no estan en package.json.
+# Ningun fichero lo usa, y romperia la compilacion de CI.
+app-client-desktop-and-mobile/src/lib/utils.ts
+
+# Salida local de Playwright MCP (capturas y sesiones de navegador).
+.playwright-mcp/

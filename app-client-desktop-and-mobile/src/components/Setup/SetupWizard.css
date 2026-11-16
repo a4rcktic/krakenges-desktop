@@ -1,0 +1,198 @@
+/* ==========================================================================
+   KRAKEN GES SETUP WIZARD — Python-in-Windows Style Component Installer
+   100% Monochromatic Stark (#000000 / #ffffff) & Pure Vector Iconography
+   ========================================================================== */
+
+.wizard-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  user-select: none;
+}
+
+.wizard-grid-bg {
+  background-image: 
+    radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+}
+
+.wizard-top-header {
+  position: fixed;
+  top: 1.5rem;
+  left: 2rem;
+  z-index: 10010;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wizard-card {
+  width: 100%;
+  max-width: 560px;
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  position: relative;
+  z-index: 10020;
+}
+
+@media (max-width: 640px) {
+  .wizard-card {
+    padding: 1.5rem;
+  }
+}
+
+.btn-wizard-tactile {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+  cursor: pointer;
+}
+
+.btn-wizard-tactile * {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+.btn-wizard-tactile:hover {
+  background-color: #e4e4e7 !important;
+}
+
+.btn-wizard-tactile:active {
+  transform: scale(0.97);
+}
+
+.wizard-checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  background: #141416;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.wizard-checkbox:checked {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.wizard-checkbox:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background-color: #000000;
+}
+
+.wizard-log-box {
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  color: #9499ad;
+  height: 7rem;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.wizard-log-box::-webkit-scrollbar {
+  width: 4px;
+}
+.wizard-log-box::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------------------
+   Progreso de descarga del motor
+   ---------------------------------------------------------------------------
+   Antes no había nada: ~130 MB sin feedback parecían la app colgada. Si el
+   servidor no envía Content-Length (total === 0) la barra va en modo
+   indeterminado, porque un porcentaje inventado sería peor que ninguna cifra.
+--------------------------------------------------------------------------- */
+.wizard-engine-progress {
+  margin: 0.75rem 0 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wizard-engine-progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+}
+
+.wizard-engine-progress-label {
+  font-size: 0.75rem;
+  color: #e8eaf2;
+  font-weight: 500;
+}
+
+.wizard-engine-progress-figure {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  color: #9499ad;
+  white-space: nowrap;
+}
+
+.wizard-engine-bar {
+  position: relative;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.wizard-engine-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4f7cff, #7a5cff);
+  transition: width 220ms ease-out;
+}
+
+/* Modo indeterminado: total desconocido. Se anima el ancho en lugar de
+   mostrar un porcentaje, porque no se sabe cuánto falta de verdad. */
+.wizard-engine-bar-fill.is-indeterminate {
+  width: 35% !important;
+  animation: wizard-engine-slide 1.15s ease-in-out infinite;
+}
+
+@keyframes wizard-engine-slide {
+  0%   { left: -35%; }
+  100% { left: 100%; }
+}
+
+.wizard-engine-error {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.6rem;
+  background: rgba(239, 68, 68, 0.09);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}

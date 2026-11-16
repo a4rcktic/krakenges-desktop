@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Autenticación de Flota</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* Ambient cursor spotlight glow */
+    #cursor-spotlight {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(750px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(255, 255, 255, 0.055), transparent 60%);
+      transition: opacity 0.3s ease;
+    }
+
+    /* Interactive Canvas */
+    #fx-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Technical subtle grid overlay */
+    .tech-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glass card with multi-layer refraction */
+    .auth-glass-card {
+      background: rgba(10, 10, 14, 0.74);
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        0 30px 80px -20px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .auth-glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-tactile {
+      transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn-tactile:active {
+      transform: scale(0.97);
+    }
+
+    .form-fade {
+      animation: formFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes formFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center p-4 bg-black select-none relative">
+
+  <!-- DYNAMIC BACKGROUND CANVAS -->
+  <canvas id="fx-canvas"></canvas>
+
+  <!-- INTERACTIVE MOUSE SPOTLIGHT -->
+  <div id="cursor-spotlight"></div>
+
+  <!-- SUBTLE TECH GRID -->
+  <div class="tech-grid"></div>
+
+  <!-- CENTRAL AUTH CARD (Toggles smoothly between Login and Register) -->
+  <div class="w-full max-w-[390px] auth-glass-card rounded-2xl p-7 sm:p-8 space-y-6 z-20 relative">
+
+    <!-- ==================== VIEW 1: LOGIN ==================== -->
+    <div id="view-login" class="form-fade space-y-6">
+      <!-- LOGO Y TÍTULO -->
+      <div class="space-y-3 text-center">
+        <div class="w-11 h-11 rounded-xl bg-white text-black mx-auto flex items-center justify-center shadow-lg shadow-white/10">
+          <i data-lucide="shield" class="w-5 h-5 fill-black text-black"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-white tracking-tight">Iniciar sesión</h1>
+          <p class="text-xs text-neutral-400 mt-1">Ingresa tus datos para continuar en Kraken Ges</p>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE LOGIN -->
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
+        <!-- Usuario -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-medium text-neutral-300">Usuario</label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="login-username"
+              value="usuario"
+              required
+              autocomplete="username"
+              placeholder="Ingresa tu usuario" 
+              class="w-full h-10 pl-10 pr-3 rounded-xl bg-black/60 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-white transition font-mono"
+            >
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-medium text-neutral-300">Contraseña</label>
+            <a href="#" onclick="alert('Contacta a tu asesor o soporte para restablecer tu acceso.')" class="text-[11px] text-neutral-400 hover:text-white transition">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="password" 
+              id="login-password"
+              value="••••••••••••"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••••••" 
+              class="w-full h-10 pl-10 pr-10 rounded-xl bg-black/60 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-white transition font-mono"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('login-password', 'login-eye-icon')" 
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-1 transition"
+            >
+              <i id="login-eye-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón Ingresar -->
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            id="login-submit-btn"
+            class="w-full h-10 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs flex items-center justify-center gap-2 btn-tactile shadow-md shadow-white/5"
+          >
+            <span id="login-btn-text">Iniciar sesión</span>
+            <i id="login-btn-icon" data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- SWITCH TO REGISTER (Rotates background automatically!) -->
+      <div class="pt-2 text-center text-xs text-neutral-400 border-t border-white/5">
+        ¿No tienes una cuenta? 
+        <button onclick="switchToView('register')" class="text-white font-semibold hover:underline ml-1 cursor-pointer">
+          Regístrate
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 2: REGISTER ==================== -->
+    <div id="view-register" class="hidden form-fade space-y-5">
+      <!-- LOGO Y TÍTULO -->
+      <div class="space-y-2.5 text-center">
+        <div class="w-11 h-11 rounded-xl bg-white text-black mx-auto flex items-center justify-center shadow-lg shadow-white/10">
+          <i data-lucide="shield" class="w-5 h-5 fill-black text-black"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-white tracking-tight">Crear cuenta</h1>
+          <p class="text-xs text-neutral-400 mt-0.5">Comienza a gestionar tu flota en Kraken Ges</p>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE REGISTRO (SIN CORREO, CON CONFIRMACIÓN DE CONTRASEÑA) -->
+      <form onsubmit="handleRegisterSubmit(event)" class="space-y-3 text-xs">
+        <!-- Usuario -->
+        <div class="space-y-1">
+          <label class="block text-[11.5px] font-medium text-neutral-300">Usuario</label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="reg-username"
+              required
+              autocomplete="username"
+              placeholder="Elige tu nombre de usuario" 
+              class="w-full h-9 pl-10 pr-3 rounded-xl bg-black/60 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-white transition font-mono"
+            >
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="space-y-1">
+          <label class="block text-[11.5px] font-medium text-neutral-300">Contraseña</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="password" 
+              id="reg-password"
+              required
+              autocomplete="new-password"
+              placeholder="Mínimo 8 caracteres" 
+              class="w-full h-9 pl-10 pr-10 rounded-xl bg-black/60 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-white transition font-mono"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('reg-password', 'reg-eye-icon')" 
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-1 transition"
+            >
+              <i id="reg-eye-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirmar Contraseña -->
+        <div class="space-y-1">
+          <label class="block text-[11.5px] font-medium text-neutral-300">Confirmar contraseña</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="password" 
+              id="reg-password-confirm"
+              required
+              autocomplete="new-password"
+              placeholder="Repite tu contraseña" 
+              class="w-full h-9 pl-10 pr-10 rounded-xl bg-black/60 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-white transition font-mono"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('reg-password-confirm', 'reg-eye-confirm-icon')" 
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-1 transition"
+            >
+              <i id="reg-eye-confirm-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <p id="password-match-error" class="hidden text-[10.5px] text-rose-400 font-mono pt-0.5">Las contraseñas no coinciden</p>
+        </div>
+
+        <!-- Código de Licencia (Opcional) -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="block text-[11.5px] font-medium text-neutral-300">Código de Licencia</label>
+            <span class="text-[10px] text-neutral-500 font-mono">Opcional</span>
+          </div>
+          <div class="relative">
+            <i data-lucide="key" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="reg-key"
+              placeholder="MSK-XXXX-XXXX (De tu asesor)" 
+              class="w-full h-9 pl-10 pr-3 rounded-xl bg-black/60 border border-white/10 text-white placeholder-neutral-600 text-xs focus:outline-none focus:border-white transition font-mono uppercase"
+            >
+          </div>
+        </div>
+
+        <!-- Botón Registrar -->
+        <div class="pt-1.5">
+          <button 
+            type="submit" 
+            id="reg-submit-btn"
+            class="w-full h-10 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs flex items-center justify-center gap-2 btn-tactile shadow-md shadow-white/5"
+          >
+            <span id="reg-btn-text">Crear cuenta</span>
+            <i id="reg-btn-icon" data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- SWITCH TO LOGIN (Rotates background automatically!) -->
+      <div class="pt-2 text-center text-xs text-neutral-400 border-t border-white/5">
+        ¿Ya tienes una cuenta? 
+        <button onclick="switchToView('login')" class="text-white font-semibold hover:underline ml-1 cursor-pointer">
+          Iniciar sesión
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DISCREET BACKGROUND ROTATION INDICATOR & MANUAL ROTATOR (BOTTOM-RIGHT) -->
+  <div class="fixed bottom-6 right-8 z-30 flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-black/70 border border-white/10 backdrop-blur-md text-[11px] font-mono text-neutral-400 shadow-xl">
+    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span>Fondo:</span>
+    <span id="fx-indicator-label" class="text-white font-bold">Constelación</span>
+    <button onclick="rotateFx()" class="p-1 rounded-md hover:bg-white/10 text-neutral-300 hover:text-white transition ml-1" title="Cambiar fondo manualmente">
+      <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+    </button>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Available background modes
+    const MODES = ['constellation', 'waves', 'matrix'];
+    const MODE_LABELS = {
+      constellation: 'Constelación',
+      waves: 'Ondas 3D',
+      matrix: 'Malla Hex'
+    };
+
+    // Pick random initial mode or advance from previous session
+    let lastIndex = parseInt(localStorage.getItem('krakenges_login_bg_idx') || '0');
+    let currentModeIndex = (lastIndex + 1) % MODES.length;
+    localStorage.setItem('krakenges_login_bg_idx', currentModeIndex);
+    let currentMode = MODES[currentModeIndex];
+
+    function updateFxLabel() {
+      const label = document.getElementById('fx-indicator-label');
+      if (label) label.textContent = MODE_LABELS[currentMode];
+    }
+    updateFxLabel();
+
+    // Rotate background effect smoothly
+    function rotateFx() {
+      currentModeIndex = (currentModeIndex + 1) % MODES.length;
+      currentMode = MODES[currentModeIndex];
+      localStorage.setItem('krakenges_login_bg_idx', currentModeIndex);
+      updateFxLabel();
+    }
+
+    // Switch between Login and Register views + ROTATE BACKGROUND AUTOMATICALLY
+    function switchToView(view) {
+      const loginView = document.getElementById('view-login');
+      const registerView = document.getElementById('view-register');
+
+      if (view === 'register') {
+        loginView.classList.add('hidden');
+        registerView.classList.remove('hidden');
+      } else {
+        registerView.classList.add('hidden');
+        loginView.classList.remove('hidden');
+      }
+
+      // Rotate background effect automatically on switch!
+      rotateFx();
+      lucide.createIcons();
+    }
+
+    // Password visibility toggle
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      icon.setAttribute('data-lucide', isPass ? 'eye-off' : 'eye');
+      lucide.createIcons();
+    }
+
+    // Submit simulations
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-submit-btn');
+      const text = document.getElementById('login-btn-text');
+      const icon = document.getElementById('login-btn-icon');
+
+      text.textContent = 'Iniciando sesión...';
+      icon.setAttribute('data-lucide', 'loader-2');
+      icon.classList.add('animate-spin');
+      btn.disabled = true;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        window.location.href = 'concept4_uber_fleet.html';
+      }, 700);
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const pass = document.getElementById('reg-password').value;
+      const confirmPass = document.getElementById('reg-password-confirm').value;
+      const matchError = document.getElementById('password-match-error');
+
+      if (pass !== confirmPass) {
+        matchError.classList.remove('hidden');
+        document.getElementById('reg-password-confirm').classList.add('border-rose-500');
+        return;
+      }
+      matchError.classList.add('hidden');
+      document.getElementById('reg-password-confirm').classList.remove('border-rose-500');
+
+      const btn = document.getElementById('reg-submit-btn');
+      const text = document.getElementById('reg-btn-text');
+      const icon = document.getElementById('reg-btn-icon');
+
+      text.textContent = 'Creando cuenta...';
+      icon.setAttribute('data-lucide', 'loader-2');
+      icon.classList.add('animate-spin');
+      btn.disabled = true;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        alert('¡Cuenta creada con éxito! Redirigiendo a la plataforma...');
+        window.location.href = 'concept4_uber_fleet.html';
+      }, 900);
+    }
+
+    // Interactive Cursor Spotlight Tracking
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    const spotlight = document.getElementById('cursor-spotlight');
+
+    window.addEventListener('pointermove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      spotlight.style.setProperty('--mouse-x', `${mouseX}px`);
+      spotlight.style.setProperty('--mouse-y', `${mouseY}px`);
+    });
+
+    // -------------------------------------------------------------
+    // HIGH PERFORMANCE INTERACTIVE CANVAS BACKGROUND ENGINE (60 FPS)
+    // -------------------------------------------------------------
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // MODE 1: CONSTELLATION PARTICLES (PHYSICS + MOUSE MAGNET)
+    const PARTICLE_COUNT = 85;
+    const particles = [];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.7;
+        this.vy = (Math.random() - 0.5) * 0.7;
+        this.radius = Math.random() * 1.6 + 0.8;
+        this.baseAlpha = Math.random() * 0.5 + 0.3;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
+
+        // Mouse magnetic physics
+        const dx = mouseX - this.x;
+        const dy = mouseY - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 180) {
+          const force = (180 - dist) / 180;
+          this.x -= (dx / dist) * force * 1.8;
+          this.y -= (dy / dist) * force * 1.8;
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.baseAlpha})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new Particle());
+    }
+
+    // MODE 2: TOPOGRAPHICAL WAVES
+    let waveTime = 0;
+
+    function renderWaves() {
+      waveTime += 0.015;
+      const lines = 18;
+      const step = height / lines;
+
+      ctx.lineWidth = 1;
+      for (let i = 0; i < lines; i++) {
+        const yBase = i * step + 40;
+        ctx.beginPath();
+        
+        for (let x = 0; x < width; x += 15) {
+          const distToMouse = Math.abs(x - mouseX);
+          const mouseLift = distToMouse < 240 ? Math.cos((distToMouse / 240) * (Math.PI / 2)) * 30 : 0;
+          
+          const y = yBase 
+            + Math.sin(x * 0.006 + waveTime + i * 0.4) * 22
+            + Math.sin(x * 0.015 - waveTime * 0.8) * 12
+            - mouseLift;
+
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+
+        const alpha = Math.sin((i / lines) * Math.PI) * 0.16 + 0.03;
+        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.stroke();
+      }
+    }
+
+    // MODE 3: HEX GRID RADAR PULSE
+    let hexRadius = 38;
+    let hexTime = 0;
+
+    function drawHex(x, y, r, alpha) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i;
+        const hx = x + r * Math.cos(angle);
+        const hy = y + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(hx, hy);
+        else ctx.lineTo(hx, hy);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.stroke();
+    }
+
+    function renderHexMatrix() {
+      hexTime += 0.02;
+      const h = hexRadius * Math.sqrt(3);
+      const cols = Math.ceil(width / (hexRadius * 1.5)) + 1;
+      const rows = Math.ceil(height / h) + 1;
+
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          const x = c * hexRadius * 1.5;
+          const y = r * h + (c % 2 === 0 ? 0 : h / 2);
+
+          const dx = mouseX - x;
+          const dy = mouseY - y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          let alpha = 0.035;
+          if (dist < 220) {
+            alpha += (1 - dist / 220) * 0.22;
+          }
+          alpha += Math.sin(hexTime + (c + r) * 0.2) * 0.02;
+
+          drawHex(x, y, hexRadius - 3, Math.max(0.015, alpha));
+        }
+      }
+    }
+
+    // MAIN ANIMATION LOOP
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      if (currentMode === 'constellation') {
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 115) {
+              const alpha = (1 - dist / 115) * 0.16;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+
+          const mdx = particles[i].x - mouseX;
+          const mdy = particles[i].y - mouseY;
+          const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mdist < 150) {
+            const malpha = (1 - mdist / 150) * 0.32;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${malpha})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      } else if (currentMode === 'waves') {
+        renderWaves();
+      } else if (currentMode === 'matrix') {
+        renderHexMatrix();
+      }
+
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

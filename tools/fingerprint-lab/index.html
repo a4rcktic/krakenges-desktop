@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fingerprint Lab</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; padding:20px; background:#0b0b0f; color:#e5e5e5;
+         font:14px/1.5 ui-monospace, "JetBrains Mono", Menlo, monospace; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  .sub { color:#8b8b9a; margin-bottom:18px; font-size:12px; }
+  .box { background:#14141b; border:1px solid #26262f; border-radius:8px;
+         padding:14px; margin-bottom:16px; }
+  .estado { display:flex; gap:10px; flex-wrap:wrap; margin:12px 0; }
+  .pastilla { padding:6px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+  .ok   { background:#052e16; color:#4ade80; border:1px solid #166534; }
+  .mal  { background:#2a0a0a; color:#f87171; border:1px solid #7f1d1d; }
+  .nulo { background:#1a1a22; color:#a1a1aa; border:1px solid #33333f; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { text-align:left; color:#8b8b9a; font-weight:500; padding:6px 8px;
+       border-bottom:1px solid #26262f; }
+  td { padding:5px 8px; border-bottom:1px solid #1c1c24; vertical-align:top;
+       word-break:break-all; }
+  td.k { color:#c4b5fd; white-space:nowrap; }
+  .v-ok   { color:#4ade80; }
+  .v-mal  { color:#f87171; font-weight:700; }
+  .v-nulo { color:#71717a; }
+  button { background:#f5f5f5; color:#0b0b0f; border:0; border-radius:6px;
+           padding:9px 16px; font-weight:700; font-size:13px; cursor:pointer;
+           font-family:inherit; }
+  code { background:#1c1c24; padding:1px 5px; border-radius:3px; color:#93c5fd; }
+  ul { margin:6px 0; padding-left:20px; } li { margin:3px 0; color:#c4c4cc; }
+</style>
+</head>
+<body>
+
+<h1>Fingerprint Lab</h1>
+<div class="sub">
+  Qué ve un sitio de ti, qué querías tú, y si coinciden.
+  Ábrelo tal cual: en Chrome normal no hay intención y solo se observan valores.
+</div>
+
+<div class="box">
+  <button id="correr">Medir ahora</button>
+  <button id="copiar" style="background:#1c1c24; color:#e5e5e5; margin-left:8px">Copiar informe</button>
+  <div class="estado" id="estado"></div>
+  <div id="resumen" style="color:#a1a1aa; font-size:12px; margin-top:8px"></div>
+</div>
+
+<div class="box" id="tabla"></div>
+
+<div class="box" id="webview">
+  <b style="color:#f87171">¿Esto es un WebView?</b>
+  <div class="estado"><span class="pastilla nulo">midiendo…</span></div>
+  <div class="nota" style="color:#a1a1aa; font-size:12px; margin:4px 0 10px"></div>
+  <table></table>
+</div>
+
+<div class="box">
+  <b style="color:#f87171">Lo que JavaScript no puede medir</b>
+  <div style="color:#8b8b9a; font-size:12px; margin:6px 0 10px">
+    Estas señales existen y un sitio las ve. No aparecen en la tabla porque
+    medirlas desde dentro es imposible: hay que medirlas desde fuera.
+  </div>
+  <ul id="externas"></ul>
+</div>
+
+<div class="box" style="color:#8b8b9a; font-size:12px">
+  <b style="color:#e5e5e5">Cómo se lee</b>
+  <ul style="margin-top:8px">
+    <li><span class="v-ok">coherente</span> — lo inyectas y coincide con la receta</li>
+    <li><span class="v-mal">SE ESCAPA</span> — lo inyectas pero el valor real difiere: eso es lo que te delata</li>
+    <li><span class="v-nulo">sin control</span> — no lo tocas en absoluto</li>
+    <li><span class="v-nulo">observado</span> — sin sesión de perfil, así que solo se registra el valor</li>
+  </ul>
+  <p style="margin:10px 0 0">
+    La recipe llega al shim y ahora se publica en <code>window.__krakenges</code>.
+    Si esa propiedad no existe, el motor es una build anterior o la sesión no
+    tiene el shim inyectado.
+  </p>
+</div>
+
+<script src="probe.js"></script>
+<script>
+  function esc(s) {
+    return String(s).replace(/[<>&]/g, function (c) {
+      return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c];
+    });
+  }
+
+  async function pintar() {
+    var r = await FingerprintLab.run();
+    var escapan = r.filas.filter(function (f) { return f.veredicto === 'SE ESCAPA'; });
+    var ok = r.filas.filter(function (f) { return f.veredicto === 'coherente'; });
+    var sin = r.filas.filter(function (f) { return f.veredicto === 'sin control'; });
+
+    var e = document.getElementById('estado');
+    if (!r.intencion) {
+      e.innerHTML = '<span class="pastilla nulo">sin sesión de perfil · solo valores observados</span>';
+    } else {
+      e.innerHTML =
+        '<span class="pastilla ok">' + ok.length + ' coherentes</span>' +
+        '<span class="pastilla ' + (escapan.length ? 'mal' : 'ok') + '">' + escapan.length + ' se escapan</span>' +
+        '<span class="pastilla nulo">' + sin.length + ' sin control</span>';
+    }
+
+    document.getElementById('resumen').innerHTML = escapan.length
+      ? 'Repara esto primero: ' + escapan.map(function (f) { return f.clave; }).join(', ')
+      : (r.intencion ? 'Ninguna señal inyectada difiere de la receta.' : '');
+
+    var h = '<table><thead><tr><th>señal</th><th>observado</th><th>intención</th><th>veredicto</th></tr></thead><tbody>';
+    r.filas.forEach(function (f) {
+      var cls = f.veredicto === 'coherente' ? 'ok' : (f.veredicto === 'SE ESCAPA' ? 'mal' : 'nulo');
+      h += '<tr><td class="k">' + esc(f.clave) + '</td>' +
+           '<td>' + esc(f.observado) + '</td>' +
+           '<td>' + (f.queria === null ? '—' : esc(f.queria)) + '</td>' +
+           '<td class="v-' + cls + '">' + esc(f.veredicto) + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('tabla').innerHTML = h;
+
+    document.getElementById('externas').innerHTML = FingerprintLab.EXTERNAS.map(function (x) {
+      return '<li><b>' + esc(x.label) + '</b> — ' + esc(x.nota) + '</li>';
+    }).join('');
+
+    var wv = r.webview || [];
+    var cuántos = r.filas.filter(function (f) { return f.clave === 'webviewSospechoso'; })[0];
+    var n = cuántos ? cuántos.observado : 0;
+    var caja = document.getElementById('webview');
+    if (!caja) return;
+    caja.querySelector('.pastilla').textContent = n + ' señales activas';
+    caja.querySelector('.pastilla').className = 'pastilla ' + (n >= 2 ? 'mal' : (n === 1 ? 'nulo' : 'ok'));
+    caja.querySelector('.nota').textContent = n >= 2
+      ? 'Un detector no necesita las cinco: con dos ya sabe que es un WebView. Esto no se corrige inyectando, es una propiedad del contenedor.'
+      : (n === 1
+        ? 'Una sola señal activa es inocente: la tienen browsers de escritorio también. No destaca.'
+        : 'Ninguna señal de WebView activa.');
+    caja.querySelector('table').innerHTML =
+      '<thead><tr><th>señal</th><th>observado</th></tr></thead><tbody>' +
+      wv.filter(function (f) { return f.clave !== 'webviewSospechoso'; })
+        .map(function (f) {
+          var malo = (f.observado === true) || (typeof f.observado === 'string' && f.observado !== 'ninguno' && f.observado !== 'ninguna');
+          return '<tr><td class="k">' + esc(f.clave) + '</td><td class="v-' + (malo ? 'mal' : 'ok') + '">' + esc(f.observado) + '</td></tr>';
+        }).join('') +
+      '</tbody>';
+  }
+
+  // Informe en texto plano, para pegar en un chat o en un ticket. Se elige lo
+  // que tiene valor diagnóstico y se descarta el ruido.
+  async function informe() {
+    var r = await FingerprintLab.run();
+    var L = [];
+    L.push('# Fingerprint Lab');
+    L.push('# ' + r.intencion ? 'sesion de perfil (hay intencion)' : 'sin sesion de perfil (solo observado)');
+    L.push('# userAgent: ' + navigator.userAgent);
+    var escapan = r.filas.filter(function (f) { return f.veredicto === 'SE ESCAPA'; });
+    L.push('# SE ESCAPAN: ' + escapan.length);
+    L.push('');
+    L.push('## valores observados');
+    r.filas.forEach(function (f) {
+      L.push(f.clave + ' = ' + f.observado);
+    });
+    L.push('');
+    L.push('## webview');
+    r.webview.forEach(function (f) {
+      L.push(f.clave + ' = ' + f.observado);
+    });
+    L.push('');
+    L.push('## no medible desde JS');
+    r.externas.forEach(function (x) { L.push('- ' + x.label + ': ' + x.nota); });
+    return L.join('\n');
+  }
+
+  document.getElementById('copiar').addEventListener('click', function () {
+    informe().then(function (t) {
+    var b = this;
+    function ok() { b.textContent = 'Copiado'; setTimeout(function () { b.textContent = 'Copiar informe'; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(ok, function () { window.prompt('Copia el informe:', t); });
+    } else {
+      window.prompt('Copia el informe:', t);
+    }
+    });
+
+  document.getElementById('correr').addEventListener('click', pintar);
+  pintar();
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+/* ============================================================
+   Kraken Ges Dedicated Mobile Dashboard (Touch-First & OLED Stealth)
+   100% Smartphone Ergonomics • 48px Touch Slots • 120 FPS
+   ============================================================ */
+
+.mob-dash-container {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  background-color: transparent;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Reserva de la zona de notificaciones y reloj.
+   Sin esto la cabecera queda debajo de la barra de estado del sistema. El
+   valor sale de env(safe-area-inset-top), que declara cada aparato. */
+@media (max-width: 768px) {
+  .mob-dash-container {
+    padding-top: calc(var(--krakenges-inset-top) + 0.75rem);
+  }
+}
+
+
+.mob-dash-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px 16px calc(110px + env(safe-area-inset-bottom, 24px)) 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ============================================================
+   TOP APP BAR / USER GREETING HEADER
+   ============================================================ */
+.mob-dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px 10px 4px;
+}
+
+.mob-user-avatar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mob-user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #181920 0%, #0d0e12 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+.mob-user-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.mob-greeting {
+  font-size: 11px;
+  color: #71717a;
+  font-weight: 600;
+}
+
+.mob-user-name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.mob-header-status {
+  display: flex;
+  align-items: center;
+}
+
+.mob-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #10b981;
+}
+
+.mob-pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: mobPulseDot 2s infinite;
+}
+
+@keyframes mobPulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
+/* Boton de cerrar sesion en la barra superior del movil: discreto, mismo
+   lenguaje visual que el badge de estado; es la unica salida de sesion que
+   existe en la app movil (la de escritorio vive en el Sidebar). */
+.mob-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.mob-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.32);
+  color: #ff8b8b;
+}
+
+/* ============================================================
+   HERO ACTION BENTO CARD
+   ============================================================ */
+.mob-hero-card {
+  position: relative;
+  border-radius: 20px;
+  background: rgba(10, 11, 15, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 20px 18px;
+  overflow: hidden;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.mob-hero-bg-glow {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.mob-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mob-hero-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mob-hero-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #a1a1aa;
+}
+
+.mob-plan-chip {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.mob-hero-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mob-hero-title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mob-hero-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #71717a;
+  margin: 0;
+}
+
+.mob-btn-create-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  border-radius: 13px;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.18);
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.mob-btn-create-profile:active {
+  transform: scale(0.975);
+}
+
+/* ============================================================
+   2X2 BENTO STATS GRID
+   ============================================================ */
+.mob-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mob-stat-card {
+  padding: 14px 13px;
+  border-radius: 16px;
+  background: rgba(8, 8, 12, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.15s ease;
+}
+
+.mob-stat-card:active {
+  transform: scale(0.97);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.mob-stat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mob-stat-icon-wrap {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mob-stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mob-stat-value {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.mob-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #71717a;
+}
+
+.mob-stat-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: #52525b;
+}
+
+/* ============================================================
+   SECTIONS: RECENT SESSIONS & LISTS
+   ============================================================ */
+.mob-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.mob-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.mob-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mob-section-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mob-section-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d4d4d8;
+}
+
+.mob-section-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #a1a1aa;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mob-section-link:active {
+  color: #ffffff;
+}
+
+/* Sessions Cards List */
+.mob-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mob-session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(8, 8, 12, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.mob-session-item:active {
+  transform: scale(0.985);
+}
+
+.mob-session-item.is-active {
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+.mob-session-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.mob-session-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #71717a;
+  flex-shrink: 0;
+}
+
+.mob-session-avatar.active {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.mob-session-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mob-session-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mob-session-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mob-status-tag {
+  font-size: 8px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.mob-session-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: #71717a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mob-meta-sep {
+  font-size: 6px;
+  color: #3f3f46;
+}
+
+/* 1-Touch Toggle Button */
+.mob-btn-toggle-session {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.12s ease;
+  flex-shrink: 0;
+}
+
+.mob-btn-toggle-session:active {
+  transform: scale(0.92);
+}
+
+.mob-btn-toggle-session.btn-start {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
+}
+
+.mob-btn-toggle-session.btn-stop {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================================
+   BENTO NAVIGATION QUICK HUB
+   ============================================================ */
+.mob-quick-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.mob-quick-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 6px;
+  border-radius: 16px;
+  background: rgba(8, 8, 12, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.mob-quick-tile:active {
+  transform: scale(0.94);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mob-quick-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mob-quick-lbl {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #d4d4d8;
+}

@@ -1,0 +1,98 @@
+LICENCIA COMERCIAL DE SOFTWARE — KRAKENGES
+PLANTILLA. No es asesoramiento jurídico. Completar los campos entre corchetes y
+revisar con un abogado antes de entregar o vender.
+
+Titular: [TITULAR LEGAL], con NIF/CIF [NIF/CIF] y domicilio en [DOMICILIO].
+Comprador: [COMPRADOR LEGAL], con NIF/CIF [NIF/CIF] y domicilio en [DOMICILIO].
+Fecha: [FECHA].
+Precio y forma de pago: [PRECIO] [MONEDA], según la factura o contrato anexo.
+
+1. OBJETO
+
+El titular entrega al comprador el código fuente, la documentación y los
+recursos del proyecto Kraken Ges descritos en el anexo de entrega, junto con una
+licencia de uso comercial sobre ese material. La entrega no transfiere la
+titularidad del código ni de las marcas del titular, salvo que se indique por
+escrito en el contrato.
+
+2. CONCESIÓN
+
+El titular concede al comprador una licencia mundial, no exclusiva, no
+transferible y no sublicenciable para:
+
+a) usar, copiar, compilar y modificar el código entregado;
+b) sustituir el nombre, los logotipos y las rutas de marca por los del
+   comprador, usando el mecanismo de configuración incluido;
+c) desplegar una instancia del backend y distribuir aplicaciones compiladas a
+   sus usuarios finales bajo el EULA del comprador;
+d) mantener y actualizar su propia versión.
+
+La licencia se concede para una sola entidad compradora y sus empleados o
+colaboradores directos, salvo pacto escrito distinto. No se permite revender,
+publicar ni sublicenciar el código fuente, ni entregarlo como parte de otro
+producto de código fuente, sin autorización escrita del titular.
+
+3. RESTRICCIONES
+
+El comprador no puede:
+
+a) reclamar la autoría original del código o de la marca del titular;
+b) usar las marcas, logotipos o dominios del titular después del periodo de
+   transición acordado;
+c) retirar avisos de copyright o de licencias de terceros;
+d) vender, alquilar o distribuir el código fuente a terceros;
+e) usar el software para actividades ilegales, fraude, acceso no autorizado,
+   acoso, distribución de malware o para eludir medidas de seguridad o
+   anticaptcha de terceros.
+
+4. COMPONENTES DE TERCEROS
+
+El proyecto usa dependencias de terceros (entre otras, Tauri, React, Node.js,
+Express, MongoDB y bibliotecas de interfaz). Esas dependencias conservan sus
+propias licencias y avisos. El comprador debe revisar y cumplir esas licencias
+antes de distribuir su producto. El titular no concede derechos sobre ellas más
+allá de lo que permita su licencia original.
+
+5. ACTUALIZACIONES Y SOPORTE
+
+Salvo que el contrato incluya otra cosa, la entrega se hace en el estado en que
+se encuentra. El titular no está obligado a proporcionar actualizaciones,
+soporte, correcciones ni nuevas versiones después de la entrega. Cualquier
+soporte o actualización posterior debe pactarse por escrito y puede tener un
+coste adicional.
+
+6. GARANTÍAS
+
+EL SOFTWARE SE ENTREGA "TAL CUAL" Y "SEGÚN DISPONIBILIDAD". EL TITULAR NO
+GARANTIZA QUE SEA ININTERRUMPIDO, LIBRE DE ERRORES, COMPATIBLE CON TODOS LOS
+SISTEMAS O QUE CUMPLA UNA FINALIDAD CONCRETA. EL COMPRADOR ASUME LA
+RESPONSABILIDAD DE PROBARLO, ASEGURARLO Y CUMPLIR LA NORMATIVA APLICABLE A SU
+NEGOCIO.
+
+7. RESPONSABILIDAD
+
+En la máxima medida permitida por la ley, el titular no responde por daños
+indirectos, pérdida de beneficios, pérdida de datos, interrupción del negocio ni
+reclamaciones de terceros derivadas del uso del software. La responsabilidad
+total del titular, si la hubiera, se limita al importe efectivamente pagado por
+el comprador por la licencia.
+
+8. TERMINACIÓN
+
+La licencia termina si el comprador incumple estas condiciones y no corrige el
+incumplimiento en un plazo de 15 días desde la notificación. Al terminar, el
+comprador debe dejar de distribuir el software y destruir las copias del código
+fuente que no esté obligado a conservar por ley. Las obligaciones de
+confidencialidad, propiedad intelectual y responsabilidad sobreviven.
+
+9. LEY Y JURISDICCIÓN
+
+Esta licencia se rige por las leyes de [PAÍS/JURISDICCIÓN]. Las partes se
+someten a los juzgados de [CIUDAD], salvo que la ley imperativa disponga otra
+cosa.
+
+10. FIRMAS
+
+Titular: ______________________________  Fecha: __________
+
+Comprador: ___________________________  Fecha: __________

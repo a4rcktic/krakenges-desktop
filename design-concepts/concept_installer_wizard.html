@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Asistente de Instalación de Componentes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .grid-bg {
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+    .wizard-card {
+      background: #0a0a0c;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+    .btn-tactile {
+      transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn-tactile:active {
+      transform: scale(0.97);
+    }
+    .custom-checkbox {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      background: #141416;
+      cursor: pointer;
+      display: inline-grid;
+      place-content: center;
+      transition: all 0.15s ease;
+    }
+    .custom-checkbox:checked {
+      background: #ffffff;
+      border-color: #ffffff;
+    }
+    .custom-checkbox:checked::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      background-color: #000000;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center p-4 bg-black select-none grid-bg relative">
+
+  <!-- TOP HEADER MINIMALISTA -->
+  <header class="fixed top-6 left-8 z-10 flex items-center gap-3">
+    <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black shadow-sm">
+      <i data-lucide="shield" class="w-4 h-4 fill-black text-black"></i>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="font-extrabold text-sm tracking-tight text-white leading-none">Kraken Ges</span>
+      <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-neutral-300 font-bold">SETUP WIZARD</span>
+    </div>
+  </header>
+
+  <!-- MODAL / CARD PRINCIPAL DEL INSTALADOR (ESTILO PYTHON WINDOWS INSTALLER) -->
+  <div class="w-full max-w-[560px] wizard-card rounded-2xl p-7 sm:p-8 space-y-6 z-20 relative">
+
+    <!-- ==================== PASO 1: SELECCIÓN DE COMPONENTES ==================== -->
+    <div id="step-selection" class="space-y-6">
+      <!-- Encabezado del Instalador -->
+      <div class="space-y-1.5">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-neutral-400 font-bold uppercase tracking-wider">
+          <i data-lucide="cpu" class="w-3.5 h-3.5 text-neutral-300"></i> Preparación del Entorno
+        </div>
+        <h1 class="text-xl font-extrabold text-white tracking-tight">Instalar Componentes de Ejecución</h1>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          Selecciona los componentes necesarios para que Kraken Ges funcione con aislamiento absoluto y sin detección de huella.
+        </p>
+      </div>
+
+      <!-- Lista de Componentes / Prerrequisitos con Checkboxes (Estilo Python) -->
+      <div class="space-y-3">
+
+        <!-- Componente 1: Chromium Antidetect Core (Requerido) -->
+        <label class="p-4 rounded-xl bg-black/60 border border-white/15 hover:border-white/30 flex items-start gap-3.5 cursor-pointer transition">
+          <input type="checkbox" id="chk-chromium" checked class="custom-checkbox mt-0.5 shrink-0">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="globe" class="w-3.5 h-3.5 text-uber-green"></i>
+                <span>Motor Chromium Antidetect Core v132</span>
+              </span>
+              <span class="text-[10.5px] font-mono text-neutral-400">~89 MB</span>
+            </div>
+            <p class="text-[11px] text-neutral-400 mt-1 leading-relaxed">
+              Binario aislado calibrado con inyección de CDP, evasión de bot detection y canvas determinista.
+            </p>
+          </div>
+        </label>
+
+        <!-- Componente 2: Paquete de Fuentes Antidetect -->
+        <label class="p-4 rounded-xl bg-black/60 border border-white/15 hover:border-white/30 flex items-start gap-3.5 cursor-pointer transition">
+          <input type="checkbox" id="chk-fonts" checked class="custom-checkbox mt-0.5 shrink-0">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="type" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>Paquete de Fuentes TrueType (Liberation & DejaVu)</span>
+              </span>
+              <span class="text-[10.5px] font-mono text-neutral-400">~14 MB</span>
+            </div>
+            <p class="text-[11px] text-neutral-400 mt-1 leading-relaxed">
+              Resuelve alias de fuentes Windows en el sistema local para evitar la bandera de CreepJS ("Low font count").
+            </p>
+          </div>
+        </label>
+
+        <!-- Componente 3: Reglas de Firewall y Acceso de Red -->
+        <label class="p-4 rounded-xl bg-black/60 border border-white/15 hover:border-white/30 flex items-start gap-3.5 cursor-pointer transition">
+          <input type="checkbox" id="chk-firewall" checked class="custom-checkbox mt-0.5 shrink-0">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Reglas de Firewall para Túneles Proxy</span>
+              </span>
+              <span class="text-[10.5px] font-mono text-neutral-400">~1 KB</span>
+            </div>
+            <p class="text-[11px] text-neutral-400 mt-1 leading-relaxed">
+              Permite a los perfiles conectarse a proxies móviles y residenciales sin bloqueos de Windows Defender.
+            </p>
+          </div>
+        </label>
+
+        <!-- Componente 4: Acceso directo en Escritorio -->
+        <label class="p-3.5 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 flex items-center gap-3 cursor-pointer transition">
+          <input type="checkbox" id="chk-shortcut" checked class="custom-checkbox shrink-0">
+          <div class="flex-1 flex items-center justify-between text-xs">
+            <span class="text-neutral-300 font-medium">Crear acceso directo en el Escritorio</span>
+            <span class="text-[10.5px] font-mono text-neutral-500">Opcional</span>
+          </div>
+        </label>
+
+      </div>
+
+      <!-- Ruta de Instalación (Modificable) -->
+      <div class="p-3 rounded-xl bg-black/80 border border-white/10 text-xs font-mono flex items-center justify-between">
+        <div class="flex items-center gap-2 truncate">
+          <i data-lucide="folder" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+          <span class="text-neutral-400">Ruta:</span>
+          <span class="text-white truncate" id="install-path">%LOCALAPPDATA%\Kraken Ges\bin</span>
+        </div>
+        <button onclick="changePath()" class="text-[11px] text-neutral-400 hover:text-white font-sans font-bold underline shrink-0 ml-2">
+          Cambiar
+        </button>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex items-center justify-between pt-2">
+        <button onclick="skipInstallation()" class="text-xs font-mono text-neutral-500 hover:text-neutral-300 transition">
+          Omitir (Usar Chrome existente)
+        </button>
+        <button onclick="startInstallation()" class="h-10 px-6 rounded-xl bg-white hover:bg-neutral-200 text-black font-extrabold text-xs flex items-center gap-2 btn-tactile shadow-md">
+          <span>Instalar Ahora</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== PASO 2: PROGRESO DE INSTALACIÓN ==================== -->
+    <div id="step-progress" class="hidden space-y-6">
+      <div class="space-y-1.5 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-white text-black mx-auto flex items-center justify-center shadow-md">
+          <i data-lucide="download-cloud" class="w-6 h-6 text-black animate-bounce"></i>
+        </div>
+        <h2 class="text-xl font-extrabold text-white tracking-tight" id="progress-title">Instalando Componentes...</h2>
+        <p class="text-xs text-neutral-400 font-mono" id="progress-status">Descargando Chromium Antidetect Core v132...</p>
+      </div>
+
+      <!-- Barra de Progreso Dinámica -->
+      <div class="space-y-2 font-mono">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-neutral-400" id="progress-detail">48.2 MB / 89.0 MB</span>
+          <span class="text-white font-bold text-sm" id="progress-percent">54%</span>
+        </div>
+        <div class="w-full h-2.5 bg-neutral-900 rounded-full overflow-hidden border border-white/10 p-0.5">
+          <div id="progress-bar" class="h-full bg-white rounded-full transition-all duration-300" style="width: 54%"></div>
+        </div>
+        <div class="flex items-center justify-between text-[10.5px] text-neutral-500">
+          <span id="progress-speed">Velocidad: 9.4 MB/s</span>
+          <span>Tiempo restante: ~4 seg</span>
+        </div>
+      </div>
+
+      <!-- Terminal / Registro en vivo de pasos -->
+      <div class="p-3.5 rounded-xl bg-black border border-white/10 font-mono text-[11px] text-neutral-400 space-y-1 h-28 overflow-y-auto" id="log-box">
+        <div>[01/04] Validando permisos de administrador... <span class="text-uber-green font-bold">OK</span></div>
+        <div>[02/04] Creando directorio en %LOCALAPPDATA%\Kraken Ges\bin... <span class="text-uber-green font-bold">OK</span></div>
+        <div class="text-white font-semibold animate-pulse">[03/04] Descargando motor Chromium v132-win64.zip...</div>
+      </div>
+    </div>
+
+    <!-- ==================== PASO 3: INSTALACIÓN COMPLETADA ==================== -->
+    <div id="step-completed" class="hidden space-y-6 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-uber-green text-black mx-auto flex items-center justify-center shadow-lg shadow-uber-green/20">
+        <i data-lucide="check" class="w-6 h-6 stroke-[3] text-black"></i>
+      </div>
+
+      <div class="space-y-1">
+        <h2 class="text-xl font-extrabold text-white tracking-tight">¡Instalación Completada con Éxito!</h2>
+        <p class="text-xs text-neutral-400">
+          Todos los componentes y el motor Chromium Antidetect están listos para operar.
+        </p>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs font-mono text-left space-y-1.5">
+        <div class="flex items-center gap-2 text-white">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-uber-green"></i>
+          <span>Chromium Core v132 vinculado en bin/windows/chrome.exe</span>
+        </div>
+        <div class="flex items-center gap-2 text-white">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-uber-green"></i>
+          <span>Fuentes TrueType registradas en el sistema</span>
+        </div>
+        <div class="flex items-center gap-2 text-white">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-uber-green"></i>
+          <span>Aislamiento de socket y firewall configurado</span>
+        </div>
+      </div>
+
+      <button onclick="launchApp()" class="w-full h-11 rounded-xl bg-white hover:bg-neutral-200 text-black font-extrabold text-xs flex items-center justify-center gap-2 btn-tactile shadow-lg shadow-white/5">
+        <span>Iniciar Kraken Ges</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function changePath() {
+      const newPath = prompt('Ingresa la ruta de instalación:', 'C:\\Kraken Ges\\bin');
+      if (newPath) {
+        document.getElementById('install-path').textContent = newPath;
+      }
+    }
+
+    function skipInstallation() {
+      if (confirm('¿Deseas omitir la descarga del motor oficial? La app intentará usar Google Chrome o Chromium del sistema, lo cual puede generar banderas en sitios protegidos.')) {
+        window.location.href = 'concept4_uber_fleet.html';
+      }
+    }
+
+    function startInstallation() {
+      document.getElementById('step-selection').classList.add('hidden');
+      document.getElementById('step-progress').classList.remove('hidden');
+      lucide.createIcons();
+
+      // Simulación de descarga e instalación realista
+      let percent = 0;
+      const bar = document.getElementById('progress-bar');
+      const percentEl = document.getElementById('progress-percent');
+      const detailEl = document.getElementById('progress-detail');
+      const statusEl = document.getElementById('progress-status');
+      const logBox = document.getElementById('log-box');
+
+      const interval = setInterval(() => {
+        percent += Math.floor(Math.random() * 8) + 4;
+        if (percent > 100) percent = 100;
+
+        bar.style.width = percent + '%';
+        percentEl.textContent = percent + '%';
+        const mb = ((percent / 100) * 89).toFixed(1);
+        detailEl.textContent = `${mb} MB / 89.0 MB`;
+
+        if (percent >= 60 && percent < 85) {
+          statusEl.textContent = 'Extrayendo binario y librerías de Chromium...';
+        } else if (percent >= 85 && percent < 100) {
+          statusEl.textContent = 'Configurando fuentes TrueType y permisos...';
+        }
+
+        if (percent === 100) {
+          clearInterval(interval);
+          logBox.innerHTML += `<div>[04/04] Verificando checksum SHA-256... <span class="text-uber-green font-bold">VÁLIDO</span></div>`;
+          setTimeout(() => {
+            document.getElementById('step-progress').classList.add('hidden');
+            document.getElementById('step-completed').classList.remove('hidden');
+            lucide.createIcons();
+          }, 600);
+        }
+      }, 200);
+    }
+
+    function launchApp() {
+      window.location.href = 'concept4_uber_fleet.html';
+    }
+  </script>
+</body>
+</html>

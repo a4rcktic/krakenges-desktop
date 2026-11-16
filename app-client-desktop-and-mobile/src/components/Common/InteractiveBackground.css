@@ -1,0 +1,88 @@
+/* ============================================================
+   Kraken Ges Pitch Black Monogram Eclipse Background
+   Louis Vuitton Monogram Inspired Luxury Watermark
+   Pure Vector SVG Pattern • 0% CPU Consumption • 120 FPS
+   ============================================================ */
+
+.stealth-bg-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* When embedded inside a phone chassis or relative element */
+.stealth-bg-contained {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit;
+  z-index: 0 !important;
+}
+
+/* Vector Monogram Pattern Canvas */
+.stealth-monogram-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.055); /* Desktop subtle watermark tone */
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Mobile Monogram: More vivid, higher contrast on smartphone displays */
+.stealth-bg-mobile .stealth-monogram-svg {
+  color: rgba(255, 255, 255, 0.088); /* Richer silver tone on mobile OLED */
+}
+
+/* Luxury Monogram Glyphs subtle sharpness */
+.monogram-glyph {
+  transform-origin: center;
+  transition: opacity 0.2s ease;
+}
+
+/* Desktop Radial Vignette */
+.stealth-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    rgba(0, 0, 0, 0.55) 0%, 
+    rgba(0, 0, 0, 0.15) 60%, 
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  pointer-events: none;
+}
+
+/* Mobile Vignette: Tailored for portrait smartphone aspect ratio */
+.stealth-bg-mobile .stealth-bg-vignette {
+  background: radial-gradient(
+    ellipse 95% 65% at 50% 50%, 
+    rgba(0, 0, 0, 0.5) 0%, 
+    rgba(0, 0, 0, 0.1) 45%, 
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+/* Ambient Radial Depth Lights */
+.stealth-bg-radial {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.045) 0%, transparent 60%),
+    radial-gradient(circle at 50% 110%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.stealth-bg-mobile .stealth-bg-radial {
+  background: 
+    radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.06) 0%, transparent 55%),
+    radial-gradient(circle at 50% 95%, rgba(255, 255, 255, 0.03) 0%, transparent 55%);
+}

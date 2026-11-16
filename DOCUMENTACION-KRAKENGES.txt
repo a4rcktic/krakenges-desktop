@@ -1,0 +1,512 @@
+================================================================================
+ KRAKEN GES — DOCUMENTACIÓN TÉCNICA
+================================================================================
+Última actualización: 20/10/2026
+Versión declarada: v1.0.1  (pre-lanzamiento; ver §1.2)
+
+ESTRUCTURA REAL DEL PAQUETE
+  Raíz .............. Kraken Ges-Master-Project/
+  Cliente ........... app-client-desktop-and-mobile/          (React 19 + Tauri 2)
+  Núcleo Rust ....... app-client-desktop-and-mobile/src-tauri/
+  Build del motor ... app-client-desktop-and-mobile/src-tauri/build.rs
+  Plantilla JS ...... app-client-desktop-and-mobile/src-tauri/src/injector_template.js
+  Backend ........... backend-server/                        (Express 4 + Mongoose 7)
+
+--------------------------------------------------------------------------------
+ AVISO DE FIABILIDAD — LÉELO ANTES DE FIARTE DE ESTE DOCUMENTO
+--------------------------------------------------------------------------------
+En la revisión del 29/09/2026 se comparó este documento con el código real y
+se encontraron 16 afirmaciones que ya no eran ciertas. Este texto se ha
+reescrito para que todas las cifras sean verificables contra el código.
+
+Lo que NO está verificado en esta revisión:
+  * Smoke test en Windows real y re-scan con CreepJS / Pixelscan / Botguard.
+  * Medición de huella en un móvil real: `adb` no detecta dispositivos.
+  * Backup y restore contra MongoDB real, y simulacro en staging.
+  * Release del updater con clave privada, artefactos firmados y manifiesto
+    publicado. Sin eso, `/api/updates/manifest` responde 204.
+  * Despliegue del backend nuevo en producción y CI de GitHub Actions, que
+    sigue bloqueado por facturación.
+
+Lo que SÍ está verificado (20/10/2026):
+  * Frontend React: `tsc --noEmit` sin errores y `npm run build` completa
+    (tsc + vite + ofuscación).
+  * Backend: `tsc` y build sin errores. 150 tests: 143 pasan y 7 se omiten
+    porque no hay MongoDB en el entorno local.
+  * Núcleo Rust: `cargo check` sin errores (3 avisos) y `cargo test --lib`
+    con 80/80 tests en verde.
+  * Shim de inyección: 39/39 comprobaciones de comportamiento con Node, que
+    cubren fuentes, idioma, timezone y huella de audio.
+  * Marca, catálogo de planes, puente Tauri y workflows: checks automatizados
+    en verde.
+
+--------------------------------------------------------------------------------
+ 1. QUÉ ES KRAKEN GES
+--------------------------------------------------------------------------------
+
+1.1 Arquitectura
+  Aplicación de escritorio ANTIDETECTE. Lanza un Chromium aislado por perfil con
+  una identidad rotativa derivada de una SEED determinista por perfil. La
+  identidad se aplica por dos vías complementarias:
+    (a) Capa CDP: User-Agent, Client Hints, timezone, locale y geolocalización a
+        nivel de motor, en la página y en los workers.
+    (b) Capa JS: plantilla inyectada en cada documento nuevo, que parchea
+        navigator, Intl, canvas, WebGL y enumeración de fuentes.
+
+  Servidor = Express/Mongoose + MongoDB. Gestiona cuentas, planes, licencias y
+  perfiles a nivel servidor. El cliente tiene además una base de datos local
+  (modo local) que convive con el modo servidor.
+
+1.2 Sobre el número de versión
+  La versión vigente es 1.0.1. Las versiones v1.1 … v1.5.8 que aparecen en
+  registros antiguos eran incrementos de desarrollo, NO releases. Cualquier
+  documento que cite "v1.5.8" como versión vigente está obsoleto.
+    package.json (cliente) ....... 1.0.1
+    Cargo.toml .................... 1.0.1
+    tauri.conf.json .............. 1.0.1
+    package.json (backend) ........ 0.2.0
+
+  Los binarios de releases-instaladores/ son de una build del 24/09 y NO
+  incluyen el trabajo posterior. Deben regenerarse.
+
+--------------------------------------------------------------------------------
+ 2. DÓNDE ESTÁ EL CÓDIGO
+--------------------------------------------------------------------------------
+
+2.1 Núcleo Rust — src-tauri/src/  (13 módulos, 85 comandos #[tauri::command])
+  launcher.rs    Resolución del motor, flags de aislamiento, launch/close,
+                 Preferencias nativas, alias de fuentes (fontconfig), cookies.
+  cdp.rs         Cliente CDP. Intercepción UA/ClientHints/timezone/locale/geo,
+                 inyección del shim, en páginas y en workers. Tráfico.
+  pools.rs       Catálogo de identidades: kits de hardware, regiones geográficas,
+                 selector diversificado.
+  proxy.rs       Túneles, GeoIP, sugerencia de idioma por país.
+  backend.rs     Base de datos LOCAL (krakenges_db.json), usuarios, planes,
+                 perfiles, sesiones, licencias, auditoría, backup.
+  api.rs         Cliente del backend remoto: sesión, perfiles, licencias, 2FA.
+  paths.rs       Saneado de profile_id. Impide path traversal.
+  embedded.rs    Webview embebido.
+  license.rs     HWID y validación de licencias.
+  secure_store.rs  Llavero del sistema operativo (keyring).
+  guard.rs       Guardia anti-tamper / anti-debug.
+  main.rs        Entry point binario.
+  lib.rs         Registro de comandos Tauri.
+
+  Además: build.rs (cifra el template JS al compilar) e injector_template.js.
+
+2.2 Frontend — src/
+  App.tsx                        Enrutado de pantallas.
+  components/Profiles/           Pantalla de perfiles (la principal).
+  components/Sessions/           Historial de sesiones.
+  components/Browser/BrowserDock Dock de sesión y webview activo.
+  components/Settings/           Ajustes, incluido el gestión del motor.
+  components/Setup/SetupWizard    Asistente de primer arranque.
+  components/Dashboard|Plans|Users|Login|Register|Sidebar|Common
+  services/fingerprint/          Motor de huella del frontend.
+  services/stealthInjector.ts    Inyección en el contexto web.
+  services/proxyParser.ts        Parseo de proxies.
+  config/branding.ts             Marca blanca (un solo archivo).
+  hooks/useAuth.ts               Sesión y autenticación.
+
+2.3 Backend — backend-server/src/
+  index.ts            Bootstrap: helmet, CORS, rate limit, routers.
+  routes/             auth, users, profiles, fingerprint, keys, apikeys,
+                      sessions, dashboard, activity, membership, updates.
+  services/           fingerprint, fingerprintService, proxyCipher,
+                      proxyValidator, twoFactor, subscriptionService,
+                      licenseTicket, activityLog.
+  models/             User, Profile, LicenseKey, RefreshToken, ApiKey,
+                      Session, BrowserState, ActivityLog.
+  authMiddleware.ts, sanitizeMiddleware.ts, errorMiddleware.ts.
+  config.ts, db.ts, logger.ts, utils/jwt.ts
+
+--------------------------------------------------------------------------------
+ 3. EL MOTOR DE NAVEGACIÓN
+--------------------------------------------------------------------------------
+
+3.1 Decisión de producto
+  La app usa SIEMPRE su propio motor. NO usa el Chrome del sistema.
+
+  Motivo: cuando no había motor instalado, se recurría al Chrome del usuario
+  mientras la UA anunciaba otra versión. Esa incoherencia se detecta por tres
+  vías independientes: feature detection de JS/CSS, firma TLS/JA3 y HTTP/2
+  fingerprint. Las dos últimas no se pueden falsificar desde JavaScript.
+
+  Sin motor propio, `resolve_browser_binary()` devuelve un error y no hay perfil.
+  Es preferible negarse a lanzar que lanzar con una huella que se contradice.
+
+3.2 Versionado
+  ENGINE_MAJOR = 154  (src-tauri/src/launcher.rs)
+
+  Referencia de mercado en la fecha: Chrome 153 salió estable el 08/09/2026 y
+  Chrome 154 el 22/09/2026. Google pasó a publicar un major cada DOS SEMANAS
+  desde el 153. El 155 estaba en despliegue temprano a un porcentaje pequeño de
+  usuarios, por lo que 154 es la versión que realmente tiene la gente.
+
+  Consecuencia: un major fijado se caduca solo. Por eso existe el comando
+  `check_engine_update`, que consulta el manifiesto oficial y avisa en Ajustes
+  cuando hay uno más reciente. AVISA, NO BLOQUEA: un motor antiguo sigue siendo
+  coherente consigo mismo, sólo representa a menos usuarios reales.
+
+3.3 Instalación
+  install_dedicated_engine():
+    1. Consulta https://googlechromelabs.github.io/chrome-for-testing/
+       last-known-good-versions-with-downloads.json
+    2. Resuelve la build exacta del major fijado (recoge parches sin recompilar).
+    3. Descarga y descomprime.
+    4. Verifica que la versión real del binario coincide con la del manifiesto.
+    5. Escribe engine.json con { version, major, source, url }.
+
+  engine.json es la fuente de verdad de la versión que se anuncia en la UA.
+  Evita lanzar un subproceso por sesión para preguntarle la versión a Chrome.
+  Si falta el manifiesto, la app NO arranca el motor: anunciar una versión
+  distinta de la del binario es exactamente la fuga que esto evita.
+
+  La ruta de instalación se pasa por VARIABLE DE ENTORNO al script de
+  Powershell/bash, nunca interpolada en el texto: elimina la inyección de shell.
+
+3.4 Rutas de instalación
+  Windows ... %LOCALAPPDATA%\Kraken Ges\engine\
+  Linux ..... ~/.local/share/krakenges/engine/
+  AppImage .. <AppDir>/ y subdirectorios habituales
+
+--------------------------------------------------------------------------------
+ 4. EL MOTOR DE HUELLA
+--------------------------------------------------------------------------------
+
+4.1 Catálogo de hardware (backend-server/src/services/fingerprintService.ts)
+  38 kits reales, en 5 familias:
+    Windows  9   (11 25H2 gaming/laptop, 11 24H2 office/HD, 11 23H2,
+                  11 26H1, 10 22H2 normal/office, Server 2022)
+    macOS    8   (26 Tahoe, 26 Tahoe M3 Pro, 15 Sequoia, 15 Sequoia M2,
+                  14 Sonoma, 13 Ventura, MacBook Air M2, externo 1x)
+    Linux   13   (Ubuntu 24.04/22.04/server, Fedora 42/workstation,
+                  Debian 12, Arch, Mint 22, Pop!_OS 24, openSUSE,
+                  Gentoo, portátil HiDPI, genérico)
+    Android  6   (10-11, 11, 12-13, 13, 14, 15-16)
+    iOS      2   (iPhone 15 Pro, iPhone 14)
+
+  Cada kit define pantallas (con dpr) y pares de memoria/núcleos. La versión
+  de Chrome no se sortea: la impone el motor real. `tools/fingerprint-lab/validate.mjs`
+  comprueba que el catálogo no contradiga la UA, los Client Hints, la memoria
+  que Chrome puede devolver ni el major del motor.
+
+  Salida actual del validador:
+
+    major del motor: Chrome 154, anunciado en 154 — coincide
+    catálogo OK · 38 kits, 5 familias
+
+4.2 Diversidad efectiva
+  El selector usa un finalizador de avalanche (fmix32) y reducción
+  multiplicación-shift (Lemire). No se publican aquí cifras de combinaciones ni
+  porcentajes de eficiencia que no se puedan reproducir con el catálogo actual:
+  cambian al añadir o quitar kits. Para vender o auditar, ejecuta el validador y
+  guarda la evidencia de la versión medida.
+
+  Lo que sí es estable: no se sortea la versión de Chrome. El backend y el
+  motor Rust emparejan timezone e idioma por región, así que la pareja no puede
+  ser imposible aunque no haya país de salida (ver 4.3). Las dimensiones que el
+  motor no puede sostener no cuentan como diversidad.
+
+4.2.bis Cifras antiguas
+  Documentos anteriores citaban 13 kits, 24 regiones, 41/18/18 y
+  150.935.400 combinaciones. Esas cifras no corresponden al catálogo actual y
+  no deben usarse en ventas ni auditorías. La fuente ejecutable es
+  `tools/fingerprint-lab/validate.mjs`; el catálogo tiene 38 kits y 5 familias.
+
+4.3 Coherencia geográfica
+  El catálogo tiene 24 regiones (24 zonas horarias) y 20 idiomas. La receta
+  base no elige timezone e idioma de listas independientes: elige una región y
+  saca ambos de la misma fila, con el idioma principal el ~88% de las veces y
+  las minorías plausibles el resto. Un test recorre 20.000 seeds × 5 sistemas
+  operativos y comprueba que toda pareja generada pertenece a una región.
+
+  Cuando el proxy o Cloudflare aportan `CF-IPCountry`, o el cliente manda
+  `country`, el backend sustituye timezone e idioma JUNTOS usando `countryGeo`
+  (76 países mapeados). El SO, el kit y la pantalla no cambian: solo se alinean
+  la zona horaria y el idioma con la salida real.
+
+  La receta base ya empareja timezone e idioma por región: no hay una lista
+  independiente de zonas horarias ni de idiomas. El país del egress sólo
+  sustituye esa pareja cuando el proxy o el cliente lo aportan. Países sin
+  entrada en `countryGeo` conservan la región derivada del seed.
+
+4.4 Qué se intercede por CDP
+  En páginas e iframes:
+    Network.enable
+    Network.setUserAgentOverride  (UA + userAgentMetadata + acceptLanguage)
+    Emulation.setTimezoneOverride
+    Emulation.setLocaleOverride
+    Emulation.setGeolocationOverride  (sólo si hay coordenadas del proxy)
+    Page.addScriptToEvaluateOnNewDocument  (el shim)
+    Runtime.runIfWaitingForDebugger
+
+  En workers, service workers y shared workers:
+    Network.enable
+    Network.setUserAgentOverride
+    Runtime.evaluate  (el shim, evaluado en el ámbito del worker)
+    Runtime.runIfWaitingForDebugger
+
+  Los workers ya estaban cubiertos a nivel de UA y canvas/WebGL. Lo que faltaba
+  era timezone e idioma, y eso se corrigió en el shim (§4.5), que sí se evalúa
+  en los cinco tipos de contexto.
+
+  IMPORTANTE: los envíos se comprueban. Si alguno falla (sesión CDP perdida), el
+  perfil NO arranca. Antes los 14 envíos eran `let _ = ws.send(...)`: si fallaba
+  la inyección, el perfil se lanzaba con la huella REAL del host sin ningún
+  aviso, que es el peor resultado posible en este producto.
+
+4.5 Qué parchea el shim (src/injector_template.js)
+  navigator (Navigator y WorkerNavigator):
+    hardwareConcurrency, deviceMemory, maxTouchPoints, platform, userAgent,
+    language, languages
+  Intl.DateTimeFormat.prototype.resolvedOptions -> timeZone
+  Canvas: ruido determinista por seed en toDataURL / toBlob, sólo en lienzos
+          mayores de 32x32 (los pequeños son los que usan las pruebas de fuentes
+          y los emoji de Google Botguard, que deben quedarse auténticos)
+  Audio: dither determinista por perfil en
+            - OfflineAudioContext.startRendering()  <- la de FingerprintJS
+            - AnalyserNode getFloat/getByteFrequencyData, getFloatTimeDomainData
+            - AudioBuffer getChannelData / copyFromChannel (decodeAudioData y
+              salidas de AudioWorklet)
+  WebGL: getParameter
+  Worker / WorkerNavigator
+  measureText (Canvas 2D y OffscreenCanvas) -> simula fuentes ausentes
+  document.fonts.check
+  Function.prototype.toString -> las funciones parcheadas se presentan como
+          [native code] mediante WeakSet
+
+  LÍMITE DOCUMENTADO de measureText: el shim puede OCULTAR las fuentes que el
+  host tiene de más, pero no puede fabricar métricas para una fuente que el host
+  no tiene. Por eso ensure_fontconfig_aliases() en launcher.rs es
+  IMPRESCINDIBLE: crea los alias de las familias "Microsoft" (Liberation/Carlito/
+  Caladea, métricamente compatibles) para que Arial, Times New Roman, etc.
+  existan de verdad en el host.
+
+  LÍMITE DOCUMENTADO de Intl: se corrige lo que se LEE (resolvedOptions), que
+  es lo que miden los detectores. El formateo interno sigue usando el reloj del
+  sistema, así que las horas renderizadas no se desplazan.
+
+4.5.bis Huella de audio — por qué NO se sustituyen los datos
+  La señal de audio delata directamente el hardware: depende de la
+  implementación de coma flotante de la pila de audio del SO, así que dos
+  perfiles en la misma máquina comparten hash y un servicio puede agrupar
+  cuentas aunque todo lo demás rote.
+
+  El enfoque es dejar que el motor renderice de verdad y perturbar el ÚLTIMO
+  BIT de cada muestra (±1 ULP, determinista por perfil). Así:
+    - la estructura se conserva, de modo que el resultado sigue siendo
+      indistinguible de una medición real;
+    - la magnitud es inaudible y no altera el audio que reproduce la página;
+    - al cambiar el último bit, el hash cambia por completo: cada perfil tiene
+      su huella, estable entre sesiones y distinta entre perfiles del equipo.
+
+  Existía un prototipo en native-injector/poc/fingerprint.js que sí usaba
+  AnalyserNode, pero con dos defectos: fabricaba datos planos (señal que no se
+  parece a audio real) y no cubría OfflineAudioContext.startRendering, que es la
+  técnica que usan FingerprintJS y la mayoría de detectores. Ese código nunca
+  estuvo en el shim de producción: el shim no tenía cobertura de audio alguna.
+  LOG.md v1.5.3 afirmaba que el dither estaba en cdp.rs; nunca estuvo ahí.
+
+  El ruido es una FUNCIÓN PURA de (seed, canal, índice), no un contador global.
+  Esto es deliberado: con un contador, dos renders idénticos de la misma sesión
+  darían hashes distintos. Un navegador real devuelve siempre lo mismo para la
+  misma entrada, así que esa inconsistencia sería en sí misma una señal de
+  automatización.
+
+  NO se falsifica AudioContext.sampleRate. Reportar un valor distinto del real
+  desincronizaría lo reportado de lo que realmente se renderiza, que es un indicio
+  peor que la propia tasa de muestreo del host.
+
+4.6 Listas de fuentes
+  FONTS_WIN   68    FONTS_MAC  41    FONTS_LINUX  50
+  Antes la de Windows no existía: create_identity la dejaba vacía confiando en
+  un "fallback JS (winList)" que no estaba implementado en ninguna parte. Las
+  tres listas se pasaban al shim como C.fonts y el shim las ignoraba, de modo
+  que un perfil Windows emulado sobre Linux respondía con las fuentes del host.
+
+--------------------------------------------------------------------------------
+ 5. POLÍTICA DE PROXIES
+--------------------------------------------------------------------------------
+Decisión: "el sistema no debe llevar proxies; cada usuario debe proporcionar las".
+
+  * El SERVIDOR nunca almacena proxies. Un middleware en routes/profiles.ts
+    descarta `proxy` del cuerpo antes de cualquier esquema Zod, en todas las
+    rutas /api/profiles.
+  * El CLIENTE no envía proxies al servidor (api.rs no acepta el campo).
+  * La UI guarda el proxy del usuario en localStorage de su máquina.
+  * proxyCipher.ts existe sólo para DESCIFRAR proxies legacy que quedaran en
+    instalaciones antiguas. Sin KRAKENGES_PROXY_ENCRYPTION_KEY ni SESSION_SECRET ni
+    JWT_SECRET lanza un error: ya no hay constante de reserva en el código.
+
+  ADVERTENCIA IMPORTANTE: el directorio backend-server/dist/ estaba
+  desactualizado (build del 04/09 frente a src del 14/09) y guardaba y devolvía
+  proxies en texto plano, contra esta política. Se añadió "prestart": "npm run
+  build" al package.json para que `npm start` no pueda volver a servir un dist
+  obsoleto. Hay que reconstruir dist/ antes de desplegar.
+
+  El backend local (backend.rs) sí persiste el proxy en krakenges_db.json cuando
+  opera en modo degradado sin servidor. Sigue pendiente decidir si se cifra con
+  secure_store.rs o se elimina ese campo.
+
+--------------------------------------------------------------------------------
+ 6. SEGURIDAD — ESTADO
+--------------------------------------------------------------------------------
+
+6.1 Corregido en la revisión del 29/09
+  * OWNER_PASSWORD estaba hardcodeado en backend.rs y, al estar compilado, era
+    recuperable con `strings` desde cualquier instalador distribuido. Ahora se
+    resuelve desde KRAKENGES_OWNER_PASSWORD o, en el primer arranque, se genera una
+    clave aleatoria de 192 bits y se escribe en <data_dir>/owner_credentials.txt
+    con permisos 0600.
+  * MIGRACIÓN DE INSTALACIONES EXISTENTES: las bases creadas antes tienen
+    schema_version 0. Al arrancar se detecta por versión de esquema (sin
+    conservar la clave filtrada en ninguna forma) y se rota la contraseña del
+    propietario. Idempotente. Hay que cambiar la contraseña en cada instalación
+    ya desplegada.
+  * random_bytes() ignoraba el error de getrandom: si fallaba, todos los salts
+    PBKDF2 eran 0000..., todos los id iguales y todas las claves de licencia
+    MASK-AAAA-AAAA-AAAA-AAAA. Ahora falla ruidosamente.
+  * Path traversal: profile_id llegaba por IPC y se concatenaba en la ruta sin
+    validar. launch_isolated_profile y create_embedded_browser ahora validan
+    contra [A-Za-z0-9_-]{1,64} mediante paths.rs.
+  * krakenges_db.json y server_session.json se escriben con permisos 0600.
+  * helmet estaba importado en el backend y NUNCA aplicado: no había HSTS, ni
+    CSP, ni X-Frame-Options.
+  * POST /api/auth/login/2fa no tenía rate limit (era la única ruta de auth sin
+    uno) y aceptaba userId del cuerpo sin ligarlo al login previo: fuerza bruta
+    de TOTP viable. Ahora: 10 intentos / 15 min.
+  * proxyCipher.ts tenía la constante de reserva 'krakenges-proxy-dev-secret'.
+  * tsconfig.json no excluía src/__tests__, así que los tests se compilaban
+    dentro de la imagen Docker de producción.
+  * Faltaba .env.example en todo el repositorio.
+  .gitignore nuevo en la raíz: ignora credenciales/, .env, y el template del
+  inyector.
+
+6.2 Correcciones de la revisión (20/10/2026)
+  Corregido:
+  * IDOR en routes/keys.ts: un seller ya no puede tocar claves huérfanas
+    (`createdBy` nulo); sólo el owner/admin omiten la comprobación de dueño.
+  * GET /api/users/admin/backup ya no es un "backup completo": excluye hashes y
+    secretos, se audita, lleva `Cache-Control: no-store` y se marca como
+    exportación parcial. El backup restaurable es el `mongodump` cifrado.
+  * POST /users/:id/reset-hwid exige ser Owner para desvincular al Owner.
+  * PATCH /users/:id/role no permite quitar el rol al último Owner.
+  * API keys y refresh tokens se guardan como SHA-256, con migración perezosa y
+    `npm run secrets:migrate` para el lote.
+  * /api/users/forgot-password envía el enlace por Resend. Sin
+    `RESEND_API_KEY`/`MAIL_FROM` responde 503: no finge que envió el correo.
+  * POST /profiles/validate-proxy y /:id/validate-proxy ya leen el proxy y
+    responden con el resultado real. `proxyValidator.ts` usa el
+    HttpsProxyAgent en la petición, no lo descarta.
+  * Un solo generador de fingerprint (`fingerprintService.ts`); la vista de
+    estado y el endpoint /fingerprint comparten receta y versión de Chrome.
+  * Los handlers async usan `asyncHandler` o un `try/catch` explícito, así que
+    los rechazos no quedan como promesas sin manejar.
+
+  Pendiente real:
+  * Resolver las vulnerabilidades de dependencias y volver a medir.
+  * Probar validate-proxy contra un proxy real con autenticación.
+  * Backup/restore contra MongoDB real y simulacro en staging.
+  * El CSP de Tauri mantiene 'unsafe-eval' (lo exige el bootstrap del shim).
+  * Express 4 + helmet: contentSecurityPolicy está desactivado
+    intencionadamente porque la API sólo sirve JSON.
+
+6.3 Estado del servidor
+  Base de datos ... MongoDB vía Mongoose 7 (NO SQLite ni PostgreSQL).
+                    No hay users.db; ese archivo ya no existe ni se usa.
+  Puerto ......... 4000 por defecto (config.ts), HOST 127.0.0.1.
+                    En producción Apache (o nginx) proxya desde 443 a 127.0.0.1:8010
+                    vía .env. Documentos antiguos mencionaban 3000, 4000, 8010 y
+                    10000 en sitios distintos.
+  Dominio ........ krakenges.example. CORS_ORIGIN, PUBLIC_BASE_URL,
+                    DOWNLOAD_BASE_URL y APP_PUBLIC_URL deben apuntar al mismo
+                    dominio. El valor por defecto vive en brand.config.json.
+  Endpoints ...... 63.
+
+--------------------------------------------------------------------------------
+ 7. ESTADO DEL PRODUCTO
+--------------------------------------------------------------------------------
+
+7.1 Lo que SÍ funciona y está verificado (20/10/2026)
+  [OK] Frontend: tsc sin errores y build completo (tsc + vite + ofuscación).
+  [OK] Backend: tsc/build sin errores. 150 tests: 143 pasan y 7 se omiten
+       porque no hay MongoDB en el entorno local.
+  [OK] Núcleo Rust: cargo check sin errores (3 avisos) y cargo test --lib con
+       80/80 tests en verde.
+  [OK] Shim: 39/39 comprobaciones de comportamiento con Node.
+  [OK] Coherencia de versión: la UA y los Client Hints los impone el motor real,
+       también cuando la receta llega prefabricada desde el servidor.
+  [OK] El motor Rust y el backend emparejan timezone e idioma por región. El
+       país del egress (CF-IPCountry o `country`) sustituye ambos campos juntos
+       mediante `countryGeo`; sin país se conserva la región del seed (ver 4.3).
+  [OK] Envíos CDP comprobados: el perfil aborta si la huella no se aplicó.
+  [OK] Sin fallback al navegador del sistema.
+
+7.2 Lo que NO está verificado
+  [PENDIENTE] Smoke test en Windows real.
+  [PENDIENTE] Re-scan con CreepJS / Pixelscan / Botguard con el motor nuevo.
+  [PENDIENTE] Medición de huella en un móvil real; adb no detecta dispositivos.
+  [PENDIENTE] Regenerar los instaladores de releases-instaladores/ (son del
+              24/09 y no incluyen nada de este trabajo).
+  [PENDIENTE] Backup y restore contra MongoDB real, y simulacro en staging.
+
+7.3 Riesgos de fingerprint conocidos y ACCEPTADOS
+  * La enumeración de fuentes no puede fabricar métricas de fuentes que el host
+    no tiene (§4.5).
+  * Intl no desplaza la hora renderizada, sólo la que se reporta (§4.5).
+  * fonts/emoji/svg/css/media siguen siendo host-derived en el DOM.
+  * El espacio del catálogo marca el límite: una flota muy grande para un
+    mismo cliente empieza a repetir identidad. El límite es el catálogo, no el
+    selector.
+  * Un detector escrito contra estas señales cohorts a todos los clientes a la
+    vez. Si el negocio es volumen, diversificar el motor entre builds distintas
+    vale más que cualquier otra medida de ofuscación.
+
+7.4 Deuda técnica conocida
+  * launcher.rs (más de 1.400 líneas), secure_store.rs y embedded.rs no tienen
+    ningún test.
+  * panic = "abort" en release junto a ~20 .lock().unwrap(): cualquier pánico
+    aborta la app completa.
+  * with_db() reescribe la base entera en cada operación, incluidas las de solo
+    lectura.
+  * Dos tests del backend son tautológicos o se saltan en silencio:
+    auth.validation.test.ts reimplementa los schemas en vez de importarlos, y
+    los tests de integración se saltan si no hay Mongo.
+  * El cdp.rs tiene un test que escribe un fichero en disco y depende de
+    variables de entorno compartidas.
+  * install_dedicated_engine usa curl/unzip/PowerShell del sistema.
+
+--------------------------------------------------------------------------------
+ 8. COMPILACIÓN Y RELEASES
+--------------------------------------------------------------------------------
+  Los instaladores se compilan fuera del portátil, en el VPS o en CI.
+  `cargo check` y `cargo test` locales son solo verificación.
+
+  Workflows en .github/workflows/:
+    build-desktop.yml   Linux (AppImage/deb/rpm) + Windows (NSIS/MSI)
+    build-apk.yml       Android
+    rust-tests.yml      cargo test --lib
+    deploy-backend.yml  Despliegue del backend
+
+  8.1 CONTRIBUIR A ESTE DOCUMENTO
+  Toda cifra de aquí debe poder comprobarse en el código. Si un número no se
+  puede derivar de una lectura del repositorio, es una estimación y debe
+  marcarse como tal. La revisión del 29/09/2026 encontró 16 afirmaciones falsas
+  en la versión anterior de este texto, casi todas por eso: cifras calculadas a
+  mano y contrastadas con el "resultado esperado" en vez de con el código.
+
+--------------------------------------------------------------------------------
+ 9. PRÓXIMOS PASOS SUGERIDOS
+--------------------------------------------------------------------------------
+  1. Desbloquear la facturación de GitHub Actions y ejecutar el CI.
+  2. Regenerar instaladores.
+  3. Seguir ampliando el catálogo de hardware, sobre todo Windows/Linux
+     (ver §4.2).
+  4. Resolver las vulnerabilidades de dependencias y volver a medir con
+     `npm audit` antes de afirmar que el paquete está limpio.
+  5. Subir ENGINE_MAJOR cada 2-4 majors (check_engine_update avisa).
+
+================================================================================
+ FIN DE DOCUMENTACIÓN
+================================================================================

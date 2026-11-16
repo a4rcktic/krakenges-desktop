@@ -1,0 +1,483 @@
+name: Build Desktop (Tauri Multiplatform)
+
+on:
+  # Se lanza a mano hasta configurar los secretos de firma del updater.
+  workflow_dispatch:
+    inputs:
+      build_arch:
+        description: Compilar también el paquete Arch
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: app-client-desktop-and-mobile
+
+jobs:
+  build-tauri:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+    # En contenedores de Actions, HOME apunta a /github/home pero el proceso
+    # corre como root (euid 0). rustup aborta con "$HOME differs from
+    # euid-obtained home directory" si no se fuerza HOME=/root. El mismo
+    # problema ocurre en el job de Arch (mas abajo), resuelto con env por step.
+    env:
+      CARGO_HOME: /root/.cargo
+      RUSTUP_HOME: /root/.rustup
+      HOME: /root
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install base tools + Linux system dependencies (Ubuntu 22.04)
+        run: |
+          apt-get update
+          apt-get install -y build-essential curl git wget jq pkg-config ca-certificates \
+            libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf \
+            libssl-dev libdbus-1-dev libsecret-1-dev xdg-utils file
+
+          # GitHub CLI: la imagen ubuntu:22.04 no lo trae y el paso que publica
+          # los bundles en el release lo necesita. Antes se usaba
+          # upload-artifact, que no requiere gh pero consume la cuota llena.
+          mkdir -p -m 755 /etc/apt/keyrings
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+            -o /etc/apt/keyrings/githubcli-archive-keyring.gpg
+          chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+            > /etc/apt/sources.list.d/github-cli.list
+          apt-get update
+          apt-get install -y gh
+          gh --version
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: app-client-desktop-and-mobile/package-lock.json
+
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './app-client-desktop-and-mobile/src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      # El script vive en la raiz del repo, pero este workflow corre con
+      # working-directory: app-client-desktop-and-mobile. Sin la ruta absoluta,
+      # node busca app-client-desktop-and-mobile/tools/... y el build muere.
+      # Paso de verdad: asi se tumbo el build de escritorio del 14/10.
+      - name: Comprobar que las vistas invocan comandos existentes
+        # working-directory fija la raiz del repo y funciona en bash y en
+        # PowerShell. Usar "$GITHUB_WORKSPACE" en `run:` solo vale en bash; el
+        # runner de Windows ejecuta pwsh y lo expandia a "/tools/...".
+        working-directory: ${{ github.workspace }}
+        run: node tools/bridge-check/check.js
+
+      - name: Comprobar paridad del catalogo de planes
+        working-directory: ${{ github.workspace }}
+        run: node tools/plan-check/check.js
+
+      - name: Probar el generador del manifiesto del updater
+        working-directory: ${{ github.workspace }}
+        run: node tools/updater-manifest/generate.mjs --self-test
+
+      - name: Escanear el paquete de venta
+        working-directory: ${{ github.workspace }}
+        run: node tools/delivery-scan/check.mjs
+
+      - name: Comprobar que la marca esta aplicada
+        working-directory: ${{ github.workspace }}
+        run: node tools/brand/apply.mjs --check
+
+      - name: Build frontend (Tauri incrusta este dist/ en el binario)
+        # Sin esto, tauri.conf.json (frontendDist: "../dist") no encuentra el
+        # bundle y Tauri falla o genera un binario sin interfaz.
+        run: npm run build
+
+      - name: Nombre de la marca para el release
+        # El nombre sale de brand.config.json: al cambiar la marca no hay que
+        # tocar este workflow.
+        run: echo "APP_NAME=$(node -p "require('../brand.config.json').appName")" >> "$GITHUB_ENV"
+
+      - name: Build Tauri Application & Bundles
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Clave Ed25519 del updater (fuera del repo, en ~/.config/krakenges/updater).
+          # Sin esto, createUpdaterArtifacts no genera los artefactos firmados y
+          # el updater nativo no tiene nada que verificar.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          # El release solo se crea cuando hay un tag. En un push normal a main
+          # se construyen y suben los artefactos, pero no se toca el release.
+          tagName: v__VERSION__
+          releaseName: '${{ env.APP_NAME }} Desktop v__VERSION__'
+          releaseBody: |
+            ${{ env.APP_NAME }} v__VERSION__.
+            Incluye el panel de contenido, la publicación remota sin recompilar y las correcciones acumuladas desde la v1.0.0.
+          releaseDraft: false
+          prerelease: false
+          args: '--target x86_64-unknown-linux-gnu'
+
+  build-windows:
+    name: Windows (NSIS/MSI & Standalone Bundled Engine)
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: app-client-desktop-and-mobile/package-lock.json
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './app-client-desktop-and-mobile/src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Comprobar que las vistas invocan comandos existentes
+        # working-directory fija la raiz del repo y funciona en bash y en
+        # PowerShell. Usar "$GITHUB_WORKSPACE" en `run:` solo vale en bash; el
+        # runner de Windows ejecuta pwsh y lo expandia a "/tools/...".
+        working-directory: ${{ github.workspace }}
+        run: node tools/bridge-check/check.js
+
+      - name: Comprobar paridad del catalogo de planes
+        working-directory: ${{ github.workspace }}
+        run: node tools/plan-check/check.js
+
+      - name: Probar el generador del manifiesto del updater
+        working-directory: ${{ github.workspace }}
+        run: node tools/updater-manifest/generate.mjs --self-test
+
+      - name: Escanear el paquete de venta
+        working-directory: ${{ github.workspace }}
+        run: node tools/delivery-scan/check.mjs
+
+      - name: Comprobar que la marca esta aplicada
+        working-directory: ${{ github.workspace }}
+        run: node tools/brand/apply.mjs --check
+
+      - name: Build frontend (Tauri incrusta este dist/ en el binario)
+        run: npm run build
+
+      - name: Build Tauri Windows bundles (NSIS & MSI)
+        # La clave del updater tambien hace falta aqui: createUpdaterArtifacts
+        # genera el .nsis.zip firmado, y sin la variable el build falla con
+        # 'failed to decode secret key' o produce un bundle sin firmar.
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npx tauri build --bundles nsis,msi
+
+      - name: Download and Provision Standalone Chromium Engine
+        # Motor ungoogled-chromium (misma base de Chromium sin los servicios de
+        # Google). La version debe ir alineada con ENGINE_MAJOR en
+        # src-tauri/src/launcher.rs: ambos suben de versión con cada major nueva
+        # de Chrome (ungoogled publica la misma build el mismo día).
+        shell: bash
+        run: |
+          mkdir -p installer/bin/windows
+          ENGINE_VERSION="156.0.8078.47"
+          URL="https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/${ENGINE_VERSION}-1.1/ungoogled-chromium_${ENGINE_VERSION}-1.1_windows_x64.zip"
+          ROOT="ungoogled-chromium_${ENGINE_VERSION}-1.1_windows_x64"
+          echo "Descargando motor ungoogled-chromium ${ENGINE_VERSION}..."
+          curl -fail --location "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/${ENGINE_VERSION}-1.1/ungoogled-chromium_${ENGINE_VERSION}-1.1_windows_x64.zip" -o ungoogled-chromium-x64.zip
+          # Info-ZIP devuelve codigo 1 (= solo advertencia) por los 6472 bytes
+          # extra que trae el zip de ungoogled-chromium-windows; la extraccion
+          # en si es completa. Se ignora el codigo y se valida el resultado
+          # real: que la raiz con chrome.exe exista antes de copiarla.
+          unzip -q ungoogled-chromium-x64.zip || true
+          test -f "${ROOT}/chrome.exe" || { echo "la extraccion del motor no produjo ${ROOT}/chrome.exe"; exit 1; }
+          # La raíz del zip es ungoogled-chromium_<version>-1.1_windows_x64/.
+          cp -rf "${ROOT}"/* installer/bin/windows/
+          rm -rf ungoogled-chromium-x64.zip "${ROOT}"
+          ls -la installer/bin/windows/chrome.exe
+
+      - name: Compile Inno Setup Standalone Installer with Bundled Engine
+        shell: bash
+        run: |
+          choco install innosetup --no-progress -y
+          mkdir -p dist-installer
+          mkdir -p installer/fonts
+          cp -f src-tauri/icons/icon.ico installer/app_icon.ico || true
+          # El instalador espera <appName>.exe (MyAppExeName, lo escribe
+          # tools/brand/apply.mjs); Cargo genera el binario con el nombre del crate.
+          APP_EXE="$(node -p "require('../brand.config.json').appName").exe"
+          if [ -f src-tauri/target/release/krakenges-app.exe ] && [ ! -f "src-tauri/target/release/${APP_EXE}" ]; then
+            cp src-tauri/target/release/krakenges-app.exe "src-tauri/target/release/${APP_EXE}"
+          fi
+          iscc installer/Setup.iss
+          ls -la dist-installer/
+
+      - name: Publicar bundles Windows en release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          APP_NAME="$(node -p "require(require('path').join(process.env.GITHUB_WORKSPACE, 'brand.config.json')).appName")"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF_NAME}"
+            TITLE="${APP_NAME} Desktop ${GITHUB_REF_NAME}"
+          else
+            TAG="v$(node -p "require('./src-tauri/tauri.conf.json').version")"
+            TITLE="${APP_NAME} Desktop ${TAG}"
+          fi
+          # tauri-action crea el release en paralelo. Esperarlo evita que este
+          # job cree un release duplicado o falle por una carrera.
+          for _ in $(seq 1 60); do
+            gh release view "$TAG" >/dev/null 2>&1 && break
+            sleep 5
+          done
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --title "$TITLE" --notes "Instaladores generados automaticamente por GitHub Actions." --prerelease
+          shopt -s nullglob
+          # Tauri 2.12+ firma el instalador NSIS/MSI directo. El .exe.sig es
+          # el artefacto real del updater en Windows; el .exe sin firma y el
+          # instalador Inno son para descarga manual.
+          files=(dist-installer/*.exe src-tauri/target/release/bundle/nsis/*.exe \
+            src-tauri/target/release/bundle/nsis/*.exe.sig \
+            src-tauri/target/release/bundle/msi/*.msi \
+            src-tauri/target/release/bundle/msi/*.msi.sig)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No se genero ningun instalador de Windows"
+            exit 1
+          fi
+          gh release upload "$TAG" "${files[@]}" --clobber
+          echo "--- assets publicados ---"
+          gh release view "$TAG" --json assets --jq '.assets[] | "\(.name)  \(.size) bytes"'
+
+  build-arch-native:
+    name: Native Arch package (.pkg.tar.zst)
+    if: ${{ inputs.build_arch }}
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    permissions:
+      contents: write
+    # Este job NO puede usar defaults.run.working-directory: su primer step
+    # (pacman) corre ANTES del checkout, y el contenedor falla al hacer chdir a
+    # un directorio que aun no existe ("chdir to cwd ... no such file or
+    # directory"). El default se hereda igual aunque el job no lo declare, asi
+    # que hay que anularlo explicitamente apuntando a la raiz del workspace,
+    # que siempre existe. Los steps que necesitan el proyecto llevan su propio
+    # working-directory.
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+    steps:
+      - name: Update system and install toolchain
+        run: |
+          pacman-key --init && pacman-key --populate archlinux
+          pacman -Syu --noconfirm --needed \
+            base-devel git nodejs npm \
+            webkit2gtk-4.1 gtk3 libsoup3 openssl github-cli
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust via rustup
+        env:
+          HOME: /root
+          CARGO_HOME: /root/.cargo
+          RUSTUP_HOME: /root/.rustup
+        run: |
+          curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          /root/.cargo/bin/rustc --version
+
+      - name: Build frontend
+        env:
+          HOME: /root
+        working-directory: app-client-desktop-and-mobile
+        run: |
+          npm ci --no-audit --no-fund --silent || npm install
+          npm run build
+
+      - name: Compile release binary with cargo
+        env:
+          HOME: /root
+          CARGO_HOME: /root/.cargo
+          RUSTUP_HOME: /root/.rustup
+        working-directory: app-client-desktop-and-mobile/src-tauri
+        run: |
+          RUSTFLAGS="-C link-arg=-fuse-ld=bfd" /root/.cargo/bin/cargo build --release --features custom-protocol
+          ls -la target/release/krakenges-app
+
+      - name: Stage package-only PKGBUILD workspace
+        run: |
+          useradd -m -s /bin/bash builder 2>/dev/null || true
+          mkdir -p /pkg
+          # Este step corre desde la raiz del repo (no hereda el
+          # working-directory de los steps de build), asi que las rutas llevan
+          # el prefijo app-client-desktop-and-mobile/. El binario ya compilaba
+          # bien: fallaba el cp, que no encontraba src-tauri/target/release/.
+          CLIENT=app-client-desktop-and-mobile
+          cp "$CLIENT/src-tauri/target/release/krakenges-app" /pkg/
+          cp "$CLIENT/packaging/arch/app.desktop" /pkg/
+          cp "$CLIENT/src-tauri/icons/32x32.png" /pkg/
+          cp "$CLIENT/src-tauri/icons/128x128.png" /pkg/
+          cp "$CLIENT/src-tauri/icons/icon.png" /pkg/
+          cp "$CLIENT/packaging/arch/PKGBUILD" /pkg/
+          VERSION=$(node -p "require('./$CLIENT/src-tauri/tauri.conf.json').version")
+          sed -i "s|^pkgver=.*|pkgver=${VERSION}|" /pkg/PKGBUILD
+          chown -R builder:builder /pkg
+          ls -la /pkg
+          echo "Packing ${VERSION}"
+
+      - name: Build package with makepkg
+        run: |
+          sudo -u builder env HOME=/home/builder PATH=/usr/bin:/bin /bin/bash -c 'cd /pkg && makepkg -f --noconfirm'
+
+      - name: Publicar paquete Arch en release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          APP_NAME="$(node -p "require(require('path').join(process.env.GITHUB_WORKSPACE, 'brand.config.json')).appName")"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF_NAME}"
+            TITLE="${APP_NAME} Desktop ${GITHUB_REF_NAME}"
+          else
+            TAG="v$(node -p "require('./app-client-desktop-and-mobile/src-tauri/tauri.conf.json').version")"
+            TITLE="${APP_NAME} Desktop ${TAG}"
+          fi
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --title "$TITLE" --notes "Instaladores generados automaticamente por GitHub Actions." --prerelease
+          shopt -s nullglob
+          files=(/pkg/*.pkg.tar.zst)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No se genero ningun paquete Arch"
+            exit 1
+          fi
+          gh release upload "$TAG" "${files[@]}" --clobber
+          echo "--- assets publicados ---"
+          gh release view "$TAG" --json assets --jq '.assets[] | "\(.name)  \(.size) bytes"'
+
+  publish-updater-manifest:
+    name: Publicar manifiesto firmado del updater
+    needs: [build-tauri, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Descargar artefactos firmados de la release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./app-client-desktop-and-mobile/src-tauri/tauri.conf.json').version")"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="v${VERSION}"
+          fi
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+          rm -rf updater-release
+          mkdir -p updater-release
+
+          # El release lo crea tauri-action en paralelo. No se genera el
+          # manifiesto hasta que exista y estén sus artefactos.
+          for _ in $(seq 1 60); do
+            gh release view "$TAG" >/dev/null 2>&1 && break
+            sleep 5
+          done
+          gh release view "$TAG" >/dev/null
+          PREFIX="$(node -p "require(require('path').join(process.env.GITHUB_WORKSPACE, 'brand.config.json')).artifactPrefix")"
+          gh release download "$TAG" --dir updater-release \
+            --pattern 'latest.json' \
+            --pattern "${PREFIX}_*_amd64.AppImage" \
+            --pattern "${PREFIX}_*_amd64.AppImage.sig" \
+            --pattern "${PREFIX}_*_x64-setup.exe" \
+            --pattern "${PREFIX}_*_x64-setup.exe.sig"
+          ls -lh updater-release
+
+      - name: Generar y validar el manifiesto
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          PUB_DATE="$(jq -r '.pub_date // empty' updater-release/latest.json)"
+          if [[ -z "$PUB_DATE" ]]; then
+            echo "latest.json no trae pub_date" >&2
+            exit 1
+          fi
+          NOTES="$(gh release view "$TAG" --json body --jq '.body // ""')"
+          node tools/updater-manifest/generate.mjs \
+            --artifacts updater-release \
+            --version "$VERSION" \
+            --pub-date "$PUB_DATE" \
+            --notes "$NOTES" \
+            --output updater-release/updater-manifest.json
+
+          BASE="$(node -p "require('./brand.config.json').updaterDownloadBaseUrl")"
+          export BASE
+          node <<'NODE'
+          const fs = require('node:fs');
+          const manifest = JSON.parse(fs.readFileSync('updater-release/updater-manifest.json', 'utf8'));
+          const base = process.env.BASE.replace(/\/+$/, '');
+          if (manifest.version !== process.env.VERSION) {
+            throw new Error(`Versión del manifiesto ${manifest.version} != ${process.env.VERSION}`);
+          }
+          for (const target of ['linux-x86_64', 'windows-x86_64']) {
+            const entry = manifest.platforms && manifest.platforms[target];
+            if (!entry || !entry.signature || !entry.url) {
+              throw new Error(`Falta la entrada firmada de ${target}`);
+            }
+            if (!entry.url.startsWith(`${base}/`)) {
+              throw new Error(`La URL de ${target} no apunta a ${base}: ${entry.url}`);
+            }
+          }
+          console.log(`Manifiesto válido: v${manifest.version} (${Object.keys(manifest.platforms).join(', ')})`);
+          NODE
+
+      - name: Publicar manifiesto en la release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release upload "$TAG" updater-release/updater-manifest.json --clobber

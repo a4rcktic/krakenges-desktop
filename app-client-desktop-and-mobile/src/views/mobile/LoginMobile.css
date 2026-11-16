@@ -1,0 +1,525 @@
+/* ============================================================
+   Kraken Ges Dedicated Mobile View (Android Stealth & Touch Ergonomics)
+   100% Native Smartphone UX • Zero Desktop Jargon • 120 FPS
+   ============================================================ */
+
+.mob-screen-wrapper {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+  z-index: 1000;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   SMARTPHONE CHASSIS PREVIEW (FOR WEB DEV ON PC)
+   ============================================================ */
+.mob-phone-frame {
+  position: relative;
+  width: 100%;
+  max-width: 385px;
+  height: 810px;
+  max-height: calc(100vh - 40px);
+  border-radius: 44px;
+  border: 4px solid #27272a;
+  background: #000000;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 30px 90px rgba(0, 0, 0, 0.98);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic Island Notch */
+.mob-phone-notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95px;
+  height: 22px;
+  background: #18181b;
+  border-radius: 20px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.mob-phone-inner {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+/* Native Android Container */
+.mob-native-screen {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   MOBILE APP SURFACE
+   ============================================================ */
+.mob-app-surface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 22px 24px;
+  width: 100%;
+  margin: auto;
+}
+
+/* Haptic Shake */
+.mob-shake {
+  animation: mobShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes mobShake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Top Status Bar */
+.mob-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.mob-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.mob-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.mob-version-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #71717a;
+}
+
+/* Hero */
+.mob-hero {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.mob-logo-box {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  border-radius: 16px;
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.mob-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mob-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mob-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.mob-subtitle {
+  font-size: 12.5px;
+  color: #71717a;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   THUMB-FRIENDLY TOUCH TABS
+   ============================================================ */
+.mob-tab-switch {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  background: rgba(10, 10, 14, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+
+.mob-tab-indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 11px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mob-tab-btn {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.mob-tab-btn.active {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Error Banner */
+.mob-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 11px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SMOOTH TAB CONTENT TRANSITION (ZERO DEAD SPACE)
+   ============================================================ */
+.mob-tab-content {
+  animation: mobTabFade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes mobTabFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Forms & Large Touch Inputs */
+.mob-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mob-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mob-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mob-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #71717a;
+  letter-spacing: 0.05em;
+}
+
+.mob-forgot-link {
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  color: #a1a1aa;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mob-badge-req {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: #00f2fe;
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* 48px Ergonomic Touch Slot */
+.mob-input-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(9, 9, 13, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 13px;
+  transition: all 0.18s ease;
+}
+
+.mob-input-slot:focus-within {
+  border-color: #ffffff;
+  background: rgba(0, 0, 0, 0.95);
+  box-shadow: 0 0 0 1px #ffffff, 0 0 16px rgba(255, 255, 255, 0.14);
+}
+
+.mob-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #52525b;
+  pointer-events: none;
+  transition: color 0.18s ease;
+}
+
+.mob-input-slot:focus-within .mob-input-icon {
+  color: #ffffff;
+}
+
+.mob-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 44px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 15px; /* Minimum 16px font to prevent mobile auto-zoom */
+  outline: none;
+}
+
+.mob-input::placeholder {
+  color: #3f3f46;
+  font-size: 14px;
+}
+
+.mob-check-icon {
+  margin-right: 12px;
+}
+
+.mob-eye-touch {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mob-key-input {
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+
+.mob-input-error {
+  border-color: #ef4444 !important;
+}
+
+/* Criteria Chips */
+.mob-checklist {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mob-check-chip {
+  font-size: 10px;
+  font-weight: 600;
+  color: #52525b;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 7px;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+
+.mob-check-chip.valid {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* ============================================================
+   52PX BIG TOUCH ACTION BUTTON
+   ============================================================ */
+.mob-btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 50px;
+  margin-top: 6px;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.15);
+}
+
+.mob-btn-action:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.mob-btn-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.mob-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Dev Demo Button */
+.mob-demo-wrap {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.mob-demo-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #71717a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mob-demo-btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Footer */
+.mob-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #52525b;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mob-footer-link {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+}
+
+/* ============================================================
+   REAL SMARTPHONES / NATIVE ANDROID MEDIA QUERY
+   ============================================================ */
+@media (max-width: 640px) {
+  .mob-screen-wrapper {
+    padding: 0;
+  }
+  .mob-phone-frame {
+    border: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    box-shadow: none !important;
+  }
+  .mob-phone-notch {
+    display: none !important;
+  }
+  .mob-app-surface {
+    padding-top: max(env(safe-area-inset-top), 24px);
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+}

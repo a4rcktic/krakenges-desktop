@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kraken Ges — Selector de Diseños</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000000;
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .tab-btn {
+      transition: all 0.15s ease-out;
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col antialiased overflow-hidden bg-black">
+
+  <!-- TOP HUB BAR -->
+  <header class="h-16 border-b border-white/10 bg-[#0a0a0a] px-6 flex items-center justify-between shrink-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center font-black text-sm shadow-md">
+        M
+      </div>
+      <div>
+        <h1 class="font-extrabold text-sm text-white tracking-tight">Kraken Ges — Concepto 4 (Uber Fleet Architecture)</h1>
+        <p class="text-[11px] text-neutral-400 font-mono">Diseño de producto Senior: Monocromático, Stark Black & White, iconografía precisa</p>
+      </div>
+    </div>
+
+    <!-- CONCEPTS TABS -->
+    <div class="flex items-center p-1 rounded-xl bg-[#141414] border border-white/10 gap-1 font-sans">
+      
+      <!-- CONCEPT 4 (UBER FLEET - SELECTED) -->
+      <button onclick="switchPreview('concept4_uber_fleet.html', this)" class="tab-btn px-4 py-2 rounded-lg text-xs font-bold text-black bg-white shadow-sm flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-black"></span>
+        <span>Perfiles (Uber Fleet)</span>
+        <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/15 text-black font-extrabold">Elegido</span>
+      </button>
+
+      <!-- PLANES & CUOTAS FLEET -->
+      <button onclick="switchPreview('concept_planes_fleet.html', this)" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5">
+        <i data-lucide="credit-card" class="w-3.5 h-3.5 text-neutral-400"></i>
+        <span>Planes & Cuotas</span>
+      </button>
+
+      <!-- LOGIN FLEET -->
+      <button onclick="switchPreview('concept_login_fleet.html', this)" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5">
+        <i data-lucide="lock" class="w-3.5 h-3.5 text-neutral-400"></i>
+        <span>Pantalla Login</span>
+      </button>
+
+      <!-- SETUP WIZARD / INSTALADOR -->
+      <button onclick="switchPreview('concept_installer_wizard.html', this)" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5">
+        <i data-lucide="cpu" class="w-3.5 h-3.5 text-neutral-400"></i>
+        <span>Instalador Componentes</span>
+      </button>
+
+      <!-- CONCEPT 1 PRO -->
+      <button onclick="switchPreview('concept1_linear_obsidian_pro.html', this)" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5">
+        <span>Linear Obsidian</span>
+      </button>
+
+      <!-- CONCEPT 5 (DIDI) -->
+      <button onclick="switchPreview('concept5_didi_kinetic.html', this)" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5">
+        <span>DiDi Kinetic</span>
+      </button>
+
+    </div>
+
+    <div class="flex items-center gap-3 text-xs font-mono">
+      <a id="direct-link" href="concept4_uber_fleet.html" target="_blank" class="px-3.5 py-2 rounded-lg border border-white/10 hover:border-white/20 text-neutral-300 hover:text-white flex items-center gap-2 transition">
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        <span>Pestaña Nueva</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- IFRAME PREVIEW CONTAINER -->
+  <main class="flex-1 bg-black overflow-hidden relative">
+    <iframe id="preview-frame" src="concept4_uber_fleet.html" class="w-full h-full border-0"></iframe>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function switchPreview(url, btn) {
+      document.getElementById('preview-frame').src = url;
+      document.getElementById('direct-link').href = url;
+
+      document.querySelectorAll('.tab-btn').forEach(tab => {
+        tab.className = "tab-btn px-3.5 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5";
+      });
+
+      btn.className = "tab-btn px-4 py-2 rounded-lg text-xs font-bold text-black bg-white shadow-sm flex items-center gap-2";
+    }
+  </script>
+</body>
+</html>

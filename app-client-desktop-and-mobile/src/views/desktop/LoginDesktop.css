@@ -1,0 +1,765 @@
+/* ============================================================
+   Kraken Ges Desktop Luxury Interface (High-End SaaS & Stealth Tech)
+   Chamfered Specular Rim • Live Real Hardware Detection • 120 FPS
+   ============================================================ */
+
+.desk-auth-screen {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1000;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Chamfered Diamond-Cut Specular Frame Rim */
+.desk-master-rim {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 890px;
+  padding: 1px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.035) 45%, rgba(255, 255, 255, 0.16) 100%);
+  box-shadow: 
+    0 40px 110px -20px rgba(0, 0, 0, 1),
+    0 0 45px rgba(0, 0, 0, 0.95);
+  margin: auto;
+  animation: rimFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
+}
+
+@keyframes rimFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.975) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Shake on error */
+.desk-shake {
+  animation: hapticShakeRim 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes hapticShakeRim {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Main Luxury Inner Card */
+.desk-master-card {
+  display: grid;
+  grid-template-columns: 385px 1fr;
+  background: rgba(6, 7, 10, 0.96);
+  border-radius: 27px;
+  backdrop-filter: blur(36px) saturate(160%);
+  -webkit-backdrop-filter: blur(36px) saturate(160%);
+  overflow: hidden;
+}
+
+/* ============================================================
+   LEFT COLUMN: BRAND SHOWCASE & LIVE HARDWARE TELEMETRY
+   ============================================================ */
+.desk-showcase-pane {
+  padding: 38px 32px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Brand Header */
+.desk-brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.desk-logo-halo-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.desk-logo-halo {
+  position: absolute;
+  inset: -3px;
+  border-radius: 16px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 70%);
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+.desk-logo-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 13px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.desk-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.desk-logo-fallback {
+  color: #ffffff;
+}
+
+.desk-brand-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desk-brand-name {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.desk-brand-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #d4d4d8;
+}
+
+/* Hero Typography */
+.desk-hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.desk-hero-title {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0;
+}
+
+.desk-hero-title span {
+  color: #71717a;
+}
+
+.desk-hero-desc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #8e8e93;
+  margin: 0;
+}
+
+/* ============================================================
+   REAL HARDWARE & FINGERPRINT TELEMETRY WIDGET
+   ============================================================ */
+.desk-real-widget {
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.desk-real-widget:hover {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.desk-widget-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.desk-widget-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.desk-live-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #10b981;
+}
+
+.desk-live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
+/* 2x2 Real Hardware Grid */
+.desk-real-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.desk-real-cell {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.desk-cell-span {
+  grid-column: 1 / -1;
+}
+
+.desk-cell-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: #71717a;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.desk-cell-val {
+  font-size: 11px;
+  font-weight: 700;
+  color: #e4e4e7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Anti-Detect Status Banner */
+.desk-spoof-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+}
+
+.desk-spoof-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: rgba(16, 185, 129, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.desk-spoof-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.desk-spoof-info strong {
+  font-size: 11px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.desk-spoof-info span {
+  font-size: 10px;
+  color: #a1a1aa;
+  line-height: 1.3;
+}
+
+/* Value Checkpoints */
+.desk-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desk-check-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  color: #8e8e93;
+}
+
+.desk-check-bullet {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RIGHT COLUMN: FORM CONSOLE
+   ============================================================ */
+.desk-form-pane {
+  padding: 38px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Segmented Pill Tabs */
+.desk-tab-switcher {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  margin-bottom: 22px;
+}
+
+.desk-tab-slider {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 11px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.desk-tab-trigger {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: color 0.18s ease;
+}
+
+.desk-tab-trigger:hover {
+  color: #e4e4e7;
+}
+
+.desk-tab-trigger.active {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Error Banner */
+.desk-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 11px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+
+/* Form Structure */
+.desk-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.desk-fade-in {
+  animation: deskFadeAnim 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes deskFadeAnim {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.desk-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.desk-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.desk-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #8e8e93;
+}
+
+.desk-forgot-link {
+  background: transparent;
+  border: none;
+  font-size: 11.5px;
+  color: #a1a1aa;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.desk-forgot-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.desk-req-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #00f2fe;
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Input Boxes */
+.desk-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #020204;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  transition: all 0.18s cubic-bezier(0.05, 0.9, 0.1, 1.05);
+}
+
+.desk-input-box:focus-within {
+  border-color: #ffffff;
+  background: #000000;
+  box-shadow: 
+    0 0 0 1px #ffffff,
+    0 0 20px rgba(255, 255, 255, 0.14);
+}
+
+.desk-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #52525b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: color 0.18s ease;
+}
+
+.desk-input-box:focus-within .desk-input-icon {
+  color: #ffffff;
+}
+
+.desk-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px 0 42px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+}
+
+.desk-input::placeholder {
+  color: #3f3f46;
+  font-size: 13px;
+}
+
+.desk-check-icon {
+  margin-right: 14px;
+  animation: fadeIn 0.2s ease;
+}
+
+.desk-eye-action {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #52525b;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.desk-eye-action:hover {
+  color: #ffffff;
+}
+
+.desk-key-style {
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.desk-input-error {
+  border-color: #ef4444 !important;
+}
+
+/* Criteria Badges */
+.desk-checklist {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.desk-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #52525b;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.18s ease;
+}
+
+.desk-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #3f3f46;
+  transition: all 0.18s ease;
+}
+
+.desk-pill.valid {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.desk-pill.valid .desk-pill-dot {
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+/* Submit Action Button (Stark High Contrast White) */
+.desk-submit-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  margin-top: 6px;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.18s cubic-bezier(0.05, 0.9, 0.1, 1.05);
+  box-shadow: 
+    0 4px 20px rgba(255, 255, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.desk-submit-btn:hover:not(:disabled) {
+  background: #f4f4f5;
+  box-shadow: 
+    0 6px 28px rgba(255, 255, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.desk-submit-btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.desk-submit-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
+.desk-btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.08), transparent);
+  transform: skewX(-20deg);
+  animation: btnShineAnim 4s infinite;
+}
+
+@keyframes btnShineAnim {
+  0% { left: -100%; }
+  25%, 100% { left: 160%; }
+}
+
+.desk-arrow-icon {
+  transition: transform 0.18s ease;
+}
+
+.desk-submit-btn:hover .desk-arrow-icon {
+  transform: translateX(4px);
+}
+
+.desk-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Demo Bypass & Card Footer */
+.desk-demo-box {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.desk-demo-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #71717a;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.desk-demo-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.desk-card-footer {
+  text-align: center;
+  font-size: 12.5px;
+  color: #71717a;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.desk-footer-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  transition: opacity 0.15s ease;
+}
+
+.desk-footer-btn:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 860px) {
+  .desk-master-card {
+    grid-template-columns: 1fr;
+  }
+  .desk-showcase-pane {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 28px 24px;
+  }
+  .desk-form-pane {
+    padding: 28px 24px;
+  }
+}

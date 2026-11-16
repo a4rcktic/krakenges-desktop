@@ -1,0 +1,51 @@
+[Unit]
+Description=Kraken Ges backend API
+Documentation=file:/opt/krakenges/README-DEV.md
+After=network-online.target mongod.service
+Wants=network-online.target mongod.service
+
+[Service]
+Type=simple
+User=krakenges
+Group=krakenges
+WorkingDirectory=/opt/krakenges/backend
+Environment=NODE_ENV=production
+EnvironmentFile=/opt/krakenges/backend/.env
+ExecStart=/usr/bin/node /opt/krakenges/backend/dist/index.js
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+KillSignal=SIGINT
+LimitNOFILE=65535
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateDevices=true
+ProtectClock=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectProc=invisible
+RemoveIPC=true
+SystemCallArchitectures=native
+ReadWritePaths=/opt/krakenges/backend/logs /opt/krakenges/content
+# Todo lo demás es de solo lectura. El panel de contenido escribe únicamente
+# en /opt/krakenges/content (incluido su subdirectorio history).
+ReadOnlyPaths=/opt/krakenges/backend/dist /opt/krakenges/backend/.keys /opt/krakenges/downloads
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=krakenges-backend
+
+[Install]
+WantedBy=multi-user.target

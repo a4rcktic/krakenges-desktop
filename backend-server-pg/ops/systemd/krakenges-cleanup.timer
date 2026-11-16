@@ -1,0 +1,11 @@
+[Unit]
+Description=Kraken Ges — ejecutar limpieza diaria
+
+[Timer]
+OnCalendar=*-*-* 04:15:00 UTC
+Persistent=true
+RandomizedDelaySec=10m
+Unit=krakenges-cleanup.service
+
+[Install]
+WantedBy=timers.target

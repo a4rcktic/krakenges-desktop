@@ -1,0 +1,53 @@
+[Unit]
+Description=Kraken Ges backend (PostgreSQL)
+Documentation=https://krakenges.example
+After=network-online.target
+Wants=network-online.target
+# Si PostgreSQL es local y usa systemd, descomenta:
+# After=postgresql.service
+# Requires=postgresql.service
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=krakenges
+Group=krakenges
+WorkingDirectory=/opt/krakenges/backend
+EnvironmentFile=/etc/krakenges/backend.env
+ExecStart=/usr/bin/node /opt/krakenges/backend/dist/index.js
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+KillSignal=SIGTERM
+UMask=0077
+
+# --- Endurecimiento ---------------------------------------------------------
+# El servicio no necesita root ni acceso al resto del sistema. La única ruta
+# escribible es .keys (el backend crea el par Ed25519 si no existe).
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/opt/krakenges/backend/.keys
+
+# stdout/stderr van a journald. No escribas logs a fichero: journald ya rota.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=krakenges-backend
+
+[Install]
+WantedBy=multi-user.target

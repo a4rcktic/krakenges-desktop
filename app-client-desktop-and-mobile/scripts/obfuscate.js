@@ -70,7 +70,7 @@ for (const file of files) {
     log: false,
     numbersToExpressions: true,
     renameGlobals: false,
-    selfDefending: true,
+    selfDefending: false,
     simplify: true,
     splitStrings: true,
     splitStringsChunkLength: 6,

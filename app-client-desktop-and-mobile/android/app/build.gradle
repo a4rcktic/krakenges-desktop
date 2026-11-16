@@ -36,6 +36,9 @@ android {
                 storePassword props['storePassword']
                 keyAlias props['keyAlias']
                 keyPassword props['keyPassword']
+                v1SigningEnabled true
+                v2SigningEnabled true
+                v3SigningEnabled true
             } else {
                 // Sin credenciales no se puede firmar el release. Fallar ruidosamente
                 // (y no compilar con una clave por defecto) para no distribuir un APK

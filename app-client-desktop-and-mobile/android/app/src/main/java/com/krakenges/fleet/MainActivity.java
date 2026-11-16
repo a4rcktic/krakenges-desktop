@@ -28,7 +28,7 @@ public class MainActivity extends BridgeActivity {
     // Se obtiene con:
     //   keytool -exportcert -alias <alias> -keystore release.keystore | sha256sum
     private static final String OFFICIAL_RELEASE_SIGNATURE =
-        "0000000000000000000000000000000000000000000000000000000000000000";
+        "F5D73262FF9E79820ACBDA919BA52BE83A345CCFA40D56BF41E3A203C8B4C5CF";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

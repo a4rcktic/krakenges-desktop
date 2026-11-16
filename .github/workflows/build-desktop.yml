@@ -481,3 +481,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: gh release upload "$TAG" updater-release/updater-manifest.json --clobber
+

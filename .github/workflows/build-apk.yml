@@ -67,6 +67,31 @@ jobs:
           echo "::add-mask::$STORE_PASSWORD"
           echo "::add-mask::$KEY_PASSWORD"
 
+      - name: Inject signing certificate SHA-256 into brand config
+        # El RASP de MainActivity verifica que la firma del APK coincida con
+        # OFFICIAL_RELEASE_SIGNATURE. Ese valor lo escribe apply.mjs desde
+        # brand.config.json. Aqui extraemos la SHA-256 real del keystore de CI
+        # y la inyectamos antes de que apply.mjs --check la verifique.
+        env:
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          KEYSTORE=app-client-desktop-and-mobile/android/app/release.keystore
+          SHA256=$(keytool -exportcert \
+            -alias "$KEY_ALIAS" \
+            -keystore "$KEYSTORE" \
+            -storepass "$STORE_PASSWORD" \
+            -noprompt 2>/dev/null \
+            | sha256sum | awk '{print toupper($1)}')
+          echo "Certificate SHA-256: $SHA256"
+          node -e "
+            const fs = require('fs');
+            const cfg = JSON.parse(fs.readFileSync('brand.config.json', 'utf8'));
+            cfg.androidReleaseSha256 = '$SHA256';
+            fs.writeFileSync('brand.config.json', JSON.stringify(cfg, null, 2) + '\n');
+          "
+          node tools/brand/apply.mjs
+
       - name: Verify Android SDK
         run: |
           echo "ANDROID_HOME: $ANDROID_HOME"

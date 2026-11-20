@@ -9,7 +9,7 @@
 #define MyAppPublisher "Kraken Ges"
 #define MyAppURL "https://app.krakenchk.com"
 #define MyAppExeName "Kraken Ges.exe"
-#define MyArtifactPrefix "KrakenGes"
+#define MyArtifactPrefix "Kraken.Ges"
 #define MyAppAssocName MyAppName + " Profile Session"
 #define MyAppAssocExt ".krakenges"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt

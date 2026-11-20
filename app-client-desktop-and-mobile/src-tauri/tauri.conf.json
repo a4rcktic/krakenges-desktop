@@ -48,7 +48,7 @@
       "endpoints": [
         "https://app.krakenchk.com/api/updates/manifest"
       ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY3MTI2NjY3RjY2NTg0NkYKUldSdmhHWDJaMllTWitlUm1jYjJjdkxoYjFjWlU4eDRjZXJicTVRUFV1NlZkRk5XV0NNemdvY3UK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZDNzk4ODI5MUQ3RTc1RUIKUldUcmRYNGRLWWg1YkZBenFpemxQRDJvbkw2TWFlamgwYnBMUXE0eTV4ejl3SG1HUmJlcW0wc00K",
       "windows": {
         "installMode": "passive"
       }
